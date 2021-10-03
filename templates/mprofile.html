@@ -3,9 +3,10 @@
 {% block title %}R-Portal - Member Profile{% endblock %}
 
 {% block content %}
-<h3>Member Profile Page</h3>
+<h2>Member Profile Page</h2>
 <div>
-    <p>Your account details are below:</p>
+    <h3>Your account details are below:</h3>
+    <h4>Personal Details:</h4>
     <table>
         <tr>
             <td>Name:</td>
@@ -24,10 +25,6 @@
             <td>{{ account['Mwing'] }}</td>
         </tr>
         <tr>
-            <td>Society Code:</td>
-            <td>{{ account['Mcode'] }}</td>
-        </tr>
-        <tr>
             <td>Email:</td>
             <td>{{ account['Memail'] }}</td>
         </tr>
@@ -39,10 +36,40 @@
             <td>Password:</td>
             <td>{{ account['Mpassword'] }}</td>
         </tr>
+    </table>
+    <h3>Your Society details are below:</h3>
+    <h4>Society Location:</h4>
+    <table>
         <tr>
-            <td>OTP:</td>
-            <td>{{ account['Motp'] }}</td>
+            <td>Name:</td>
+            <td>{{ account['name'] }}</td>
         </tr>
-      </table>
+        <tr>
+            <td>Society Code:</td>
+            <td>{{ account['code'] }}</td>
+        </tr>
+        <tr>    
+            <td>Road:</td>
+            <td>{{ account['road'] }}</td>
+        </tr>
+        <tr>
+            <td>Area:</td>
+            <td>{{ account['area'] }}</td>
+        </tr>
+        <tr>
+            <td>City:</td>
+            <td>{{ account['city'] }}</td>
+        </tr>
+        <tr>
+            <td>State:</td>
+            <td>{{ account['state'] }}</td>
+        </tr>
+        <tr>
+            <td>Pin code:</td>
+            <td>{{ account['pin'] }}</td>
+        </tr>
+    </table>
+    <br>    
+    <a href='javascript:self.history.back();'>Go Back</a>
 </div>
 {% endblock %}

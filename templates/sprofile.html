@@ -3,9 +3,10 @@
 {% block title %}R-Portal - Secretary Profile{% endblock %}
 
 {% block content %}
-<h3>Secretary Profile Page</h3>
+<h2>Secretary Profile Page</h2>
 <div>
-    <p>Your account details are below:</p>
+    <h3>Your account details are below:</h3>
+    <h4>Personal Details:</h4>
     <table>
         <tr>
             <td>Name:</td>
@@ -43,6 +44,78 @@
             <td>OTP:</td>
             <td>{{ account['Sotp'] }}</td>
         </tr>
-      </table>
+    </table>
+    <h3>Your Society details are below:</h3>
+    <h4>Society Location:</h4>
+    <table>
+        <tr>
+            <td>Name:</td>
+            <td>{{ account['name'] }}</td>
+        </tr>
+        <tr>    
+            <td>Road:</td>
+            <td>{{ account['road'] }}</td>
+        </tr>
+        <tr>
+            <td>Area:</td>
+            <td>{{ account['area'] }}</td>
+        </tr>
+        <tr>
+            <td>City:</td>
+            <td>{{ account['city'] }}</td>
+        </tr>
+        <tr>
+            <td>State:</td>
+            <td>{{ account['state'] }}</td>
+        </tr>
+        <tr>
+            <td>Pin code:</td>
+            <td>{{ account['pin'] }}</td>
+        </tr>
+        <tr>
+            <td>Society Code:</td>
+            <td>{{ account['code'] }}</td>
+        </tr>
+    </table>
+    <h4>Society Account Details:</h4>
+    <table>
+        <tr>
+            <td>Account Name:</td>
+            <td>{{ account['acname'] }}</td>
+        </tr>
+        <tr>
+            <td>Account Number:</td>
+            <td>{{ account['acno'] }}</td>
+        </tr>
+        <tr>
+            <td>MMID:</td>
+            <td>{{ account['mmid'] }}</td>
+        </tr>
+        <tr>
+            <td>Bank Name:</td>
+            <td>{{ account['bankname'] }}</td>
+        </tr>
+        <tr>
+            <td>Branch:</td>
+            <td>{{ account['branch'] }}</td>
+        </tr>
+        <tr>
+            <td>IFSC Code:</td>
+            <td>{{ account['ifsc'] }}</td>
+        </tr>
+    </table>
+    <h4>Rules Section:</h4>
+    <table>
+        <tr>
+            <td>Society Rules:</td>
+            <td>{{ account['socrule'] }}</td>
+        </tr>
+        <tr>
+            <td>Maintainance Rules:</td>
+            <td>{{ account['mainrule'] }}</td>
+        </tr>
+    </table>
+    <br>    
+    <a href='javascript:self.history.back();'>Go Back</a>
 </div>
 {% endblock %}

@@ -11,7 +11,7 @@ from flask import *
 from flask_mail import Message 
 
 app = Flask(__name__)
-app.secret_key = 'otp'
+app.secret_key = '65142'
 app.config['MYSQL_HOST'] = '127.0.0.1'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = '1234'
@@ -20,7 +20,7 @@ mysql = MySQL(app)
  
 mail = Mail(app)
 app.config["MAIL_SERVER"]='smtp.gmail.com'  
-app.config["MAIL_PORT"] = 465 #465 or 587 
+app.config["MAIL_PORT"] =465 #465 or 587 
 app.config["MAIL_USERNAME"] = 'ajinfotics@gmail.com'  
 app.config['MAIL_PASSWORD'] = 'JAIS@65142'  
 #app.config['MAIL_USE_TLS'] = False
@@ -39,9 +39,13 @@ otp = random.randint(000000,999999)
 
 @app.route('/')
 def index():
-        return render_template('index.html')
+    return rportal()
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/R-Portal/')
+def rportal():
+    return render_template('rportal.html')
+
+@app.route('/R-Portal/login', methods=['GET', 'POST'])
 def login():
     msg = ''
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
@@ -66,11 +70,22 @@ def login():
                 session['id'] = account['Mid']
                 session['username'] = account['Musername']
                 return motp()       
-            else:
-                msg = 'Incorrect username/password! Please check Username/Password and try again!'
+            elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+                username = request.form['username']
+                password = request.form['password']
+                cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                cursor.execute('SELECT * FROM admin WHERE Ausername = %s AND Apassword = %s', (username, password,))
+                account = cursor.fetchone()
+                if account:
+                    session['loggedin'] = True
+                    session['id'] = account['Aid']
+                    session['username'] = account['Ausername']
+                    return render_template("admin.html")       
+                else:
+                    msg = 'Incorrect username/password! Please check Username/Password and try again!'
     return render_template('login.html', msg=msg)
 
-def sotp():
+def sotp(): 
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM secretary WHERE Sid = %s', (session['id'],))
@@ -82,24 +97,26 @@ def sotp():
             mail.send(msg) 
             return render_template('sotp.html')
         else:
-                msg = 'Something went wrong:( Please try again!'
+            msg = 'Something went wrong:( Please try again!'
     else:
-        return render_template("index.html")
+        return render_template("rportal.html")
+    
 def motp():
     if 'loggedin' in session:
-            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('SELECT * FROM member WHERE Mid = %s ', (session['id'],))
-            account = cursor.fetchone()
-            if account:
-                email = account['Memail']
-                msg = Message('OTP confirmation for RPortal' ,sender ='Rportal<me@Rportal.com', recipients = [email]) 
-                msg.body = part2 + str(otp) + part3 
-                mail.send(msg)  
-                return render_template('Motp.html')
-            else:
-                msg = 'Something went wrong:( Please try again!'
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM member WHERE Mid = %s ', (session['id'],))
+        account = cursor.fetchone()
+        if account:
+            email = account['Memail']
+            msg = Message('OTP confirmation for RPortal' ,sender ='Rportal<me@Rportal.com', recipients = [email]) 
+            msg.body = part2 + str(otp) + part3 
+            mail.send(msg)  
+            msg1 = 'OTP: ',otp
+            return render_template('Motp.html', msg1=msg1)
+        else:
+            msg = 'Something went wrong:( Please try again!'
     else:
-        return render_template("index.html")
+        return render_template("rportal.html")
 
 @app.route('/svalidate',methods=["POST"])
 def svalidate():  
@@ -109,20 +126,20 @@ def svalidate():
     else: 
         return render_template("rportal.html")
 
-@app.route('/motpvalidate',methods=["POST"])
+@app.route('/mvalidate',methods=["POST"])
 def mvalidate():  
     user_otp = request.form['otp']  
     if otp == int(user_otp):  
-        return redirect(url_for('shome')) 
+        return redirect(url_for('mhome')) 
     else: 
-        return render_template("index.html")  
+        return render_template("rportal.html")  
 
-@app.route('/logout')
+@app.route('/R-Portal/logout')
 def logout():
    session.pop('loggedin', None)
    session.pop('id', None)
    session.pop('username', None)
-   return redirect(url_for('index'))
+   return redirect(url_for('rportal'))
 
 def invitation():
     num = '0123456789'
@@ -138,7 +155,7 @@ def invitation():
     code = str(str1 + num1)
     return code
 
-@app.route('/sregister', methods=['GET','POST'])
+@app.route('/R-Portal/sregister', methods=['GET','POST'])
 def sregister():
     msg = ''
     if request.method == 'POST' and 'Sname' in request.form and 'Susername' in request.form and 'Semail' in request.form:
@@ -194,22 +211,22 @@ def sregister():
         msg = 'elif code!' 
     return render_template('sregister.html', msg=msg)
 
-@app.route('/shome')
+@app.route('/R-Portal/shome')
 def shome():
     if 'loggedin' in session:
         return render_template('shome.html', Susername=session['username'])
     return redirect(url_for('login'))
 
-@app.route('/sprofile')
+@app.route('/R-Portal/sprofile')
 def sprofile():
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM secretary WHERE Sid = %s', (session['id'],))
+        cursor.execute('SELECT * FROM secretary INNER JOIN society ON secretary.Scode = society.code WHERE Sid = %s', (session['id'],))
         account = cursor.fetchone()
         return render_template('sprofile.html', account=account)
     return redirect(url_for('login'))
 
-@app.route('/mcode', methods=['GET', 'POST'])
+@app.route('/R-Portal/mcode', methods=['GET', 'POST'])
 def mcode():
     msg = ''
     if request.method == 'POST' and 'code' in request.form:
@@ -226,7 +243,7 @@ def mcode():
             msg='Invalid Society Code!'
     return render_template('mcode.html', msg=msg)
 
-@app.route('/mregister', methods=['GET', 'POST'])
+@app.route('/R-Portal/mregister', methods=['GET', 'POST'])
 def mregister():
     msg = ''
     if request.method == 'POST' and 'Musername' in request.form and 'Mpassword' in request.form and 'Memail' in request.form and 'Mcode' in request.form and 'Mname' in request.form and 'Mflatno' in request.form and 'Mwing' in request.form and 'Mmobile' in request.form:
@@ -262,20 +279,32 @@ def mregister():
         msg = 'Please fill out the form!'
     return render_template('mregister.html', msg=msg)
 
-@app.route('/mhome')
+@app.route('/R-Portal/mhome')
 def mhome():
     if 'loggedin' in session:
         return render_template('mhome.html', Musername=session['username'])
     return redirect(url_for('login'))
 
-@app.route('/mprofile')
+@app.route('/R-Portal/mprofile')
 def mprofile():
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM member WHERE Mid = %s', (session['id'],))
+        cursor.execute('SELECT Musername, Mpassword, Memail, Mname, Mflatno, Mwing, Mmobile, code, name, city, road, area, state, pin FROM member INNER JOIN society ON member.Mcode = society.code WHERE Mid = %s;', (session['id'],))
         account = cursor.fetchone()
         return render_template('mprofile.html', account=account)
     return redirect(url_for('login'))
+
+@app.route('/R-Portal/asoc')
+def asoc():
+    if 'loggedin' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM society')
+        account = cursor.fetchall()
+        for account in cursor:
+            print(account, '\n')
+        return render_template('asoc.html', account=account)
+    else:
+        return redirect(url_for('login'))
 
 if __name__ == '__main__':
    app.run(debug=True)

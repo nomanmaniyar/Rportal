@@ -55,9 +55,21 @@ CREATE TABLE IF NOT EXISTS `society` (
     PRIMARY KEY (`id`,`code`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 ALTER TABLE society ADD CONSTRAINT UNIQUE (code);
-INSERT INTO `society` (`id`, `code`, `name`,`city`, `road`,`area`,`state`,`pin`,`acname`,`acno`,`mmid`,`bankname`,`branch`,`ifsc`,`socrule`,`mainrule`) VALUES (1, 'ZZZZ55', 'Gokuldham SOciety', 'Goregaon east', 'powder gali','goregaon','maharastra','422003','bhide op','9922338265','515515','tooti footi bank','usa','aajaus5415',NULL,NULL);
+INSERT INTO `society` (`id`, `code`, `name`,`city`, `road`,`area`,`state`,`pin`,`acname`,`acno`,`mmid`,`bankname`,`branch`,`ifsc`,`socrule`,`mainrule`) VALUES (2, 'ZZZZ56', 'SOciety', 'east', 'gali','gaon','rastra','4223','op','8265','515','footi bank','sa','aaja',NULL,NULL);
 select * from society;
 
 alter table society auto_increment = 2;
 SELECT * FROM member INNER JOIN society ON member.Mcode = society.code INNER JOIN secretary ON member.Mcode = secretary.Scode;
 SET GLOBAL sql_mode = '';
+SELECT Musername, Mpassword, Memail, Mname, Mflatno, Mwing, Mmobile, code, name, city, road, area, state, pin FROM member INNER JOIN society ON member.Mcode = society.code WHERE Mid = 1;
+
+
+CREATE TABLE IF NOT EXISTS `admin` (
+	`Aid` int(11) NOT NULL AUTO_INCREMENT,
+	`Ausername` varchar(255) NOT NULL,
+  	`Apassword` varchar(255) NOT NULL,
+	`Aemail` varchar(100),
+  	PRIMARY KEY (`Aid`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+INSERT INTO `admin` (`Aid`, `Ausername`, `Apassword`,`Aemail`) VALUES ('1', 'ajinfotics', '65142', NULL);
+select * from admin;
