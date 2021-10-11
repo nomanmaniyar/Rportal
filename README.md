@@ -3,7 +3,7 @@ Residential Management System
 
 #Systeam requirements
  
-Python
+Python,
 Mysql
 
 #config Database
