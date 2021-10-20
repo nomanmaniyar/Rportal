@@ -57,7 +57,7 @@ ALTER TABLE society ADD CONSTRAINT UNIQUE (code);
 INSERT INTO `society` (`id`, `code`, `name`,`city`, `road`,`area`,`state`,`pin`,`acname`,`acno`,`mmid`,`bankname`,`branch`,`ifsc`,`socrule`,`mainrule`,`kyc_file`) VALUES (2, 'ZZZZ56', 'SOciety', 'east', 'gali','gaon','rastra','4223','op','8265','515','footi bank','sa','aaja',NULL,NULL,'path');
 select * from society;
 
-alter table society auto_increment = 2;
+alter table staff auto_increment = 2;
 SELECT * FROM member INNER JOIN society ON member.Mcode = society.code INNER JOIN secretary ON member.Mcode = secretary.Scode;
 SET GLOBAL sql_mode = '';
 SELECT Musername, Mpassword, Memail, Mname, Mflatno, Mwing, Mmobile, code, name, city, road, area, state, pin FROM member INNER JOIN society ON member.Mcode = society.code WHERE Mid = 1;
@@ -72,3 +72,29 @@ CREATE TABLE IF NOT EXISTS `admin` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 INSERT INTO `admin` (`Aid`, `Ausername`, `Apassword`,`Aemail`) VALUES ('1', 'ajinfotics', '65142', NULL);
 select * from admin;
+
+CREATE TABLE IF NOT EXISTS `security` (
+	`security_id` int(11) NOT NULL AUTO_INCREMENT,
+	`security_username` varchar(255) NOT NULL,
+  	`security_password` varchar(255) NOT NULL,
+	`security_name` varchar(255) NOT NULL,
+	`security_mobile` varchar(255) NOT NULL,
+	`security_code` varchar(30) NOT NULL,
+    `security_status` varchar(255) default 'false',
+  	PRIMARY KEY (`security_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+INSERT INTO `security` (`security_id`, `security_username`, `security_password`,`security_name`, `security_mobile`, `security_code`) VALUES ('1', 'noman', '1234', 'Noman', '5154545', 'ZZZZ55');
+select * from security;
+
+CREATE TABLE IF NOT EXISTS `staff` (
+	`staff_id` int(11) NOT NULL AUTO_INCREMENT,
+	`staff_username` varchar(255) NOT NULL,
+  	`staff_password` varchar(255) NOT NULL,
+	`staff_name` varchar(255) NOT NULL,
+	`staff_mobile` varchar(255) NOT NULL,
+	`staff_code` varchar(30) NOT NULL,
+    `staff_status` varchar(255) default 'false',
+  	PRIMARY KEY (`staff_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+INSERT INTO `staff` (`staff_id`, `staff_username`, `staff_password`,`staff_name`, `staff_mobile`, `staff_code`) VALUES ('1', 'samadhan', '1234', 'Samadhan', '5154545', 'ZZZZ55');
+select * from staff;
