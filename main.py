@@ -129,7 +129,7 @@ def motp():
 def svalidate():  
     user_otp = request.form['otp']  
     if otp == int(user_otp):  
-        return redirect(url_for('secretary/shome')) 
+        return redirect(url_for('shome')) 
     else: 
         return render_template("rportal.html")
 
