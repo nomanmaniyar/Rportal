@@ -19,7 +19,7 @@ app = Flask(__name__)
 app.secret_key = '65142'
 app.config['MYSQL_HOST'] = '127.0.0.1'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '1234'
+app.config['MYSQL_PASSWORD'] = '2001'
 app.config['MYSQL_DB'] = 'rportal'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 mysql = MySQL(app)
@@ -147,6 +147,61 @@ def logout():
    session.pop('id', None)
    session.pop('username', None)
    return redirect(url_for('rportal'))
+
+@app.route('/R-Portal/security', methods=['GET','POST'])
+def security():
+    msg = ''
+    if request.method == 'POST' and 'security_name' in request.form and 'security_username' in request.form and 'security_password' in request.form:
+        
+        security_username = request.form['security_username']
+        security_mobile = request.form['security_mobile']
+        security_password = request.form['security_password']
+        security_name = request.form['security_name']
+        security_code = request.form['security_code']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM security WHERE security_username = %s AND security_mobile = %s', (security_username, security_mobile))
+        account = cursor.fetchone()
+        if account:
+            msg = 'Warning! Account already exists!!'
+        elif not re.match(r'[A-Za-z0-9]+', security_username):
+            msg = 'Username must contain only characters and numbers!'
+        elif not security_username or not security_password or not security_mobile:
+            msg = 'Please fill out the form!'
+        else:
+            cursor.execute('INSERT INTO security VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT)', (security_username , security_password , security_name , security_mobile, security_code))
+            mysql.connection.commit()
+            msg = 'You have successfully registered!'
+    elif request.method == 'POST':
+        msg = 'elif code!' 
+    return render_template('secretary/security.html', msg=msg)
+
+
+@app.route('/R-Portal/staff', methods=['GET','POST'])
+def staff():
+    msg = ''
+    if request.method == 'POST' and 'staff_name' in request.form and 'staff_username' in request.form and 'staff_password' in request.form:
+        
+        staff_username = request.form['staff_username']
+        staff_mobile = request.form['staff_mobile']
+        staff_password = request.form['staff_password']
+        staff_name = request.form['staff_name']
+        staff_code = request.form['staff_code']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM staff WHERE staff_username = %s AND staff_mobile = %s', (staff_username, staff_mobile))
+        account = cursor.fetchone()
+        if account:
+            msg = 'Warning! Account already exists!!'
+        elif not re.match(r'[A-Za-z0-9]+', staff_username):
+            msg = 'Username must contain only characters and numbers!'
+        elif not staff_username or not staff_password or not staff_mobile:
+            msg = 'Please fill out the form!'
+        else:
+            cursor.execute('INSERT INTO staff VALUES (NULL, %s, %s, %s, %s, %s, NULL)', (staff_username , staff_password , staff_name , staff_mobile, staff_code))
+            mysql.connection.commit()
+            msg = 'You have successfully registered!'
+    elif request.method == 'POST':
+        msg = 'elif code!' 
+    return render_template('secretary/staff.html', msg=msg)
 
 def invitation():
     num = '0123456789'
