@@ -9,6 +9,11 @@ from email.message import EmailMessage
 from flask_mail import * 
 from flask import *
 from flask_mail import Message 
+import os 
+
+
+UPLOAD_FOLDER = '/path/to/the/uploads'
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
 app.secret_key = '65142'
@@ -16,6 +21,7 @@ app.config['MYSQL_HOST'] = '127.0.0.1'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = '1234'
 app.config['MYSQL_DB'] = 'rportal'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 mysql = MySQL(app)
  
 mail = Mail(app)
@@ -80,7 +86,7 @@ def login():
                     session['loggedin'] = True
                     session['id'] = account['Aid']
                     session['username'] = account['Ausername']
-                    return render_template("admin.html")       
+                    return render_template("admin/admin.html")       
                 else:
                     msg = 'Incorrect username/password! Please check Username/Password and try again!'
     return render_template('login.html', msg=msg)
@@ -95,7 +101,8 @@ def sotp():
             msg = Message('OTP confirmation for RPortal' ,sender ='Rportal<me@Rportal.com', recipients = [email])
             msg.body = part2 + str(otp)+ part3 
             mail.send(msg) 
-            return render_template('sotp.html')
+            msg1 = 'OTP: ',otp
+            return render_template('secretary/sotp.html', msg1=msg1)
         else:
             msg = 'Something went wrong:( Please try again!'
     else:
@@ -112,7 +119,7 @@ def motp():
             msg.body = part2 + str(otp) + part3 
             mail.send(msg)  
             msg1 = 'OTP: ',otp
-            return render_template('Motp.html', msg1=msg1)
+            return render_template('member/Motp.html', msg1=msg1)
         else:
             msg = 'Something went wrong:( Please try again!'
     else:
@@ -122,7 +129,7 @@ def motp():
 def svalidate():  
     user_otp = request.form['otp']  
     if otp == int(user_otp):  
-        return redirect(url_for('shome')) 
+        return redirect(url_for('secretary/shome')) 
     else: 
         return render_template("rportal.html")
 
@@ -158,6 +165,9 @@ def invitation():
 @app.route('/R-Portal/sregister', methods=['GET','POST'])
 def sregister():
     msg = ''
+    target = os.path.join( '/static/upload/')
+    if not os.path.isdir(target):
+        os.makedirs(target)
     if request.method == 'POST' and 'Sname' in request.form and 'Susername' in request.form and 'Semail' in request.form:
         
         username = request.form['Susername']
@@ -179,6 +189,14 @@ def sregister():
         city = request.form['city']
         state = request.form['state']
         pin = request.form['pin']
+        ...
+        file = request.files['file']
+        file_name = file.filename or ''
+        destination = ''.join([target, file_name])
+        file.save(destination)
+        kyc_file  = destination;
+        ...
+        
         code = ""
         code =invitation()
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -203,18 +221,18 @@ def sregister():
         elif not username or not password or not email:
             msg = 'Please fill out the form!'
         else:
-            cursor1.execute('INSERT INTO secretary VALUES (NULL, %s, %s, %s, %s, NULL, %s, %s, %s,%s)', (username , password , code ,  email , Aname , flatno , wing , mobile))
-            cursor2.execute('INSERT INTO society VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, NULL, NULL)', (code , name , city , road , area , state , pin , acname, acno, mmid, bankname, branch, ifsc))
+            cursor1.execute('INSERT INTO secretary VALUES (NULL, %s, %s, %s, %s, %s, %s, %s,%s)', (username , password , code ,  email , Aname , flatno , wing , mobile))
+            cursor2.execute('INSERT INTO society VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, NULL, NULL,%s)', (code , name , city , road , area , state , pin , acname, acno, mmid, bankname, branch, ifsc, kyc_file))
             mysql.connection.commit()
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
         msg = 'elif code!' 
-    return render_template('sregister.html', msg=msg)
+    return render_template('secretary/sregister.html', msg=msg)
 
 @app.route('/R-Portal/shome')
 def shome():
     if 'loggedin' in session:
-        return render_template('shome.html', Susername=session['username'])
+        return render_template('secretary/shome.html', Susername=session['username'])
     return redirect(url_for('login'))
 
 @app.route('/R-Portal/sprofile')
@@ -223,7 +241,7 @@ def sprofile():
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM secretary INNER JOIN society ON secretary.Scode = society.code WHERE Sid = %s', (session['id'],))
         account = cursor.fetchone()
-        return render_template('sprofile.html', account=account)
+        return render_template('secretary/sprofile.html', account=account)
     return redirect(url_for('login'))
 
 @app.route('/R-Portal/mcode', methods=['GET', 'POST'])
@@ -237,11 +255,11 @@ def mcode():
         if account:
             cursor.execute('select name, city, road, area, state, pin from society WHERE code = %s', (code ,))
             account = cursor.fetchone()
-            return render_template('mverify.html', account=account)
+            return render_template('member/mverify.html', account=account)
         else:
             mysql.connection.commit()
             msg='Invalid Society Code!'
-    return render_template('mcode.html', msg=msg)
+    return render_template('member/mcode.html', msg=msg)
 
 @app.route('/R-Portal/mregister', methods=['GET', 'POST'])
 def mregister():
@@ -277,12 +295,12 @@ def mregister():
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
         msg = 'Please fill out the form!'
-    return render_template('mregister.html', msg=msg)
+    return render_template('member/mregister.html', msg=msg)
 
 @app.route('/R-Portal/mhome')
 def mhome():
     if 'loggedin' in session:
-        return render_template('mhome.html', Musername=session['username'])
+        return render_template('member/mhome.html', Musername=session['username'])
     return redirect(url_for('login'))
 
 @app.route('/R-Portal/mprofile')
@@ -291,7 +309,7 @@ def mprofile():
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT Musername, Mpassword, Memail, Mname, Mflatno, Mwing, Mmobile, code, name, city, road, area, state, pin FROM member INNER JOIN society ON member.Mcode = society.code WHERE Mid = %s;', (session['id'],))
         account = cursor.fetchone()
-        return render_template('mprofile.html', account=account)
+        return render_template('member/mprofile.html', account=account)
     return redirect(url_for('login'))
 
 @app.route('/R-Portal/asoc')
@@ -302,7 +320,7 @@ def asoc():
         account = cursor.fetchall()
         for account in cursor:
             print(account, '\n')
-        return render_template('asoc.html', account=account)
+        return render_template('admin/asoc.html', account=account)
     else:
         return redirect(url_for('login'))
 

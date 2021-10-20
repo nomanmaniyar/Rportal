@@ -1,3 +1,4 @@
+@import url('https://use.fontawesome.com/releases/v5.7.1/css/all.css');
 * {
     box-sizing: border-box;
     font-family: -apple-system, BlinkMacSystemFont, "segoe ui", roboto, oxygen, ubuntu, cantarell, "fira sans", "droid sans", "helvetica neue", Arial, sans-serif;
@@ -145,3 +146,5 @@ body.loggedin {
   padding: 5px;
   margin: 0 0 10px 0;
 }
+
+

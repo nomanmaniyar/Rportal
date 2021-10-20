@@ -7,7 +7,6 @@ CREATE TABLE IF NOT EXISTS `secretary` (
   	`Spassword` varchar(255) NOT NULL,
   	`Scode` varchar(30) NOT NULL,
 	`Semail` varchar(100) NOT NULL,
-  	`Sotp` int(15) ,
   	`Sname` varchar(255) NOT NULL,
   	`Sflatno` int(20) NOT NULL,
   	`Swing` varchar(50) NOT NULL,
@@ -15,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `secretary` (
     PRIMARY KEY (`Sid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 ALTER TABLE secretary ADD CONSTRAINT UNIQUE (semail);
-INSERT INTO `secretary` (`Sid`, `Susername`, `Spassword`,`Scode`, `Semail`,`Sotp`,`Sname`,`Sflatno`,`Swing`,`Smobile`) VALUES (1, 'stest', 'stestpw', 'ZZZZ55', 'jais65142@gmail.com',NULL,'sec test','1001','A','9420829593');
+INSERT INTO `secretary` (`Sid`, `Susername`, `Spassword`,`Scode`, `Semail`,`Sname`,`Sflatno`,`Swing`,`Smobile`) VALUES (1, 'stest', 'stestpw', 'ZZZZ55', 'jais65142@gmail.com','sec test','1001','A','9420829593');
 select * from secretary;
 
 CREATE TABLE IF NOT EXISTS `member` (
@@ -24,7 +23,6 @@ CREATE TABLE IF NOT EXISTS `member` (
   	`Mpassword` varchar(255) NOT NULL,
   	`Mcode` varchar(30) NOT NULL,
 	`Memail` varchar(100) NOT NULL,
-  	`Motp` int(15) ,
   	`Mname` varchar(255) NOT NULL,
   	`Mflatno` int(20) NOT NULL,
   	`Mwing` varchar(50) NOT NULL,
@@ -32,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `member` (
     PRIMARY KEY (`Mid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 ALTER TABLE member ADD CONSTRAINT UNIQUE (Memail);
-INSERT INTO `member` (`Mid`, `Musername`, `Mpassword`,`Mcode`, `Memail`,`Motp`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('1', 'mtest', 'mtestpw', 'ZZZZ55', 'aashutoshmali1460@gmail.com',NULL,'mem test','2002','A','9922338265');
+INSERT INTO `member` (`Mid`, `Musername`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('1', 'mtest', 'mtestpw', 'ZZZZ55', 'aashutoshmali1460@gmail.com','mem test','2002','A','9922338265');
 select * from member;
 
 CREATE TABLE IF NOT EXISTS `society` (
@@ -52,10 +50,11 @@ CREATE TABLE IF NOT EXISTS `society` (
   	`ifsc` varchar(255) NOT NULL,
   	`socrule` varchar(2000),
 	`mainrule` varchar(2000),
+	`kyc_file` varchar(255),
     PRIMARY KEY (`id`,`code`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 ALTER TABLE society ADD CONSTRAINT UNIQUE (code);
-INSERT INTO `society` (`id`, `code`, `name`,`city`, `road`,`area`,`state`,`pin`,`acname`,`acno`,`mmid`,`bankname`,`branch`,`ifsc`,`socrule`,`mainrule`) VALUES (2, 'ZZZZ56', 'SOciety', 'east', 'gali','gaon','rastra','4223','op','8265','515','footi bank','sa','aaja',NULL,NULL);
+INSERT INTO `society` (`id`, `code`, `name`,`city`, `road`,`area`,`state`,`pin`,`acname`,`acno`,`mmid`,`bankname`,`branch`,`ifsc`,`socrule`,`mainrule`,`kyc_file`) VALUES (2, 'ZZZZ56', 'SOciety', 'east', 'gali','gaon','rastra','4223','op','8265','515','footi bank','sa','aaja',NULL,NULL,'path');
 select * from society;
 
 alter table society auto_increment = 2;
