@@ -338,7 +338,10 @@ def sregister():
 @app.route('/R-Portal/shome')
 def shome():
     if 'loggedin' in session:
-        return render_template('secretary/shome.html', Susername=session['username'])
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT Sname, Mname from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s', (session['id'],))
+        account = cursor.fetchone()
+        return render_template('secretary/shome.html', account=account)
     return redirect(url_for('login'))
 
 @app.route('/R-Portal/sprofile')
@@ -396,7 +399,7 @@ def mregister():
         elif not username or not password or not email:
             msg = 'Please fill out the form!'
         else:
-            cursor.execute('INSERT INTO member VALUES (NULL, %s, %s, %s, %s, NULL, %s, %s, %s,%s)', (username , password , code ,  email , name , flatno , wing , mobile))
+            cursor.execute('INSERT INTO member VALUES (NULL, %s, %s, %s, %s, %s, %s, %s,%s)', (username , password , code ,  email , name , flatno , wing , mobile))
             mysql.connection.commit()
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
