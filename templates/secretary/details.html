@@ -1,44 +1,16 @@
 {% extends 'secretary/slayout.html' %}
 
-{% block title %}R-Portal - Secretary Profile{% endblock %}
+{% block title %}R-Portal - Society Details{% endblock %}
 
 {% block content %}
-<h2>Secretary Profile Page</h2>
+<h2>Society Details Page</h2>
 <div>
-    <h3>Your account details are below:</h3>
-    <h4>Personal Details:</h4>
+    <h3>Your society details are below:</h3>
+    <h4>Secretary:</h4>
     <table>
         <tr>
             <td>Name:</td>
             <td>{{ account['Sname'] }}</td>
-        </tr>
-        <tr>    
-            <td>Username:</td>
-            <td>{{ account['Susername'] }}</td>
-        </tr>
-        <tr>
-            <td>Flat Number:</td>
-            <td>{{ account['Sflatno'] }}</td>
-        </tr>
-        <tr>
-            <td>Wing:</td>
-            <td>{{ account['Swing'] }}</td>
-        </tr>
-        <tr>
-            <td>Society Code:</td>
-            <td>{{ account['Scode'] }}</td>
-        </tr>
-        <tr>
-            <td>Email:</td>
-            <td>{{ account['Semail'] }}</td>
-        </tr>
-        <tr>
-            <td>Mobile Number:</td>
-            <td>{{ account['Smobile'] }}</td>
-        </tr>
-        <tr>
-            <td>Password:</td>
-            <td>{{ account['Spassword'] }}</td>
         </tr>
     </table>
     <h3>Your Society details are below:</h3>

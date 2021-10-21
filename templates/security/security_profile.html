@@ -1,0 +1,35 @@
+{% extends 'security/security_layout.html' %}
+
+{% block title %}R-Portal - Security Profile{% endblock %}
+
+{% block content %}
+<h2>Security Profile Page</h2>
+<div>
+    <h3>Your account details are below:</h3>
+    <h4>Personal Details:</h4>
+    <table>
+        <tr>
+            <td>Name:</td>
+            <td>{{ account['security_name'] }}</td>
+        </tr>
+        <tr>    
+            <td>Username:</td>
+            <td>{{ account['security_username'] }}</td>
+        </tr>
+        <tr>
+            <td>Society Code:</td>
+            <td>{{ account['security_code'] }}</td>
+        </tr>
+        <tr>
+            <td>Mobile Number:</td>
+            <td>{{ account['security_mobile'] }}</td>
+        </tr>
+        <tr>
+            <td>Password:</td>
+            <td>{{ account['security_password'] }}</td>
+        </tr>
+    </table>
+    <br>    
+    <a href='javascript:self.history.back();'>Go Back</a>
+</div>
+{% endblock %}

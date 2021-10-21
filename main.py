@@ -87,8 +87,30 @@ def login():
                     session['id'] = account['Aid']
                     session['username'] = account['Ausername']
                     return render_template("admin/admin.html")       
-                else:
-                    msg = 'Incorrect username/password! Please check Username/Password and try again!'
+                elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+                    username = request.form['username']
+                    password = request.form['password']
+                    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                    cursor.execute('SELECT * FROM security WHERE security_username = %s AND security_password = %s', (username, password,))
+                    account = cursor.fetchone()
+                    if account:
+                        session['loggedin'] = True
+                        session['id'] = account['security_id']
+                        session['username'] = account['security_username']
+                        return render_template("security/security_home.html")       
+                    elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+                        username = request.form['username']
+                        password = request.form['password']
+                        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                        cursor.execute('SELECT * FROM staff WHERE staff_username = %s AND staff_password = %s', (username, password,))
+                        account = cursor.fetchone()
+                        if account:
+                            session['loggedin'] = True
+                            session['id'] = account['staff_id']
+                            session['username'] = account['staff_username']
+                            return render_template("staff/staff_home.html") 
+                        else:
+                            msg = 'Incorrect username/password! Please check Username/Password and try again!'
     return render_template('login.html', msg=msg)
 
 def sotp(): 
@@ -148,7 +170,7 @@ def logout():
    session.pop('username', None)
    return redirect(url_for('rportal'))
 
-@app.route('/R-Portal/security', methods=['GET','POST'])
+@app.route('/R-Portal/add_security', methods=['GET','POST'])
 def security():
     msg = ''
     if request.method == 'POST' and 'security_name' in request.form and 'security_username' in request.form and 'security_password' in request.form:
@@ -173,10 +195,24 @@ def security():
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
         msg = 'elif code!' 
-    return render_template('secretary/security.html', msg=msg)
+    return render_template('secretary/add_security.html', msg=msg)
 
+@app.route('/R-Portal/security_home')
+def security_home():
+    if 'loggedin' in session:
+        return render_template('security/security_home.html', security_username=session['username'])
+    return redirect(url_for('login'))
 
-@app.route('/R-Portal/staff', methods=['GET','POST'])
+@app.route('/R-Portal/security_profile')
+def security_profile():
+    if 'loggedin' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT security_username, security_password, security_name, security_mobile, security_code FROM security WHERE security_id = %s;', (session['id'],))
+        account = cursor.fetchone()
+        return render_template('security/security_profile.html', account=account)
+    return redirect(url_for('login'))
+
+@app.route('/R-Portal/add_staff', methods=['GET','POST'])
 def staff():
     msg = ''
     if request.method == 'POST' and 'staff_name' in request.form and 'staff_username' in request.form and 'staff_password' in request.form:
@@ -201,7 +237,22 @@ def staff():
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
         msg = 'elif code!' 
-    return render_template('secretary/staff.html', msg=msg)
+    return render_template('secretary/add_staff.html', msg=msg)
+
+@app.route('/R-Portal/staff_home')
+def staff_home():
+    if 'loggedin' in session:
+        return render_template('staff/staff_home.html', staff_username=session['username'])
+    return redirect(url_for('login'))
+
+@app.route('/R-Portal/staff_profile')
+def staff_profile():
+    if 'loggedin' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT staff_username, staff_password, staff_name, staff_mobile, staff_code FROM staff WHERE staff_id = %s;', (session['id'],))
+        account = cursor.fetchone()
+        return render_template('staff/staff_profile.html', account=account)
+    return redirect(url_for('login'))
 
 def invitation():
     num = '0123456789'
