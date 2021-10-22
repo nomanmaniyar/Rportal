@@ -44,19 +44,7 @@
                   </thead>
                   
                 <tbody>
-                    <tr class="candidates-list">
-                        <td class="title">
-                          
-                          <div class="candidate-list-details">
-                            <div class="candidate-list-info">
-                              <div class="candidate-list-title">
-                                <h6 class="mb-0"><a href="{{ url_for('security') }}"><i class="fas fa-user-plus"></i>Add Security Guards</a></h6>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        </tr>
-                {% for Mname in account %}
+                {%for data in account%}
                   <tr class="candidates-list">
                     <td class="title">
                       <div class="thumb">
@@ -65,13 +53,13 @@
                       <div class="candidate-list-details">
                         <div class="candidate-list-info">
                           <div class="candidate-list-title">
-                            <h6 class="mb-0">{{ account['Mname'] }}</h6>
+                            <h6 class="mb-0">{{ data['Mname'] }}</h6>
                           </div>
                         </div>
                       </div>
                     </td>
                     </tr>
-                 {% endfor %}
+                 {%endfor%}
                   </tbody>
               </table>
              </div>
