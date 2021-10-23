@@ -19,7 +19,7 @@ app = Flask(__name__)
 app.secret_key = '65142'
 app.config['MYSQL_HOST'] = '127.0.0.1'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '2001'
+app.config['MYSQL_PASSWORD'] = '1234'
 app.config['MYSQL_DB'] = 'rportal'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 mysql = MySQL(app)
@@ -427,8 +427,9 @@ def asoc():
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM society')
         account = cursor.fetchall()
-        for account in cursor:
-            print(account, '\n')
+        #for account in cursor:
+           # print(account, '\n')
+             
         return render_template('admin/asoc.html', account=account)
     else:
         return redirect(url_for('login'))

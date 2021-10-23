@@ -13,7 +13,6 @@
 <div>
     <table style="width:100%">
         <tr>
-            <th>Sr no</th>
             <th>Name</th>
             <th>Road</th>
             <th>Area</th>
@@ -27,41 +26,31 @@
             <th>Bank Name</th>
             <th>Branch</th>
             <th>IFSC Code</th>
+            <th>KYC File</th>
         </tr> 
-        {% if account != null %}
+        {% for data in account %}
             <tr>
-                <td>{{ account['id'] }}</td>
-                <td>{{ account['name'] }}</td>
-                <td>{{ account['road'] }}</td>
-                <td>{{ account['area'] }}</td>
-                <td>{{ account['city'] }}</td>
-                <td>{{ account['state'] }}</td>
-                <td>{{ account['pin'] }}</td>
-                <td>{{ account['code'] }}</td>
-                <td>{{ account['acname'] }}</td>
-                <td>{{ account['acno'] }}</td>
-                <td>{{ account['mmid'] }}</td>
-                <td>{{ account['bankname'] }}</td>
-                <td>{{ account['branch'] }}</td>
-                <td>{{ account['ifsc'] }}</td>
-            </tr>
-            <tr>
-                <td>{{ account['id'] }}</td>
-                <td>{{ account['name'] }}</td>
-                <td>{{ account['road'] }}</td>
-                <td>{{ account['area'] }}</td>
-                <td>{{ account['city'] }}</td>
-                <td>{{ account['state'] }}</td>
-                <td>{{ account['pin'] }}</td>
-                <td>{{ account['code'] }}</td>
-                <td>{{ account['acname'] }}</td>
-                <td>{{ account['acno'] }}</td>
-                <td>{{ account['mmid'] }}</td>
-                <td>{{ account['bankname'] }}</td>
-                <td>{{ account['branch'] }}</td>
-                <td>{{ account['ifsc'] }}</td>
-            </tr>
-        {% endif %}
+                <td>{{ data['name'] }}</td>
+                <td>{{ data['road'] }}</td>
+                <td>{{ data['area'] }}</td>
+                <td>{{ data['city'] }}</td>
+                <td>{{ data['state'] }}</td>
+                <td>{{ data['pin'] }}</td>
+                <td>{{ data['code'] }}</td>
+                <td>{{ data['acname'] }}</td>
+                <td>{{ data['acno'] }}</td>
+                <td>{{ data['mmid'] }}</td>
+                <td>{{ data['bankname'] }}</td>
+                <td>{{ data['branch'] }}</td>
+                <td>{{ data['ifsc'] }}</td>
+                <td><a href= "{{( data['kyc_file']) }}" ,  download= "{{(data['kyc_file'])}} ">Download</a> </td>
+              
+           
+      
+       </tr>
+       
+
+{% endfor %}
     </table>
     <br>    
     <a href='javascript:self.history.back();'>Go Back</a>
