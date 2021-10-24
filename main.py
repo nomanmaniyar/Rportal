@@ -335,18 +335,28 @@ def sregister():
         msg = 'elif code!' 
     return render_template('secretary/sregister.html', msg=msg)
 
+@app.route('/R-Portal/society_details')
+def people():
+    if 'loggedin' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT Mname, member_status, Mmobile from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s', (session['id'],))
+        account = cursor.fetchall()     
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('SELECT Sname,secretarty_status, Smobile from secretary WHERE Sid = %s', (session['id'],))
+        account1 = cursor1.fetchone()  
+        cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor2.execute('SELECT security_name, security_status, security_mobile from secretary inner join security on secretary.Scode = security.security_code WHERE Sid = %s', (session['id'],))
+        account2 = cursor2.fetchall()     
+        cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor3.execute('SELECT staff_name, staff_status, staff_mobile from secretary inner join staff on secretary.Scode = staff.staff_code WHERE Sid = %s', (session['id'],))
+        account3 = cursor3.fetchall()        
+        return render_template('secretary/people.html', account=account, account1=account1, account2=account2, account3=account3)
+    return redirect(url_for('login'))
+
 @app.route('/R-Portal/shome')
 def shome():
     if 'loggedin' in session:
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT Mname from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s', (session['id'],))
-        account = cursor.fetchall()     
-        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor1.execute('SELECT Sname from secretary WHERE Sid = %s', (session['id'],))
-        account1 = cursor1.fetchone()     
-       # for account in cursor:
-        #   print(account, '\n')
-        return render_template('secretary/shome.html', account=account, account1=account1)
+        return render_template('secretary/shome.html')
     return redirect(url_for('login'))
 
 @app.route('/R-Portal/sprofile')
@@ -430,11 +440,8 @@ def mprofile():
 def asoc():
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM society')
-        account = cursor.fetchall()
-        #for account in cursor:
-           # print(account, '\n')
-             
+        cursor.execute('SELECT  name, road, area, city, state, pin, Sname, Sflatno, Swing, Smobile, Semail, code, acname, acno, mmid, bankname, branch, ifsc, secretarty_status FROM secretary INNER JOIN society on secretary.Scode=society.code;')
+        account = cursor.fetchall() 
         return render_template('admin/asoc.html', account=account)
     else:
         return redirect(url_for('login'))

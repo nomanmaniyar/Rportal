@@ -15,37 +15,38 @@
         <tr>
             <th>Name</th>
             <th>Address</th>
-            <th>Phone Number</th>
+            <th>Secretary Details</th>
             <th>Society Code</th>
             <th>Bank Details</th>
             <th>KYC File</th>
+            <th>Status</th>
         </tr> 
         {% for data in account %}
             <tr>
                 <td>{{ data['name'] }}</td>
                 <td>{{ data['road'] }}
-                {{ data['area'] }}
-                {{ data['city'] }}
-                {{ data['state'] }}
-                {{ data['pin'] }}</td>
-                <td> {{ data['Smobile'] }}</td>
+                    {{ data['area'] }}<br>
+                    {{ data['city'] }}
+                    {{ data['state'] }}<br>
+                    {{ data['pin'] }}</td>
+                <td><b><a>Name: </a></b>{{ data['Sname'] }}<br>
+                    <b><a>Flat no: </a></b> {{ data['Sflatno'] }}<br>
+                    <b><a>Wing: </a></b> {{ data['Swing'] }}<br>
+                    <b><a>Mobile: </a></b> {{ data['Smobile'] }}<br>
+                    <b><a>Email: </a></b>  {{ data['Semail'] }}</td>
                 <td>{{ data['code'] }}</td>
-                <td><b><a>AC Name:</a></b>{{ data['acname'] }}<br>
-                    <b><a>Ac Number:</a></b> {{ data['acno'] }}<br>
-                    <b><a>MMID:</a></b> {{ data['mmid'] }}
-                    <b><a>Bank Name:</a></b> {{ data['bankname'] }}<br>
-                    <b><a>Branch:</a></b>  {{ data['branch'] }}
-                    <b><a>IFSC Code:</a></b>  {{ data['ifsc'] }}</td>
+                <td><b><a>AC Name: </a></b>{{ data['acname'] }}<br>
+                    <b><a>Ac Number: </a></b> {{ data['acno'] }}<br>
+                    <b><a>MMID: </a></b> {{ data['mmid'] }}<br>
+                    <b><a>Bank Name: </a></b> {{ data['bankname'] }}<br>
+                    <b><a>Branch: </a></b>  {{ data['branch'] }}<br>
+                    <b><a>IFSC Code: </a></b>  {{ data['ifsc'] }}</td>
                 <td>
-            
-                        <a href="/static/upload/{{data['kyc_file']}}" download="/static/upload/{{data['kyc_file']}}" target="blank"><button class='btn btn-primary'>Download</button></a></td>
-              
-           
-      
-       </tr>
-       
+                <a href="/static/upload/{{data['kyc_file']}}" download="/static/upload/{{data['kyc_file']}}" target="blank"><button class='btn btn-primary'>Download</button></a></td>
+                <td>{{ data['secretarty_status'] }}</td>      
+            </tr>   
+        {% endfor %}
 
-{% endfor %}
     </table>
     <br>    
     <a href='javascript:self.history.back();'>Go Back</a>
