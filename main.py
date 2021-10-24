@@ -11,17 +11,20 @@ from flask import *
 from flask import Flask, render_template, flash, request, redirect, url_for
 from flask_mail import Message 
 import os 
+import sys
+sys.path.insert(0, 'Rportal/config')
+from config import credentials as cred
 
 
 UPLOAD_FOLDER = '/path/to/the/uploads'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
-app.secret_key = '65142'
-app.config['MYSQL_HOST'] = '127.0.0.1'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '2001'
-app.config['MYSQL_DB'] = 'rportal'
+app.secret_key = cred.secret_key
+app.config['MYSQL_HOST'] =cred.mysql_host
+app.config['MYSQL_USER'] = cred.mysql_user
+app.config['MYSQL_PASSWORD'] = cred.mysql_password
+app.config['MYSQL_DB'] = cred.mysql_db
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 mysql = MySQL(app)
  
