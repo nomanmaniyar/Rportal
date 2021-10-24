@@ -339,11 +339,14 @@ def sregister():
 def shome():
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT Sname, Mname from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s', (session['id'],))
+        cursor.execute('SELECT Mname from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s', (session['id'],))
         account = cursor.fetchall()     
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('SELECT Sname from secretary WHERE Sid = %s', (session['id'],))
+        account1 = cursor1.fetchone()     
        # for account in cursor:
         #   print(account, '\n')
-        return render_template('secretary/shome.html', account=account)
+        return render_template('secretary/shome.html', account=account, account1=account1)
     return redirect(url_for('login'))
 
 @app.route('/R-Portal/sprofile')
