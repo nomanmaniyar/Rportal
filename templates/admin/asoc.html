@@ -11,43 +11,34 @@
 	
 <h2>All Society under R-Portal</h2>
 <div>
-    <table style="width:100%">
+    <table  class="table" style="width:100%">
         <tr>
             <th>Name</th>
-            <th>Road</th>
-            <th>Area</th>
-            <th>City</th>
-            <th>State</th>
-            <th>Pin code</th>
+            <th>Address</th>
+            <th>Phone Number</th>
             <th>Society Code</th>
-            <th>Account Name</th>
-            <th>Account Number</th>
-            <th>MMID</th>
-            <th>Bank Name</th>
-            <th>Branch</th>
-            <th>IFSC Code</th>
+            <th>Bank Details</th>
             <th>KYC File</th>
         </tr> 
         {% for data in account %}
             <tr>
                 <td>{{ data['name'] }}</td>
-                <td>{{ data['road'] }}</td>
-                <td>{{ data['area'] }}</td>
-                <td>{{ data['city'] }}</td>
-                <td>{{ data['state'] }}</td>
-                <td>{{ data['pin'] }}</td>
+                <td>{{ data['road'] }}
+                {{ data['area'] }}
+                {{ data['city'] }}
+                {{ data['state'] }}
+                {{ data['pin'] }}</td>
+                <td> {{ data['Smobile'] }}</td>
                 <td>{{ data['code'] }}</td>
-                <td>{{ data['acname'] }}</td>
-                <td>{{ data['acno'] }}</td>
-                <td>{{ data['mmid'] }}</td>
-                <td>{{ data['bankname'] }}</td>
-                <td>{{ data['branch'] }}</td>
-                <td>{{ data['ifsc'] }}</td>
+                <td><b><a>AC Name:</a></b>{{ data['acname'] }}<br>
+                    <b><a>Ac Number:</a></b> {{ data['acno'] }}<br>
+                    <b><a>MMID:</a></b> {{ data['mmid'] }}
+                    <b><a>Bank Name:</a></b> {{ data['bankname'] }}<br>
+                    <b><a>Branch:</a></b>  {{ data['branch'] }}
+                    <b><a>IFSC Code:</a></b>  {{ data['ifsc'] }}</td>
                 <td>
             
-                        <a href="/static/upload/{{data['kyc_file']}}" download="/static/upload/{{data['kyc_file']}}" target="blank"><button class='btn btn-default'>Download</button></a>
-                       
-                    </body></td>
+                        <a href="/static/upload/{{data['kyc_file']}}" download="/static/upload/{{data['kyc_file']}}" target="blank"><button class='btn btn-primary'>Download</button></a></td>
               
            
       
