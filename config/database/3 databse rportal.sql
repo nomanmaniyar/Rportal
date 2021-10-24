@@ -33,6 +33,7 @@ ALTER TABLE member ADD CONSTRAINT UNIQUE (Memail);
 INSERT INTO `member` (`Mid`, `Musername`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('1', 'mtest', 'mtestpw', 'ZZZZ55', 'aashutoshmali1460@gmail.com','mem test','2002','A','9922338265');
 select * from member;
 
+SELECT Sname, Mname from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid =1;
 CREATE TABLE IF NOT EXISTS `society` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`code` varchar(30) NOT NULL,
@@ -57,7 +58,7 @@ ALTER TABLE society ADD CONSTRAINT UNIQUE (code);
 INSERT INTO `society` (`id`, `code`, `name`,`city`, `road`,`area`,`state`,`pin`,`acname`,`acno`,`mmid`,`bankname`,`branch`,`ifsc`,`socrule`,`mainrule`,`kyc_file`) VALUES (2, 'ZZZZ56', 'SOciety', 'east', 'gali','gaon','rastra','4223','op','8265','515','footi bank','sa','aaja',NULL,NULL,'path');
 select * from society;
 
-alter table staff auto_increment = 2;
+alter table society auto_increment = 2;
 SELECT * FROM member INNER JOIN society ON member.Mcode = society.code INNER JOIN secretary ON member.Mcode = secretary.Scode;
 SET GLOBAL sql_mode = '';
 SELECT Musername, Mpassword, Memail, Mname, Mflatno, Mwing, Mmobile, code, name, city, road, area, state, pin FROM member INNER JOIN society ON member.Mcode = society.code WHERE Mid = 1;
@@ -98,3 +99,26 @@ CREATE TABLE IF NOT EXISTS `staff` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 INSERT INTO `staff` (`staff_id`, `staff_username`, `staff_password`,`staff_name`, `staff_mobile`, `staff_code`) VALUES ('1', 'samadhan', '1234', 'Samadhan', '5154545', 'ZZZZ55');
 select * from staff;
+
+
+CREATE TABLE IF NOT EXISTS `notification` (
+	`noti_id` int(11) NOT NULL AUTO_INCREMENT,
+	`noti_message` varchar(500) NOT NULL,
+	`noti_code` varchar(30) NOT NULL,
+    `noti_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  	PRIMARY KEY (`noti_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+INSERT INTO `notification` (`noti_id`, `noti_message`, `noti_code`) VALUES ('1', 'Test notofocation Message', 'ZZZZ55');
+select * from notification;
+
+alter table secretary 
+add column `secretary_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+add column `secretarty_status` varchar(255) default 'inactive'; 	
+
+alter table member 
+add column `member_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+add column `member_status` varchar(255) default 'inactive'; 	
+
+alter table society 
+add column `society_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+add column `society_status` varchar(255) default 'inactive'; 	
