@@ -43,7 +43,11 @@
                 <td>{{ data['bankname'] }}</td>
                 <td>{{ data['branch'] }}</td>
                 <td>{{ data['ifsc'] }}</td>
-                <td><a href= "{{( data['kyc_file']) }}" ,  download= "{{(data['kyc_file'])}} ">Download</a> </td>
+                <td>
+            
+                        <a href="/static/upload/{{data['kyc_file']}}" download="/static/upload/{{data['kyc_file']}}" target="blank"><button class='btn btn-default'>Download</button></a>
+                       
+                    </body></td>
               
            
       
