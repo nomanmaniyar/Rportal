@@ -341,8 +341,8 @@ def shome():
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT Sname, Mname from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s', (session['id'],))
         account = cursor.fetchall()     
-        for account in cursor:
-           print(account, '\n')
+       # for account in cursor:
+        #   print(account, '\n')
         return render_template('secretary/shome.html', account=account)
     return redirect(url_for('login'))
 

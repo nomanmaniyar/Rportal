@@ -19,7 +19,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    
+                  {% for data in account %}
+
                   <tr class="candidates-list">
                     <td class="title">
                       <div class="thumb">
@@ -30,12 +31,13 @@
                           <div class="candidate-list-title">
                             
                             
-                            <h6 class="mb-0" style="color:#3a8bf5;">{{ account['Sname'] }}</h6>
+                            <h6 class="mb-0" style="color:#3a8bf5;">{{ data['Sname'] }}</h6>
                           </div>
                         </div>
                       </div>
                     </td>
                     </tr>
+             {% endfor %}
                   
                   </tbody>
                   <thead>
