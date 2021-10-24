@@ -334,14 +334,15 @@ def sregister():
     elif request.method == 'POST':
         msg = 'elif code!' 
     return render_template('secretary/sregister.html', msg=msg)
+
 @app.route('/R-Portal/shome')
 def shome():
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT Sname, Mname from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s', (session['id'],))
-        account = cursor.fetchone()
-       
-       
+        account = cursor.fetchall()     
+        for account in cursor:
+           print(account, '\n')
         return render_template('secretary/shome.html', account=account)
     return redirect(url_for('login'))
 

@@ -30,7 +30,7 @@
                           <div class="candidate-list-title">
                             
                             
-                            <h6 class="mb-0" style="color:#3a8bf5;">{{account['Sname'] }}</h6>
+                            <h6 class="mb-0" style="color:#3a8bf5;">{{ account['Sname'] }}</h6>
                           </div>
                         </div>
                       </div>
@@ -45,7 +45,7 @@
                   </thead>
                   
                 <tbody>
-             
+                  {% for data in account %}
                   <tr class="candidates-list">
                     <td class="title">
                       <div class="thumb">
@@ -54,15 +54,13 @@
                       <div class="candidate-list-details">
                         <div class="candidate-list-info">
                           <div class="candidate-list-title">
-                     
-                           
-                            <h6 class="mb-0" >{{ account['Mname'] }}</h6>
+                            <h6 class="mb-0" >{{ data['Mname'] }}</h6>
                           </div>
                         </div>
                       </div>
                     </td>
                     </tr>
-             
+             {% endfor %}
                     
                   </tbody>
               </table>
