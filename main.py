@@ -271,7 +271,7 @@ def invitation():
 @app.route('/R-Portal/sregister', methods=['GET','POST'])
 def sregister():
     msg = ''
-    target = os.path.join( '/static/upload/')
+    target = os.path.join( '/Rportal/static/upload/')
     if not os.path.isdir(target):
         os.makedirs(target)
     if request.method == 'POST' and 'Sname' in request.form and 'Susername' in request.form and 'Semail' in request.form:
