@@ -8,6 +8,7 @@ from ssl import create_default_context
 from email.message import EmailMessage
 from flask_mail import * 
 from flask import *
+from flask import Flask, render_template, flash, request, redirect, url_for
 from flask_mail import Message 
 import os 
 
@@ -267,7 +268,6 @@ def invitation():
         num1 += num[math.floor(random.random() * length1)]
     code = str(str1 + num1)
     return code
-
 @app.route('/R-Portal/sregister', methods=['GET','POST'])
 def sregister():
     msg = ''
@@ -300,7 +300,7 @@ def sregister():
         file_name = file.filename or ''
         destination = ''.join([target, file_name])
         file.save(destination)
-        kyc_file  = destination;
+        kyc_file  = file_name;
         ...
         
         code = ""
@@ -334,13 +334,14 @@ def sregister():
     elif request.method == 'POST':
         msg = 'elif code!' 
     return render_template('secretary/sregister.html', msg=msg)
-
 @app.route('/R-Portal/shome')
 def shome():
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT Sname, Mname from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s', (session['id'],))
         account = cursor.fetchone()
+       
+       
         return render_template('secretary/shome.html', account=account)
     return redirect(url_for('login'))
 
@@ -433,6 +434,8 @@ def asoc():
         return render_template('admin/asoc.html', account=account)
     else:
         return redirect(url_for('login'))
+
+    
 
 if __name__ == '__main__':
    app.run(debug=True)
