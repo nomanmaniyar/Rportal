@@ -110,8 +110,40 @@ def login():
                             session['id'] = account['staff_id']
                             session['username'] = account['staff_username']
                             return render_template("staff/staff_home.html") 
-                        else:
-                            msg = 'Incorrect username/password! Please check Username/Password and try again!'
+                        elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+                            username = request.form['username']
+                            password = request.form['password']
+                            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                            cursor.execute('SELECT * FROM secretary WHERE Susername = %s AND Spassword = %s AND secretarty_status=%s', (username, password,'inactive'))
+                            account = cursor.fetchone()
+                            if account:
+                                msg = 'Your account is not activated yet or under verification process! Please come back once your account get verified!!'
+                            elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+                                username = request.form['username']
+                                password = request.form['password']
+                                cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                                cursor.execute('SELECT * FROM member WHERE Musername = %s AND Mpassword = %s AND member_status=%s', (username, password,'inactive'))
+                                account = cursor.fetchone()
+                                if account:
+                                    msg = 'Your account is not activated yet or under verification process! Please come back once your account get verified!!'
+                                elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+                                    username = request.form['username']
+                                    password = request.form['password']
+                                    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                                    cursor.execute('SELECT * FROM security WHERE security_username = %s AND security_password = %s AND security_status=%s', (username, password,'inactive'))
+                                    account = cursor.fetchone()
+                                    if account:
+                                        msg = 'Your account is not activated yet or under verification process! Please come back once your account get verified!!'
+                                    elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+                                        username = request.form['username']
+                                        password = request.form['password']
+                                        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                                        cursor.execute('SELECT * FROM staff WHERE staff_username = %s AND staff_password = %s AND staff_status=%s', (username, password,'inactive'))
+                                        account = cursor.fetchone()
+                                        if account:
+                                            msg = 'Your account is not activated yet or under verification process! Please come back once your account get verified!!'
+                                        else:
+                                            msg = 'Incorrect username/password! Please check Username/Password and try again!'
     return render_template('login.html', msg=msg)
 
 def sotp(): 

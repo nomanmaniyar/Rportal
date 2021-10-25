@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `security` (
 	`security_name` varchar(255) NOT NULL,
 	`security_mobile` varchar(255) NOT NULL,
 	`security_code` varchar(30) NOT NULL,
-    `security_status` varchar(255) default 'inactive',
+    `security_status` varchar(255) default 'active',
   	PRIMARY KEY (`security_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 INSERT INTO `security` (`security_id`, `security_username`, `security_password`,`security_name`, `security_mobile`, `security_code`) VALUES ('1', 'noman', '1234', 'Noman', '5154545', 'ZZZZ55');
@@ -96,12 +96,12 @@ CREATE TABLE IF NOT EXISTS `staff` (
 	`staff_name` varchar(255) NOT NULL,
 	`staff_mobile` varchar(255) NOT NULL,
 	`staff_code` varchar(30) NOT NULL,
-    `staff_status` varchar(255) default 'inactive',
+    `staff_status` varchar(255) default 'active',
   	PRIMARY KEY (`staff_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 INSERT INTO `staff` (`staff_id`, `staff_username`, `staff_password`,`staff_name`, `staff_mobile`, `staff_code`) VALUES ('1', 'samadhan', '1234', 'Samadhan', '5154545', 'ZZZZ55');
 select * from staff;
-
+SELECT security_name, security_status, security_mobile from secretary inner join security on secretary.Scode = security.security_code WHERE Sid = 1;
 
 CREATE TABLE IF NOT EXISTS `notification` (
 	`noti_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -124,3 +124,5 @@ add column `member_status` varchar(255) default 'inactive';
 alter table society 
 add column `society_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
 add column `society_status` varchar(255) default 'inactive'; 	
+
+SELECT * FROM staff WHERE staff_username = 'samadhan' AND staff_password = '1234' AND staff_status='inactive';
