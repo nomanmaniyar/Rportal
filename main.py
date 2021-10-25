@@ -59,7 +59,7 @@ def login():
         username = request.form['username']
         password = request.form['password']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM secretary WHERE Susername = %s AND Spassword = %s', (username, password,))
+        cursor.execute('SELECT * FROM secretary WHERE Susername = %s AND Spassword = %s AND secretarty_status=%s', (username, password,'active'))
         account = cursor.fetchone()
         if account:
             session['loggedin'] = True
@@ -70,7 +70,7 @@ def login():
             username = request.form['username']
             password = request.form['password']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('SELECT * FROM member WHERE Musername = %s AND Mpassword = %s', (username, password,))
+            cursor.execute('SELECT * FROM member WHERE Musername = %s AND Mpassword = %s AND member_status=%s', (username, password,'active'))
             account = cursor.fetchone()
             if account:
                 session['loggedin'] = True
@@ -92,7 +92,7 @@ def login():
                     username = request.form['username']
                     password = request.form['password']
                     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-                    cursor.execute('SELECT * FROM security WHERE security_username = %s AND security_password = %s', (username, password,))
+                    cursor.execute('SELECT * FROM security WHERE security_username = %s AND security_password = %s AND security_status=%s', (username, password,'active'))
                     account = cursor.fetchone()
                     if account:
                         session['loggedin'] = True
@@ -103,7 +103,7 @@ def login():
                         username = request.form['username']
                         password = request.form['password']
                         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-                        cursor.execute('SELECT * FROM staff WHERE staff_username = %s AND staff_password = %s', (username, password,))
+                        cursor.execute('SELECT * FROM staff WHERE staff_username = %s AND staff_password = %s AND staff_status=%s', (username, password,'active'))
                         account = cursor.fetchone()
                         if account:
                             session['loggedin'] = True
