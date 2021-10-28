@@ -385,7 +385,7 @@ def people():
         return render_template('secretary/people.html', account=account, account1=account1, account2=account2, account3=account3)
     return redirect(url_for('login'))
 
-@app.route('/R-Portal/allow_members')
+@app.route('/R-Portal/allow_members/')
 def allow_members():
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -394,13 +394,21 @@ def allow_members():
         return render_template('secretary/allow_members.html', account=account)
     return redirect(url_for('login'))
 
-@app.route('/R-Portal/a_members/<int:Mid>', methods=['GET', 'POST'])
+@app.route('/R-Portal/a_members/<int:Mid>')
 def a_members(Mid):
-    if 'loggedin' in session:
-        print(Mid)
+    if 'loggedin' in session: 
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('UPDATE member SET member_status = %s WHERE Mid = %s', ('active',Mid,))
+        cursor.execute('UPDATE member SET member_status = %s WHERE Mid = %s',('active',Mid)) 
         msg = 'Member Allowed'
+        return render_template('secretary/allow_members.html', msg=msg)
+    return redirect(url_for('login'))
+
+@app.route('/R-Portal/r_members/<int:Mid>')
+def r_members(Mid):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('DELETE FROM member WHERE Mid = %s',[Mid]) 
+        msg = 'Member Delete'
         return render_template('secretary/allow_members.html', msg=msg)
     return redirect(url_for('login'))
 
