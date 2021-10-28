@@ -371,18 +371,37 @@ def sregister():
 def people():
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT Mname, member_status, Mmobile from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s', (session['id'],))
+        cursor.execute('SELECT Mname, member_status, Mmobile from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s AND member_status=%s', (session['id'],'active'))
         account = cursor.fetchall()     
         cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor1.execute('SELECT Sname,secretarty_status, Smobile from secretary WHERE Sid = %s', (session['id'],))
+        cursor1.execute('SELECT Sname,secretarty_status, Smobile from secretary WHERE Sid = %s AND secretarty_status=%s', (session['id'],'active'))
         account1 = cursor1.fetchone()  
         cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor2.execute('SELECT security_name, security_status, security_mobile from secretary inner join security on secretary.Scode = security.security_code WHERE Sid = %s', (session['id'],))
+        cursor2.execute('SELECT security_name, security_status, security_mobile from secretary inner join security on secretary.Scode = security.security_code WHERE Sid = %s AND security_status=%s', (session['id'],'active'))
         account2 = cursor2.fetchall()     
         cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor3.execute('SELECT staff_name, staff_status, staff_mobile from secretary inner join staff on secretary.Scode = staff.staff_code WHERE Sid = %s', (session['id'],))
+        cursor3.execute('SELECT staff_name, staff_status, staff_mobile from secretary inner join staff on secretary.Scode = staff.staff_code WHERE Sid = %s AND staff_status=%s', (session['id'],'active'))
         account3 = cursor3.fetchall()        
         return render_template('secretary/people.html', account=account, account1=account1, account2=account2, account3=account3)
+    return redirect(url_for('login'))
+
+@app.route('/R-Portal/allow_members')
+def allow_members():
+    if 'loggedin' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT Mid, Mname, member_status, Mmobile, Mwing, Mflatno from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s AND member_status=%s', (session['id'],'inactive'))
+        account = cursor.fetchall()           
+        return render_template('secretary/allow_members.html', account=account)
+    return redirect(url_for('login'))
+
+@app.route('/R-Portal/a_members/<int:Mid>', methods=['GET', 'POST'])
+def a_members(Mid):
+    if 'loggedin' in session:
+        print(Mid)
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE member SET member_status = %s WHERE Mid = %s', ('active',Mid,))
+        msg = 'Member Allowed'
+        return render_template('secretary/allow_members.html', msg=msg)
     return redirect(url_for('login'))
 
 @app.route('/R-Portal/shome')
