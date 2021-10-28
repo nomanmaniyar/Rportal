@@ -41,13 +41,12 @@
                         </ul>
                       </div>
                       <div class="thumb">
-                        <a href="{{ url_for('a_member/{{ data['Mid'] }} ') }}"><i class="fas fa-user-plus" style="color:#08fa18"> Allow</i></a>
+                        <a href="{{ url_for('a_member/Mid={{ data['Mid'] }} ') }}"><i class="fas fa-user-plus" style="color:#08fa18"> Allow</i></a>
                         <a href="{{ url_for('people') }}"><i class="fas fa-user-minus" style="color:#fa1808"> Reject</i></a>
                       </div>
                     </div>
                   </div>
                 </td>
-                </tr>
          {% endfor %}
               </tbody>
 
