@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="444" viewBox="0 0 1920 444">
+  <defs>
+    <style>
+      .cls-1 {
+        font-size: 480px;
+        fill: #1a1a1a;
+        text-anchor: middle;
+        font-family: Balkeno;
+      }
+
+      .cls-2 {
+        font-size: 110px;
+        font-family: Reef;
+        font-weight: 700;
+      }
+
+      .cls-2, .cls-3, .cls-4 {
+        fill: #64b0fe;
+      }
+
+      .cls-3, .cls-4 {
+        font-size: 92px;
+      }
+
+      .cls-3 {
+        font-family: Calibri;
+        font-weight: 300;
+      }
+
+      .cls-4 {
+        font-family: "Microsoft YaHei";
+      }
+    </style>
+  </defs>
+  <text id="rportal" class="cls-1" x="776.001" y="336"><tspan x="776.001">rportal</tspan></text>
+  <text id="Resident_Portal" data-name="Resident Portal" class="cls-2" x="1538.001" y="195">Resident<tspan x="1538.001" dy="132">Portal</tspan></text>
+  <text id="Lorem_Ipsum" data-name="Lorem Ipsum" class="cls-3" x="1161.7" y="731.938">Lorem Ipsum</text>
+  <text id="Lorem_Ipsum-2" data-name="Lorem Ipsum" class="cls-4" x="2274.01" y="-411">Lorem Ipsum</text>
+</svg>

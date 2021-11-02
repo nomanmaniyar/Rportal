@@ -11,6 +11,9 @@ from flask import *
 from flask import Flask, render_template, flash, request, redirect, url_for
 from flask_mail import Message 
 import os 
+import sys
+sys.path.insert(0, 'Rportal/config')
+#from config import credentials as cred
 
 
 UPLOAD_FOLDER = '/path/to/the/uploads'
@@ -22,6 +25,7 @@ app.config['MYSQL_HOST'] = '127.0.0.1'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = '1234'
 app.config['MYSQL_DB'] = 'rportal'
+app.config['charset'] ='utf8'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 mysql = MySQL(app)
  
@@ -396,9 +400,12 @@ def allow_members():
 
 @app.route('/R-Portal/a_members/<int:Mid>')
 def a_members(Mid):
+
     if 'loggedin' in session: 
+
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('UPDATE member SET member_status = %s WHERE Mid = %s',('active',Mid)) 
+        cursor.execute("UPDATE member SET member_status = %s WHERE Mid = %s" ,('active',Mid,)) 
+        mysql.connection.commit()
         msg = 'Member Allowed'
         return render_template('secretary/allow_members.html', msg=msg)
     return redirect(url_for('login'))
@@ -408,6 +415,7 @@ def r_members(Mid):
     if 'loggedin' in session: 
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('DELETE FROM member WHERE Mid = %s',[Mid]) 
+        mysql.connection.commit()
         msg = 'Member Delete'
         return render_template('secretary/allow_members.html', msg=msg)
     return redirect(url_for('login'))

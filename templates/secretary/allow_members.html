@@ -33,22 +33,23 @@
                       <div class="candidate-list-option">
                         <ul class="list-unstyled">
                           <li><i class="fas fa-mobile"></i> Contact No.: {{ data['Mmobile'] }}</li>
-                          <li><i class="fas fa-building"></i> Flat No.: {{ data['Mflatno'] }}</li>
-                          <li><i class="fas fa-building"></i> Wing: {{ data['Mwing'] }}</li>
+                          <li><i class="fas fa-building"></i> Flat No.: {{ data['Mwing'] }}{{ data['Mflatno'] }}</li>
+                         
                         </ul>
                         <ul class="list-unstyled">
                             <li><i class="fas fa-toggle-on"></i> Status: {{ data['member_status'] }}</li>
                         </ul>
                       </div>
                       <div class="thumb">
-                        <a href="/R-Portal/a_members/{{data.Mid}}"><i class="fas fa-user-plus" style="color:#08fa18"> Allow</i></a>
-                        <a href="/R-Portal/r_members/{{data.Mid}}"><i class="fas fa-user-minus" style="color:#fa1808"> Reject</i></a>
+                      <a href="/R-Portal/a_members/{{data.Mid}}"><i class="fas fa-user-plus" style="color:#08fa18"></i></a>
+                        <a href="/R-Portal/r_members/{{data.Mid}}"><i class="fas fa-user-minus" onclick="return confirm('Are You Sure For Reject?')" style="color:#fa1808"></i></a>-->
+              
                       </div>
                     </div>
                   </div>
                 </td>
          {% endfor %}
-              </tbody>
+              </tbody> 
 
 
           </table>
