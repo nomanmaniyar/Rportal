@@ -1,20 +1,24 @@
 CREATE DATABASE IF NOT EXISTS `rportal` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `rportal`;
+SET GLOBAL sql_mode = '';
 
 CREATE TABLE IF NOT EXISTS `secretary` (
 	`Sid` int(11) NOT NULL AUTO_INCREMENT,
   	`Susername` varchar(50) NOT NULL,
   	`Spassword` varchar(255) NOT NULL,
   	`Scode` varchar(30) NOT NULL,
-	`Semail` varchar(100) NOT NULL,
+	`Semail` varchar(100) NOT NULL UNIQUE,
   	`Sname` varchar(255) NOT NULL,
   	`Sflatno` int(20) NOT NULL,
   	`Swing` varchar(50) NOT NULL,
   	`Smobile` varchar(255) NOT NULL,
+    `secretary_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+	`secretarty_status` varchar(255) default 'request',
     PRIMARY KEY (`Sid`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-ALTER TABLE secretary ADD CONSTRAINT UNIQUE (semail);
-INSERT INTO `secretary` (`Sid`, `Susername`, `Spassword`,`Scode`, `Semail`,`Sname`,`Sflatno`,`Swing`,`Smobile`) VALUES (1, 'stest', 'stestpw', 'ZZZZ55', 'jais65142@gmail.com','sec test','1001','A','9420829593');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO `secretary` (`Sid`, `Susername`, `Spassword`,`Scode`, `Semail`,`Sname`,`Sflatno`,`Swing`,`Smobile`) VALUES (1, 'jay', '1234', 'GOKU11', 'jais65142@gmail.com','Jay Sharma','1001','A','9420829593');
+INSERT INTO `secretary` (`Sid`, `Susername`, `Spassword`,`Scode`, `Semail`,`Sname`,`Sflatno`,`Swing`,`Smobile`) VALUES (2, 'shinde', '1234', 'SAIR11', 'jay.sharma@matoshri.edu.in','Shivnath Sahebrao Shinde','1','B','9420829593');
+alter table secretary auto_increment = 3;
 select * from secretary;
 
 CREATE TABLE IF NOT EXISTS `member` (
@@ -22,22 +26,32 @@ CREATE TABLE IF NOT EXISTS `member` (
   	`Musername` varchar(50) NOT NULL,
   	`Mpassword` varchar(255) NOT NULL,
   	`Mcode` varchar(30) NOT NULL,
-	`Memail` varchar(100) NOT NULL,
+	`Memail` varchar(100) NOT NULL UNIQUE,
   	`Mname` varchar(255) NOT NULL,
   	`Mflatno` int(20) NOT NULL,
   	`Mwing` varchar(50) NOT NULL,
   	`Mmobile` varchar(255) NOT NULL,
+    `member_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+	`member_status` varchar(255) default 'request',
     PRIMARY KEY (`Mid`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-ALTER TABLE member ADD CONSTRAINT UNIQUE (Memail);
-INSERT INTO `member` (`Mid`, `Musername`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('1', 'mtest', 'mtestpw', 'ZZZZ55', 'aashutoshmali1460@gmail.com','mem test','2002','A','9922338265');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO `member` (`Mid`, `Musername`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('1', 'aashutosh', '1234', 'GOKU11', 'aashutoshmali1460@gmail.com','Aashutosh Mali','1002','A','9922338265');
+INSERT INTO `member` (`Mid`, `Musername`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('2', 'gyaneshwar', '1234', 'SAIR11', 'aashutosh.mali@matoshri.edu.in','Gyaneshwar Rangnath Vadnere','2','B','9922338265');
+INSERT INTO `member` (`Mid`, `Musername`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('3', 'ashvini', '1234', 'SAIR11', 'mem3@gmail.com','Ashvini Sagar Dighe','3','B','9922338265');
+INSERT INTO `member` (`Mid`, `Musername`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('4', 'chandrashekhar', '1234', 'SAIR11', 'mem4@gmail.com','Chandrashekhar Bhikchand Joshi','4','B','9922338265');
+INSERT INTO `member` (`Mid`, `Musername`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('5', 'ashok', '1234', 'SAIR11', 'mem5@gmail.com','Ashok Subhash Kolhe','5','B','9922338265');
+INSERT INTO `member` (`Mid`, `Musername`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('6', 'kalpana', '1234', 'SAIR11', 'mem6@gmail.com','Kalpana Shibaji Mali','6','B','9922338265');
+INSERT INTO `member` (`Mid`, `Musername`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('7', 'sachin', '1234', 'SAIR11', 'mem7@gmail.com','Sachin Yashwant Shiral','7','B','9922338265');
+INSERT INTO `member` (`Mid`, `Musername`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('8', 'sangita', '1234', 'SAIR11', 'mem8@gmail.com','Sangita Vinay Virari','8','B','9922338265');
+INSERT INTO `member` (`Mid`, `Musername`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('9', 'nishant', '1234', 'SAIR11', 'mem9@gmail.com','Nishant Dhiren Loyada','9','B','9922338265');
+INSERT INTO `member` (`Mid`, `Musername`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('10', 'vishvanath', '1234', 'SAIR11', 'mem19@gmail.com','Vishwanath Baburao Tayde','10','B','9922338265');
+INSERT INTO `member` (`Mid`, `Musername`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('11', 'sharad', '1234', 'SAIR11', 'mem11@gmail.com','Sharad Damu Borase','11','B','9922338265');
+alter table member auto_increment = 12;
 select * from member;
-
-SELECT Mname from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid =1;
 
 CREATE TABLE IF NOT EXISTS `society` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`code` varchar(30) NOT NULL,
+	`code` varchar(30) NOT NULL UNIQUE,
   	`name` varchar(50) NOT NULL,
 	`city` varchar(50) NOT NULL,
 	`road` varchar(255) NOT NULL,
@@ -46,25 +60,21 @@ CREATE TABLE IF NOT EXISTS `society` (
   	`pin` int(15) NOT NULL,
   	`acname` varchar(255) NOT NULL,
   	`acno` varchar(200) NOT NULL,
-  	`mmid` varchar(50) NOT NULL,
+  	`mmid` varchar(50),
   	`bankname` varchar(255) NOT NULL,
     `branch` varchar(200) NOT NULL,
   	`ifsc` varchar(255) NOT NULL,
   	`socrule` varchar(2000),
 	`mainrule` varchar(2000),
 	`kyc_file` varchar(255),
+    `society_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+	`society_status` varchar(255) default 'request',
     PRIMARY KEY (`id`,`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-ALTER TABLE society ADD CONSTRAINT UNIQUE (code);
-INSERT INTO `society` (`id`, `code`, `name`,`city`, `road`,`area`,`state`,`pin`,`acname`,`acno`,`mmid`,`bankname`,`branch`,`ifsc`,`socrule`,`mainrule`,`kyc_file`) VALUES (2, 'ZZZZ55', 'SOciety', 'east', 'gali','gaon','rastra','4223','op','8265','515','footi bank','sa','aaja',NULL,NULL,'path');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO `society` (`id`, `code`, `name`,`city`, `road`,`area`,`state`,`pin`,`acname`,`acno`,`mmid`,`bankname`,`branch`,`ifsc`,`socrule`,`mainrule`,`kyc_file`) VALUES (1, 'GOKU11', 'Gokuldham Society', 'Goregaon East', 'Powder Gali','Goregaon','Maharastra','422001','Gokuldham CO OP Hsg Society','85858858585858','5155755','DBS Bank','Singapour','SBIN0006333','Sample Society Rules','Sample Maintanance Rules','path');
+INSERT INTO `society` (`id`, `code`, `name`,`city`, `road`,`area`,`state`,`pin`,`acname`,`acno`,`mmid`,`bankname`,`branch`,`ifsc`,`socrule`,`mainrule`,`kyc_file`) VALUES (2, 'SAIR11', 'Sai Residency', 'Nasik', 'Gajpanth','Mhasrul','Maharastra','422003','Sai Residency Account','5454545455454545','2525255','Bank of Maharastra','Panchvati','DBSS0IN0811','Sample Society Rules','Sample Maintanance Rules','path');
+alter table society auto_increment = 3;
 select * from society;
-
-alter table society auto_increment = 2;
-SELECT * FROM member INNER JOIN society ON member.Mcode = society.code INNER JOIN secretary ON member.Mcode = secretary.Scode;
-SET GLOBAL sql_mode = '';
-SELECT Musername, Mpassword, Memail, Mname, Mflatno, Mwing, Mmobile, code, name, city, road, area, state, pin FROM member INNER JOIN society ON member.Mcode = society.code WHERE Mid = 1;
-SELECT  name, road, area, city, state, pin, Sname, Sflatno, Swing, Smobile, Semail, code, acname, acno, mmid, bankname, branch, ifsc, secretarty_status FROM secretary INNER JOIN society on secretary.Scode=society.code;
-
 
 CREATE TABLE IF NOT EXISTS `admin` (
 	`Aid` int(11) NOT NULL AUTO_INCREMENT,
@@ -85,8 +95,10 @@ CREATE TABLE IF NOT EXISTS `security` (
 	`security_code` varchar(30) NOT NULL,
     `security_status` varchar(255) default 'active',
   	PRIMARY KEY (`security_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-INSERT INTO `security` (`security_id`, `security_username`, `security_password`,`security_name`, `security_mobile`, `security_code`) VALUES ('1', 'noman', '1234', 'Noman', '5154545', 'ZZZZ55');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO `security` (`security_id`, `security_username`, `security_password`,`security_name`, `security_mobile`, `security_code`) VALUES ('1', 'noman', '1234', 'Noman', '8889597458', 'GOKU11');
+INSERT INTO `security` (`security_id`, `security_username`, `security_password`,`security_name`, `security_mobile`, `security_code`) VALUES ('2', 'anita', '1234', 'Anita Balasaheb Dalvi', '8942314516', 'SAIR11');
+alter table security auto_increment = 3;
 select * from security;
 
 CREATE TABLE IF NOT EXISTS `staff` (
@@ -98,10 +110,11 @@ CREATE TABLE IF NOT EXISTS `staff` (
 	`staff_code` varchar(30) NOT NULL,
     `staff_status` varchar(255) default 'active',
   	PRIMARY KEY (`staff_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-INSERT INTO `staff` (`staff_id`, `staff_username`, `staff_password`,`staff_name`, `staff_mobile`, `staff_code`) VALUES ('1', 'samadhan', '1234', 'Samadhan', '5154545', 'ZZZZ55');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO `staff` (`staff_id`, `staff_username`, `staff_password`,`staff_name`, `staff_mobile`, `staff_code`) VALUES ('1', 'samadhan', '1234', 'Samadhan', '9515645454', 'GOKU11');
+INSERT INTO `staff` (`staff_id`, `staff_username`, `staff_password`,`staff_name`, `staff_mobile`, `staff_code`) VALUES ('2', 'sitaram', '1234', 'Sitaram Narayan Kapadnis', '945121415', 'SAIR11');
+alter table staff auto_increment = 3;
 select * from staff;
-SELECT security_name, security_status, security_mobile from secretary inner join security on secretary.Scode = security.security_code WHERE Sid = 1;
 
 CREATE TABLE IF NOT EXISTS `notification` (
 	`noti_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -109,20 +122,8 @@ CREATE TABLE IF NOT EXISTS `notification` (
 	`noti_code` varchar(30) NOT NULL,
     `noti_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   	PRIMARY KEY (`noti_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-INSERT INTO `notification` (`noti_id`, `noti_message`, `noti_code`) VALUES ('1', 'Test notofocation Message', 'ZZZZ55');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO `notification` (`noti_id`, `noti_message`, `noti_code`) VALUES ('1', 'Test notofocation Message', 'GOKU11');
+INSERT INTO `notification` (`noti_id`, `noti_message`, `noti_code`) VALUES ('2', 'Test notofocation Message', 'SAIR11');
+alter table notification auto_increment = 3;
 select * from notification;
-
-alter table secretary 
-add column `secretary_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-add column `secretarty_status` varchar(255) default 'inactive'; 	
-
-alter table member 
-add column `member_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-add column `member_status` varchar(255) default 'inactive'; 	
-
-alter table society 
-add column `society_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-add column `society_status` varchar(255) default 'inactive'; 	
-
-SELECT * FROM staff WHERE staff_username = 'samadhan' AND staff_password = '1234' AND staff_status='inactive';
