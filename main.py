@@ -62,8 +62,7 @@ def login():
     msg = ''
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
         username = request.form['username']
-        passtext = request.form['password']
-        password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
+        password = request.form['password']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM secretary WHERE Susername = %s AND Spassword = %s AND secretarty_status=%s', (username, password,'active'))
         account = cursor.fetchone()
@@ -71,11 +70,11 @@ def login():
             session['loggedin'] = True
             session['id'] = account['Sid']
             session['username'] = account['Susername']
+            session['code'] = account['Scode']
             return sotp() 
         elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
             username = request.form['username']
-            passtext = request.form['password']
-            password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
+            password = request.form['password']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('SELECT * FROM member WHERE Musername = %s AND Mpassword = %s AND member_status=%s', (username, password,'active'))
             account = cursor.fetchone()
@@ -83,11 +82,11 @@ def login():
                 session['loggedin'] = True
                 session['id'] = account['Mid']
                 session['username'] = account['Musername']
+                session['code'] = account['Mcode']
                 return motp()       
             elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                 username = request.form['username']
-                passtext = request.form['password']
-                password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
+                password = request.form['password']
                 cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                 cursor.execute('SELECT * FROM admin WHERE Ausername = %s AND Apassword = %s', (username, password,))
                 account = cursor.fetchone()
@@ -98,8 +97,7 @@ def login():
                     return render_template("admin/admin.html")       
                 elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                     username = request.form['username']
-                    passtext = request.form['password']
-                    password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
+                    password = request.form['password']
                     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                     cursor.execute('SELECT * FROM security WHERE security_username = %s AND security_password = %s AND security_status=%s', (username, password,'active'))
                     account = cursor.fetchone()
@@ -107,11 +105,11 @@ def login():
                         session['loggedin'] = True
                         session['id'] = account['security_id']
                         session['username'] = account['security_username']
+                        session['code'] = account['security_code']
                         return render_template("security/security_home.html")       
                     elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                         username = request.form['username']
-                        passtext = request.form['password']
-                        password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
+                        password = request.form['password']
                         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                         cursor.execute('SELECT * FROM staff WHERE staff_username = %s AND staff_password = %s AND staff_status=%s', (username, password,'active'))
                         account = cursor.fetchone()
@@ -119,11 +117,11 @@ def login():
                             session['loggedin'] = True
                             session['id'] = account['staff_id']
                             session['username'] = account['staff_username']
+                            session['code'] = account['staff_code']
                             return render_template("staff/staff_home.html") 
                         elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                             username = request.form['username']
-                            passtext = request.form['password']
-                            password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
+                            password = request.form['password']
                             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                             cursor.execute('SELECT * FROM secretary WHERE Susername = %s AND Spassword = %s AND secretarty_status=%s', (username, password,'request'))
                             account = cursor.fetchone()
@@ -131,8 +129,7 @@ def login():
                                 msg = 'Your account is not activated yet or under verification process! Please come back once your account get verified!!'
                             elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                                 username = request.form['username']
-                                passtext = request.form['password']
-                                password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
+                                password = request.form['password']
                                 cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                                 cursor.execute('SELECT * FROM member WHERE Musername = %s AND Mpassword = %s AND member_status=%s', (username, password,'request'))
                                 account = cursor.fetchone()
@@ -140,8 +137,7 @@ def login():
                                     msg = 'Your account is not activated yet or under verification process! Please come back once your account get verified!!'
                                 elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                                     username = request.form['username']
-                                    passtext = request.form['password']
-                                    password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
+                                    password = request.form['password']
                                     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                                     cursor.execute('SELECT * FROM security WHERE security_username = %s AND security_password = %s AND security_status=%s', (username, password,'request'))
                                     account = cursor.fetchone()
@@ -149,8 +145,7 @@ def login():
                                         msg = 'Your account is not activated yet or under verification process! Please come back once your account get verified!!'
                                     elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                                         username = request.form['username']
-                                        passtext = request.form['password']
-                                        password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
+                                        password = request.form['password']
                                         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                                         cursor.execute('SELECT * FROM staff WHERE staff_username = %s AND staff_password = %s AND staff_status=%s', (username, password,'request'))
                                         account = cursor.fetchone()
@@ -550,19 +545,73 @@ def mprofile():
         return render_template('member/mprofile.html', account=account)
     return redirect(url_for('login'))
 
+@app.route('/R-Portal/admin_home')
+def admin_home():
+    if 'loggedin' in session:
+        return render_template('admin/admin_home.html', Ausername=session['username'])
+    return redirect(url_for('login'))
+
 @app.route('/R-Portal/asoc')
 def asoc():
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT  name, road, area, city, state, pin, Sname, Sflatno, Swing, Smobile, Semail, code, acname, acno, mmid, bankname, branch, ifsc, secretarty_status FROM secretary INNER JOIN society on secretary.Scode=society.code;')
+        cursor.execute('SELECT  name, road, area, city, state, pin, Sname, Sflatno, Swing, Smobile, Semail, Scode, acname, acno, mmid, bankname, branch, ifsc, secretarty_status FROM secretary INNER JOIN society on secretary.Scode=society.code WHERE secretarty_status = %s;', ('active',))
         account = cursor.fetchall() 
         return render_template('admin/asoc.html', account=account)
     else:
         return redirect(url_for('login'))
 
+@app.route('/R-Portal/isoc')
+def isoc():
+    if 'loggedin' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT  name, road, area, city, state, pin, Sname, Sflatno, Swing, Smobile, Semail, Scode, acname, acno, mmid, bankname, branch, ifsc, secretarty_status FROM secretary INNER JOIN society on secretary.Scode=society.code WHERE secretarty_status = %s;', ('inactive',))
+        account = cursor.fetchall() 
+        return render_template('admin/isoc.html', account=account)
+    else:
+        return redirect(url_for('login'))
 
+@app.route('/R-Portal/admin_req/')
+def admin_req():
+    if 'loggedin' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT Sname, secretarty_status, Smobile, Semail, Scode, secretary_time, area, road, city, state, pin, name from secretary inner join society on secretary.Scode = society.code WHERE  secretarty_status = %s', ('request',))
+        account = cursor.fetchall()           
+        return render_template('admin/admin_req.html', account=account)
+    return redirect(url_for('login'))
 
-    
+@app.route('/R-Portal/a_sec/<string:Scode>')
+def a_sec(Scode):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("UPDATE secretary SET secretarty_status = %s WHERE Scode = %s" ,('active',Scode,)) 
+        cursor.execute("UPDATE society SET society_status = %s WHERE code = %s" ,('active',Scode,)) 
+        mysql.connection.commit()
+        msg = 'Society Allowed'
+        return render_template('admin/admin_req.html', msg=msg)
+    return redirect(url_for('login'))
+
+@app.route('/R-Portal/c_sec/<string:Scode>')
+def c_sec(Scode):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("UPDATE secretary SET secretarty_status = %s WHERE Scode = %s" ,('inactive',Scode,)) 
+        cursor.execute("UPDATE society SET society_status = %s WHERE code = %s" ,('inactive',Scode,)) 
+        mysql.connection.commit()
+        msg = 'Society Disbanded'
+        return render_template('admin/admin_req.html', msg=msg)
+    return redirect(url_for('login'))
+
+@app.route('/R-Portal/r_sec/<string:Scode>')
+def r_sec(Scode):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('DELETE FROM secretary WHERE Scode = %s',[Scode]) 
+        cursor.execute('DELETE FROM society WHERE code = %s',[Scode]) 
+        mysql.connection.commit()
+        msg = 'Society Rejected/Deleted'
+        return render_template('admin/admin_req.html', msg=msg)
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
    app.run(debug=True)
