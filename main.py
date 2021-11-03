@@ -11,8 +11,9 @@ from flask import *
 from flask import Flask, render_template, flash, request, redirect, url_for
 from flask_mail import Message 
 import os 
+import hashlib
 import sys
-sys.path.insert(0, 'Rportal/config')
+#sys.path.insert(0, 'Rportal/config')
 #from config import credentials as cred
 
 
@@ -33,7 +34,7 @@ mail = Mail(app)
 app.config["MAIL_SERVER"]='smtp.gmail.com'  
 app.config["MAIL_PORT"] =465 #465 or 587 
 app.config["MAIL_USERNAME"] = 'ajinfotics@gmail.com'  
-app.config['MAIL_PASSWORD'] = 'JAIS@65142'  
+app.config['MAIL_PASSWORD'] = 'Rportal@1234'  
 #app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 part2 ="Your One Time Password for logging into R-Portal is\n\n" 
@@ -61,7 +62,8 @@ def login():
     msg = ''
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
         username = request.form['username']
-        password = request.form['password']
+        passtext = request.form['password']
+        password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM secretary WHERE Susername = %s AND Spassword = %s AND secretarty_status=%s', (username, password,'active'))
         account = cursor.fetchone()
@@ -72,7 +74,8 @@ def login():
             return sotp() 
         elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
             username = request.form['username']
-            password = request.form['password']
+            passtext = request.form['password']
+            password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('SELECT * FROM member WHERE Musername = %s AND Mpassword = %s AND member_status=%s', (username, password,'active'))
             account = cursor.fetchone()
@@ -83,7 +86,8 @@ def login():
                 return motp()       
             elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                 username = request.form['username']
-                password = request.form['password']
+                passtext = request.form['password']
+                password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
                 cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                 cursor.execute('SELECT * FROM admin WHERE Ausername = %s AND Apassword = %s', (username, password,))
                 account = cursor.fetchone()
@@ -94,7 +98,8 @@ def login():
                     return render_template("admin/admin.html")       
                 elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                     username = request.form['username']
-                    password = request.form['password']
+                    passtext = request.form['password']
+                    password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
                     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                     cursor.execute('SELECT * FROM security WHERE security_username = %s AND security_password = %s AND security_status=%s', (username, password,'active'))
                     account = cursor.fetchone()
@@ -105,7 +110,8 @@ def login():
                         return render_template("security/security_home.html")       
                     elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                         username = request.form['username']
-                        password = request.form['password']
+                        passtext = request.form['password']
+                        password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
                         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                         cursor.execute('SELECT * FROM staff WHERE staff_username = %s AND staff_password = %s AND staff_status=%s', (username, password,'active'))
                         account = cursor.fetchone()
@@ -116,7 +122,8 @@ def login():
                             return render_template("staff/staff_home.html") 
                         elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                             username = request.form['username']
-                            password = request.form['password']
+                            passtext = request.form['password']
+                            password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
                             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                             cursor.execute('SELECT * FROM secretary WHERE Susername = %s AND Spassword = %s AND secretarty_status=%s', (username, password,'request'))
                             account = cursor.fetchone()
@@ -124,7 +131,8 @@ def login():
                                 msg = 'Your account is not activated yet or under verification process! Please come back once your account get verified!!'
                             elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                                 username = request.form['username']
-                                password = request.form['password']
+                                passtext = request.form['password']
+                                password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
                                 cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                                 cursor.execute('SELECT * FROM member WHERE Musername = %s AND Mpassword = %s AND member_status=%s', (username, password,'request'))
                                 account = cursor.fetchone()
@@ -132,7 +140,8 @@ def login():
                                     msg = 'Your account is not activated yet or under verification process! Please come back once your account get verified!!'
                                 elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                                     username = request.form['username']
-                                    password = request.form['password']
+                                    passtext = request.form['password']
+                                    password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
                                     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                                     cursor.execute('SELECT * FROM security WHERE security_username = %s AND security_password = %s AND security_status=%s', (username, password,'request'))
                                     account = cursor.fetchone()
@@ -140,7 +149,8 @@ def login():
                                         msg = 'Your account is not activated yet or under verification process! Please come back once your account get verified!!'
                                     elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                                         username = request.form['username']
-                                        password = request.form['password']
+                                        passtext = request.form['password']
+                                        password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
                                         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                                         cursor.execute('SELECT * FROM staff WHERE staff_username = %s AND staff_password = %s AND staff_status=%s', (username, password,'request'))
                                         account = cursor.fetchone()
@@ -245,8 +255,9 @@ def security():
     if request.method == 'POST' and 'security_name' in request.form and 'security_username' in request.form and 'security_password' in request.form:
         
         security_username = request.form['security_username']
-        security_mobile = request.form['security_mobile']
-        security_password = request.form['security_password']
+        security_mobile = request.form['security_mobile'] 
+        passtext  = request.form['security_password']
+        security_password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
         security_name = request.form['security_name']
         security_code = request.form['security_code']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -288,7 +299,8 @@ def staff():
         
         staff_username = request.form['staff_username']
         staff_mobile = request.form['staff_mobile']
-        staff_password = request.form['staff_password']
+        passtext  = request.form['staff_password']
+        staff_password  = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
         staff_name = request.form['staff_name']
         staff_code = request.form['staff_code']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -346,7 +358,8 @@ def sregister():
         
         username = request.form['Susername']
         email = request.form['Semail']
-        password = request.form['Spassword']
+        passtext = request.form['Spassword']
+        password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
         Aname = request.form['Sname']
         flatno = request.form['Sflatno']
         wing = request.form['Swing']
@@ -395,8 +408,8 @@ def sregister():
         elif not username or not password or not email:
             msg = 'Please fill out the form!'
         else:
-            cursor1.execute('INSERT INTO secretary VALUES (NULL, %s, %s, %s, %s, %s, %s, %s,%s)', (username , password , code ,  email , Aname , flatno , wing , mobile))
-            cursor2.execute('INSERT INTO society VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, NULL, NULL,%s)', (code , name , city , road , area , state , pin , acname, acno, mmid, bankname, branch, ifsc, kyc_file))
+            cursor1.execute('INSERT INTO secretary VALUES (NULL, %s, %s, %s, %s, %s, %s, %s,%s , DEFAULT , DEFAULT)', (username , password , code ,  email , Aname , flatno , wing , mobile ,))
+            cursor2.execute('INSERT INTO society VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, NULL, NULL,%s, DEFAULT , DEFAULT)', (code , name , city , road , area , state , pin , acname, acno, mmid, bankname, branch, ifsc, kyc_file))
             mysql.connection.commit()
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
@@ -429,6 +442,7 @@ def allow_members():
         account = cursor.fetchall()           
         return render_template('secretary/allow_members.html', account=account)
     return redirect(url_for('login'))
+    
 
 @app.route('/R-Portal/a_members/<int:Mid>')
 def a_members(Mid):
@@ -489,7 +503,8 @@ def mregister():
     msg = ''
     if request.method == 'POST' and 'Musername' in request.form and 'Mpassword' in request.form and 'Memail' in request.form and 'Mcode' in request.form and 'Mname' in request.form and 'Mflatno' in request.form and 'Mwing' in request.form and 'Mmobile' in request.form:
         username = request.form['Musername']
-        password = request.form['Mpassword']
+        passtext = request.form['Mpassword']
+        password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
         code = request.form['Mcode']
         email = request.form['Memail']
         name = request.form['Mname']
@@ -513,7 +528,7 @@ def mregister():
         elif not username or not password or not email:
             msg = 'Please fill out the form!'
         else:
-            cursor.execute('INSERT INTO member VALUES (NULL, %s, %s, %s, %s, %s, %s, %s,%s)', (username , password , code ,  email , name , flatno , wing , mobile))
+            cursor.execute('INSERT INTO member VALUES (NULL, %s, %s, %s, %s, %s, %s, %s,%s,DEFAULT,DEFAULT )', (username , password , code ,  email , name , flatno , wing , mobile))
             mysql.connection.commit()
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
@@ -544,6 +559,8 @@ def asoc():
         return render_template('admin/asoc.html', account=account)
     else:
         return redirect(url_for('login'))
+
+
 
     
 
