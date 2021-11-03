@@ -586,6 +586,9 @@ def a_sec(Scode):
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute("UPDATE secretary SET secretarty_status = %s WHERE Scode = %s" ,('active',Scode,)) 
         cursor.execute("UPDATE society SET society_status = %s WHERE code = %s" ,('active',Scode,)) 
+        cursor.execute("UPDATE member SET member_status = %s WHERE Mcode = %s" ,('active',Scode,)) 
+        cursor.execute("UPDATE security SET security_status = %s WHERE security_code = %s" ,('active',Scode,)) 
+        cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_code = %s" ,('active',Scode,)) 
         mysql.connection.commit()
         msg = 'Society Allowed'
         return render_template('admin/admin_req.html', msg=msg)
@@ -597,6 +600,9 @@ def c_sec(Scode):
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute("UPDATE secretary SET secretarty_status = %s WHERE Scode = %s" ,('inactive',Scode,)) 
         cursor.execute("UPDATE society SET society_status = %s WHERE code = %s" ,('inactive',Scode,)) 
+        cursor.execute("UPDATE member SET member_status = %s WHERE Mcode = %s" ,('inactive',Scode,)) 
+        cursor.execute("UPDATE security SET security_status = %s WHERE security_code = %s" ,('inactive',Scode,)) 
+        cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_code = %s" ,('inactive',Scode,)) 
         mysql.connection.commit()
         msg = 'Society Disbanded'
         return render_template('admin/admin_req.html', msg=msg)
@@ -608,6 +614,9 @@ def r_sec(Scode):
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('DELETE FROM secretary WHERE Scode = %s',[Scode]) 
         cursor.execute('DELETE FROM society WHERE code = %s',[Scode]) 
+        cursor.execute('DELETE FROM member WHERE Mcode = %s',[Scode]) 
+        cursor.execute('DELETE FROM security WHERE security_code = %s',[Scode]) 
+        cursor.execute('DELETE FROM staff WHERE staff_code = %s',[Scode]) 
         mysql.connection.commit()
         msg = 'Society Rejected/Deleted'
         return render_template('admin/admin_req.html', msg=msg)
