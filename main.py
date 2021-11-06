@@ -254,7 +254,6 @@ def security():
         passtext  = request.form['security_password']
         security_password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
         security_name = request.form['security_name']
-        security_code = request.form['security_code']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM security WHERE security_username = %s AND security_mobile = %s', (security_username, security_mobile))
         account = cursor.fetchone()
@@ -265,7 +264,7 @@ def security():
         elif not security_username or not security_password or not security_mobile:
             msg = 'Please fill out the form!'
         else:
-            cursor.execute('INSERT INTO security VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT)', (security_username , security_password , security_name , security_mobile, security_code))
+            cursor.execute('INSERT INTO security VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT)', (security_username , security_password , security_name , security_mobile, session['code']))
             mysql.connection.commit()
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
@@ -297,7 +296,6 @@ def staff():
         passtext  = request.form['staff_password']
         staff_password  = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
         staff_name = request.form['staff_name']
-        staff_code = request.form['staff_code']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM staff WHERE staff_username = %s AND staff_mobile = %s', (staff_username, staff_mobile))
         account = cursor.fetchone()
@@ -308,7 +306,7 @@ def staff():
         elif not staff_username or not staff_password or not staff_mobile:
             msg = 'Please fill out the form!'
         else:
-            cursor.execute('INSERT INTO staff VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT)', (staff_username , staff_password , staff_name , staff_mobile, staff_code))
+            cursor.execute('INSERT INTO staff VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT)', (staff_username , staff_password , staff_name , staff_mobile, session['code']))
             mysql.connection.commit()
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
