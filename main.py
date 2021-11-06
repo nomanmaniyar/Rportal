@@ -11,20 +11,22 @@ from flask import *
 from flask import Flask, render_template, flash, request, redirect, url_for
 from flask_mail import Message 
 import os 
+import hashlib
 import sys
-sys.path.insert(0, 'Rportal/config')
-from config import credentials as cred
+#sys.path.insert(0, 'Rportal/config')
+#from config import credentials as cred
 
 
 UPLOAD_FOLDER = '/path/to/the/uploads'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
-app.secret_key = cred.secret_key
-app.config['MYSQL_HOST'] =cred.mysql_host
-app.config['MYSQL_USER'] = cred.mysql_user
-app.config['MYSQL_PASSWORD'] = cred.mysql_password
-app.config['MYSQL_DB'] = cred.mysql_db
+app.secret_key = '65142'
+app.config['MYSQL_HOST'] = '127.0.0.1'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = '1234'
+app.config['MYSQL_DB'] = 'rportal'
+app.config['charset'] ='utf8'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 mysql = MySQL(app)
  
@@ -32,7 +34,7 @@ mail = Mail(app)
 app.config["MAIL_SERVER"]='smtp.gmail.com'  
 app.config["MAIL_PORT"] =465 #465 or 587 
 app.config["MAIL_USERNAME"] = 'ajinfotics@gmail.com'  
-app.config['MAIL_PASSWORD'] = 'JAIS@65142'  
+app.config['MAIL_PASSWORD'] = 'Rportal@1234'  
 #app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 part2 ="Your One Time Password for logging into R-Portal is\n\n" 
@@ -62,23 +64,25 @@ def login():
         username = request.form['username']
         password = request.form['password']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM secretary WHERE Susername = %s AND Spassword = %s', (username, password,))
+        cursor.execute('SELECT * FROM secretary WHERE Susername = %s AND Spassword = %s AND secretarty_status=%s', (username, password,'active'))
         account = cursor.fetchone()
         if account:
             session['loggedin'] = True
             session['id'] = account['Sid']
             session['username'] = account['Susername']
+            session['code'] = account['Scode']
             return sotp() 
         elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
             username = request.form['username']
             password = request.form['password']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('SELECT * FROM member WHERE Musername = %s AND Mpassword = %s', (username, password,))
+            cursor.execute('SELECT * FROM member WHERE Musername = %s AND Mpassword = %s AND member_status=%s', (username, password,'active'))
             account = cursor.fetchone()
             if account:
                 session['loggedin'] = True
                 session['id'] = account['Mid']
                 session['username'] = account['Musername']
+                session['code'] = account['Mcode']
                 return motp()       
             elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                 username = request.form['username']
@@ -95,26 +99,92 @@ def login():
                     username = request.form['username']
                     password = request.form['password']
                     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-                    cursor.execute('SELECT * FROM security WHERE security_username = %s AND security_password = %s', (username, password,))
+                    cursor.execute('SELECT * FROM security WHERE security_username = %s AND security_password = %s AND security_status=%s', (username, password,'active'))
                     account = cursor.fetchone()
                     if account:
                         session['loggedin'] = True
                         session['id'] = account['security_id']
                         session['username'] = account['security_username']
+                        session['code'] = account['security_code']
                         return render_template("security/security_home.html")       
                     elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                         username = request.form['username']
                         password = request.form['password']
                         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-                        cursor.execute('SELECT * FROM staff WHERE staff_username = %s AND staff_password = %s', (username, password,))
+                        cursor.execute('SELECT * FROM staff WHERE staff_username = %s AND staff_password = %s AND staff_status=%s', (username, password,'active'))
                         account = cursor.fetchone()
                         if account:
                             session['loggedin'] = True
                             session['id'] = account['staff_id']
                             session['username'] = account['staff_username']
+                            session['code'] = account['staff_code']
                             return render_template("staff/staff_home.html") 
-                        else:
-                            msg = 'Incorrect username/password! Please check Username/Password and try again!'
+                        elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+                            username = request.form['username']
+                            password = request.form['password']
+                            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                            cursor.execute('SELECT * FROM secretary WHERE Susername = %s AND Spassword = %s AND secretarty_status=%s', (username, password,'request'))
+                            account = cursor.fetchone()
+                            if account:
+                                msg = 'Your account is not activated yet or under verification process! Please come back once your account get verified!!'
+                            elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+                                username = request.form['username']
+                                password = request.form['password']
+                                cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                                cursor.execute('SELECT * FROM member WHERE Musername = %s AND Mpassword = %s AND member_status=%s', (username, password,'request'))
+                                account = cursor.fetchone()
+                                if account:
+                                    msg = 'Your account is not activated yet or under verification process! Please come back once your account get verified!!'
+                                elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+                                    username = request.form['username']
+                                    password = request.form['password']
+                                    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                                    cursor.execute('SELECT * FROM security WHERE security_username = %s AND security_password = %s AND security_status=%s', (username, password,'request'))
+                                    account = cursor.fetchone()
+                                    if account:
+                                        msg = 'Your account is not activated yet or under verification process! Please come back once your account get verified!!'
+                                    elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+                                        username = request.form['username']
+                                        password = request.form['password']
+                                        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                                        cursor.execute('SELECT * FROM staff WHERE staff_username = %s AND staff_password = %s AND staff_status=%s', (username, password,'request'))
+                                        account = cursor.fetchone()
+                                        if account:
+                                            msg = 'Your account is not activated yet or under verification process! Please come back once your account get verified!!'
+                                        elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+                                            username = request.form['username']
+                                            password = request.form['password']
+                                            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                                            cursor.execute('SELECT * FROM secretary WHERE Susername = %s AND Spassword = %s AND secretarty_status=%s', (username, password,'inactive'))
+                                            account = cursor.fetchone()
+                                            if account:
+                                                msg = 'Your account is temparorily disbanded! Contact Secretary of your society to learn more.'
+                                            elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+                                                username = request.form['username']
+                                                password = request.form['password']
+                                                cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                                                cursor.execute('SELECT * FROM member WHERE Musername = %s AND Mpassword = %s AND member_status=%s', (username, password,'inactive'))
+                                                account = cursor.fetchone()
+                                                if account:
+                                                    msg = 'Your account is temparorily disbanded! Contact Secretary of your society to learn more.'
+                                                elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+                                                    username = request.form['username']
+                                                    password = request.form['password']
+                                                    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                                                    cursor.execute('SELECT * FROM security WHERE security_username = %s AND security_password = %s AND security_status=%s', (username, password,'inactive'))
+                                                    account = cursor.fetchone()
+                                                    if account:
+                                                        msg = 'Your account is temparorily disbanded! Contact Secretary of your society to learn more.'
+                                                    elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+                                                        username = request.form['username']
+                                                        password = request.form['password']
+                                                        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                                                        cursor.execute('SELECT * FROM staff WHERE staff_username = %s AND staff_password = %s AND staff_status=%s', (username, password,'inactive'))
+                                                        account = cursor.fetchone()
+                                                        if account:
+                                                            msg = 'Your account is temparorily disbanded! Contact Secretary of your society to learn more.'
+                                                        else:
+                                                            msg = 'Incorrect username/password! Please check Username/Password and try again!'
     return render_template('login.html', msg=msg)
 
 def sotp(): 
@@ -180,8 +250,9 @@ def security():
     if request.method == 'POST' and 'security_name' in request.form and 'security_username' in request.form and 'security_password' in request.form:
         
         security_username = request.form['security_username']
-        security_mobile = request.form['security_mobile']
-        security_password = request.form['security_password']
+        security_mobile = request.form['security_mobile'] 
+        passtext  = request.form['security_password']
+        security_password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
         security_name = request.form['security_name']
         security_code = request.form['security_code']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -199,7 +270,7 @@ def security():
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
         msg = 'elif code!' 
-    return render_template('secretary/add_security.html', msg=msg)
+    return people()
 
 @app.route('/R-Portal/security_home')
 def security_home():
@@ -223,7 +294,8 @@ def staff():
         
         staff_username = request.form['staff_username']
         staff_mobile = request.form['staff_mobile']
-        staff_password = request.form['staff_password']
+        passtext  = request.form['staff_password']
+        staff_password  = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
         staff_name = request.form['staff_name']
         staff_code = request.form['staff_code']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -236,12 +308,14 @@ def staff():
         elif not staff_username or not staff_password or not staff_mobile:
             msg = 'Please fill out the form!'
         else:
-            cursor.execute('INSERT INTO staff VALUES (NULL, %s, %s, %s, %s, %s, NULL)', (staff_username , staff_password , staff_name , staff_mobile, staff_code))
+            cursor.execute('INSERT INTO staff VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT)', (staff_username , staff_password , staff_name , staff_mobile, staff_code))
             mysql.connection.commit()
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
-        msg = 'elif code!' 
-    return render_template('secretary/add_staff.html', msg=msg)
+        msg = 'elif code!'
+    return people()
+
+  
 
 @app.route('/R-Portal/staff_home')
 def staff_home():
@@ -281,7 +355,8 @@ def sregister():
         
         username = request.form['Susername']
         email = request.form['Semail']
-        password = request.form['Spassword']
+        passtext = request.form['Spassword']
+        password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
         Aname = request.form['Sname']
         flatno = request.form['Sflatno']
         wing = request.form['Swing']
@@ -330,26 +405,201 @@ def sregister():
         elif not username or not password or not email:
             msg = 'Please fill out the form!'
         else:
-            cursor1.execute('INSERT INTO secretary VALUES (NULL, %s, %s, %s, %s, %s, %s, %s,%s)', (username , password , code ,  email , Aname , flatno , wing , mobile))
-            cursor2.execute('INSERT INTO society VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, NULL, NULL,%s)', (code , name , city , road , area , state , pin , acname, acno, mmid, bankname, branch, ifsc, kyc_file))
+            cursor1.execute('INSERT INTO secretary VALUES (NULL, %s, %s, %s, %s, %s, %s, %s,%s , DEFAULT , DEFAULT)', (username , password , code ,  email , Aname , flatno , wing , mobile ,))
+            cursor2.execute('INSERT INTO society VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, NULL, NULL,%s, DEFAULT , DEFAULT)', (code , name , city , road , area , state , pin , acname, acno, mmid, bankname, branch, ifsc, kyc_file))
             mysql.connection.commit()
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
         msg = 'elif code!' 
     return render_template('secretary/sregister.html', msg=msg)
 
+@app.route('/R-Portal/society_details')
+def people():
+    if 'loggedin' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT Mname, member_status, Mmobile ,Mid, Mflatno,Mwing from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s AND member_status=%s', (session['id'],'active'))
+        account = cursor.fetchall()     
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('SELECT Sname,secretarty_status, Smobile from secretary WHERE Sid = %s AND secretarty_status=%s', (session['id'],'active'))
+        account1 = cursor1.fetchone()  
+        cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor2.execute('SELECT   security_id,security_name, security_status, security_mobile from secretary inner join security on secretary.Scode = security.security_code WHERE Sid = %s AND security_status=%s', (session['id'],'active'))
+        account2 = cursor2.fetchall()     
+        cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor3.execute('SELECT staff_name, staff_status, staff_mobile ,staff_id from secretary inner join staff on secretary.Scode = staff.staff_code WHERE Sid = %s AND staff_status=%s', (session['id'],'active'))
+        account3 = cursor3.fetchall()        
+        return render_template('secretary/people.html', account=account, account1=account1, account2=account2, account3=account3)
+    return redirect(url_for('login'))
+
+@app.route('/R-Portal/inactive_people')
+def inpeople():
+    if 'loggedin' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT Mname, member_status, Mmobile, Mid from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s AND member_status=%s', (session['id'],'inactive'))
+        account = cursor.fetchall()     
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('SELECT Sname,secretarty_status, Smobile from secretary WHERE Sid = %s AND secretarty_status=%s', (session['id'],'inactive'))
+        account1 = cursor1.fetchone()  
+        cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor2.execute('SELECT security_name, security_status, security_mobile,security_id from secretary inner join security on secretary.Scode = security.security_code WHERE Sid = %s AND security_status=%s', (session['id'],'inactive'))
+        account2 = cursor2.fetchall()     
+        cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor3.execute('SELECT staff_name, staff_status, staff_mobile ,staff_id from secretary inner join staff on secretary.Scode = staff.staff_code WHERE Sid = %s AND staff_status=%s', (session['id'],'inactive'))
+        account3 = cursor3.fetchall()        
+        return render_template('secretary/inactive_people.html', account=account, account1=account1, account2=account2, account3=account3)
+    return redirect(url_for('login'))
+
+
+@app.route('/R-Portal/allow_members/')
+def allow_members():
+    if 'loggedin' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT Mid, Mname, member_status, Mmobile, Mwing, Mflatno from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s AND member_status=%s', (session['id'],'Request'))
+        account = cursor.fetchall() 
+        
+        return render_template('secretary/allow_members.html', account=account )
+    return redirect(url_for('login'))
+    
+
+@app.route('/R-Portal/a_members/<int:Mid>')
+def a_members(Mid):
+
+    if 'loggedin' in session: 
+
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("UPDATE member SET member_status = %s WHERE Mid = %s" ,('active',Mid,)) 
+        mysql.connection.commit()
+        msg = 'Member Allowed'
+        return allow_members()
+    return redirect(url_for('login'))
+
+@app.route('/R-Portal/i_members/<int:Mid>', methods=['GET', 'POST'])
+def i_members(Mid):
+
+    if 'loggedin' in session: 
+        
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("UPDATE member SET member_status = %s WHERE Mid = %s" ,('inactive',Mid,)) 
+        mysql.connection.commit()
+        msg = 'Member Allowed'
+        return people()
+    return redirect(url_for('login'))
+@app.route('/R-Portal/ac_members/<int:Mid>', methods=['GET', 'POST'])
+def ac_members(Mid):
+
+    if 'loggedin' in session: 
+        
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("UPDATE member SET member_status = %s WHERE Mid = %s" ,('active',Mid,)) 
+        mysql.connection.commit()
+        msg = 'Member Allowed'
+        return inpeople()
+    return redirect(url_for('login'))
+
+@app.route('/R-Portal/r_members/<int:Mid>')
+def r_members(Mid):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('DELETE FROM member WHERE Mid = %s',[Mid]) 
+        mysql.connection.commit()
+        msg = 'Member Delete'
+        return allow_members()
+    return redirect(url_for('login'))
+
+@app.route('/R-Portal/d_members/<int:Mid>')
+def d_members(Mid):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('DELETE FROM member WHERE Mid = %s',[Mid]) 
+        mysql.connection.commit()
+        msg = 'Member Delete'
+        return people()
+    return redirect(url_for('login'))
+
+@app.route('/R-Portal/din_members/<int:Mid>')
+def din_members(Mid):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('DELETE FROM member WHERE Mid = %s',[Mid]) 
+        mysql.connection.commit()
+        msg = 'Member Delete'
+        return inpeople()
+    return redirect(url_for('login'))
+
+@app.route('/R-Portal/i_security/<int:security_id>', methods=['GET', 'POST'])
+def i_security(security_id):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("UPDATE security SET security_status = %s WHERE security_id= %s" ,('inactive',security_id,)) 
+        mysql.connection.commit()
+        return people()
+        
+@app.route('/R-Portal/a_security/<int:security_id>', methods=['GET', 'POST'])
+def a_security(security_id):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("UPDATE security SET security_status = %s WHERE security_id= %s" ,('active',security_id,)) 
+        mysql.connection.commit()
+        return inpeople()
+
+
+@app.route('/R-Portal/d_security/<int:security_id>')
+def d_security(security_id):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('DELETE FROM security WHERE security_id = %s',[security_id]) 
+        mysql.connection.commit()
+        return people()
+
+@app.route('/R-Portal/din_security/<int:security_id>')
+def din_security(security_id):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('DELETE FROM security WHERE security_id = %s',[security_id]) 
+        mysql.connection.commit()
+        return inpeople()
+    return redirect(url_for('login'))
+
+#staff people
+@app.route('/R-Portal/i_staff/<int:staff_id>', methods=['GET', 'POST'])
+def i_staff(staff_id):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_id= %s" ,('inactive',staff_id,)) 
+        mysql.connection.commit()
+        return people()
+        
+@app.route('/R-Portal/a_staff/<int:staff_id>', methods=['GET', 'POST'])
+def a_staff(staff_id):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_id= %s" ,('active',staff_id,)) 
+        mysql.connection.commit()
+        return inpeople()
+
+
+@app.route('/R-Portal/d_staff/<int:staff_id>')
+def d_staff(staff_id):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('DELETE FROM staff WHERE staff_id = %s',[staff_id]) 
+        mysql.connection.commit()
+        return people()
+
+@app.route('/R-Portal/din_staff/<int:staff_id>')
+def din_staff(staff_id):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('DELETE FROM staff WHERE staff_id = %s',[staff_id]) 
+        mysql.connection.commit()
+        return inpeople()
+    return redirect(url_for('login'))
+
+
 @app.route('/R-Portal/shome')
 def shome():
     if 'loggedin' in session:
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT Mname from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s', (session['id'],))
-        account = cursor.fetchall()     
-        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor1.execute('SELECT Sname from secretary WHERE Sid = %s', (session['id'],))
-        account1 = cursor1.fetchone()     
-       # for account in cursor:
-        #   print(account, '\n')
-        return render_template('secretary/shome.html', account=account, account1=account1)
+        return render_template('secretary/shome.html')
     return redirect(url_for('login'))
 
 @app.route('/R-Portal/sprofile')
@@ -383,7 +633,8 @@ def mregister():
     msg = ''
     if request.method == 'POST' and 'Musername' in request.form and 'Mpassword' in request.form and 'Memail' in request.form and 'Mcode' in request.form and 'Mname' in request.form and 'Mflatno' in request.form and 'Mwing' in request.form and 'Mmobile' in request.form:
         username = request.form['Musername']
-        password = request.form['Mpassword']
+        passtext = request.form['Mpassword']
+        password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
         code = request.form['Mcode']
         email = request.form['Memail']
         name = request.form['Mname']
@@ -407,7 +658,7 @@ def mregister():
         elif not username or not password or not email:
             msg = 'Please fill out the form!'
         else:
-            cursor.execute('INSERT INTO member VALUES (NULL, %s, %s, %s, %s, %s, %s, %s,%s)', (username , password , code ,  email , name , flatno , wing , mobile))
+            cursor.execute('INSERT INTO member VALUES (NULL, %s, %s, %s, %s, %s, %s, %s,%s,DEFAULT,DEFAULT )', (username , password , code ,  email , name , flatno , wing , mobile))
             mysql.connection.commit()
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
@@ -429,20 +680,82 @@ def mprofile():
         return render_template('member/mprofile.html', account=account)
     return redirect(url_for('login'))
 
+@app.route('/R-Portal/admin_home')
+def admin_home():
+    if 'loggedin' in session:
+        return render_template('admin/admin_home.html', Ausername=session['username'])
+    return redirect(url_for('login'))
+
 @app.route('/R-Portal/asoc')
 def asoc():
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM society')
-        account = cursor.fetchall()
-        #for account in cursor:
-           # print(account, '\n')
-             
+        cursor.execute('SELECT  name, road, area, city, state, pin, Sname, Sflatno, Swing, Smobile, Semail, Scode, acname, acno, mmid, bankname, branch, ifsc, secretarty_status FROM secretary INNER JOIN society on secretary.Scode=society.code WHERE secretarty_status = %s;', ('active',))
+        account = cursor.fetchall() 
         return render_template('admin/asoc.html', account=account)
     else:
         return redirect(url_for('login'))
 
-    
+@app.route('/R-Portal/isoc')
+def isoc():
+    if 'loggedin' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT  name, road, area, city, state, pin, Sname, Sflatno, Swing, Smobile, Semail, Scode, acname, acno, mmid, bankname, branch, ifsc, secretarty_status FROM secretary INNER JOIN society on secretary.Scode=society.code WHERE secretarty_status = %s;', ('inactive',))
+        account = cursor.fetchall() 
+        return render_template('admin/isoc.html', account=account)
+    else:
+        return redirect(url_for('login'))
+
+@app.route('/R-Portal/admin_req/')
+def admin_req():
+    if 'loggedin' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT Sname, secretarty_status, Smobile, Semail, Scode, secretary_time, area, road, city, state, pin, name from secretary inner join society on secretary.Scode = society.code WHERE  secretarty_status = %s', ('request',))
+        account = cursor.fetchall()           
+        return render_template('admin/admin_req.html', account=account)
+    return redirect(url_for('login'))
+
+@app.route('/R-Portal/a_sec/<string:Scode>')
+def a_sec(Scode):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("UPDATE secretary SET secretarty_status = %s WHERE Scode = %s" ,('active',Scode,)) 
+        cursor.execute("UPDATE society SET society_status = %s WHERE code = %s" ,('inactive',Scode,)) 
+        cursor.execute("UPDATE member SET member_status = %s WHERE Mcode = %s" ,('inactive',Scode,)) 
+        cursor.execute("UPDATE security SET security_status = %s WHERE security_code = %s" ,('inactive',Scode,)) 
+        cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_code = %s" ,('inactive',Scode,)) 
+        mysql.connection.commit()
+        msg = 'Society Allowed'
+        return render_template('admin/admin_req.html', msg=msg)
+    return redirect(url_for('login'))
+
+@app.route('/R-Portal/c_sec/<string:Scode>')
+def c_sec(Scode):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("UPDATE secretary SET secretarty_status = %s WHERE Scode = %s" ,('inactive',Scode,)) 
+        cursor.execute("UPDATE society SET society_status = %s WHERE code = %s" ,('inactive',Scode,)) 
+        cursor.execute("UPDATE member SET member_status = %s WHERE Mcode = %s" ,('inactive',Scode,)) 
+        cursor.execute("UPDATE security SET security_status = %s WHERE security_code = %s" ,('active',Scode,)) 
+        cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_code = %s" ,('active',Scode,)) 
+        mysql.connection.commit()
+        msg = 'Society Disbanded'
+        return render_template('admin/admin_req.html', msg=msg)
+    return redirect(url_for('login'))
+
+@app.route('/R-Portal/r_sec/<string:Scode>')
+def r_sec(Scode):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('DELETE FROM secretary WHERE Scode = %s',[Scode]) 
+        cursor.execute('DELETE FROM society WHERE code = %s',[Scode]) 
+        cursor.execute('DELETE FROM member WHERE Mcode = %s',[Scode]) 
+        cursor.execute('DELETE FROM security WHERE security_code = %s',[Scode]) 
+        cursor.execute('DELETE FROM staff WHERE staff_code = %s',[Scode]) 
+        mysql.connection.commit()
+        msg = 'Society Rejected/Deleted'
+        return render_template('admin/admin_req.html', msg=msg)
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
    app.run(debug=True)

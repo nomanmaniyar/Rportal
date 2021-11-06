@@ -9,7 +9,7 @@
     }
 </style>
 	
-<h2>All Society under R-Portal</h2>
+<h2>Inactive Society under R-Portal</h2>
 <div>
     <h4><div class="msg">{{ msg }}</div></h4>
     <table  class="table" style="width:100%">
@@ -46,7 +46,7 @@
                 <td><a href="/static/upload/{{data['kyc_file']}}" download="/static/upload/{{data['kyc_file']}}" target="blank"><button class='btn btn-primary'>Download</button></a></td>
                 <td>{{ data['secretarty_status'] }}</td>    
                 <td>
-                    <a  class="btn btn-danger" href="/R-Portal/c_sec/{{data.Scode}}"><i class="fas fa-user-minus" onclick="return confirm('Are You Sure to change status?')" style="color:#fa1808"></i>Deactivate</a><br><br>
+                    <a class="btn btn-success" href="/R-Portal/a_sec/{{data.Scode}}"><i class="fas fa-user-plus " style="color:#08fa18"></i>Allow</a><br><br>
                     <a  class="btn btn-danger" href="/R-Portal/r_sec/{{data.Scode}}"><i class="fas fa-user-minus" onclick="return confirm('Are You Sure For Reject?')" style="color:#fa1808"></i>Delete</a>
                 </td>  
             </tr>   
