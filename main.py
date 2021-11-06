@@ -270,7 +270,7 @@ def security():
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
         msg = 'elif code!' 
-    return render_template('secretary/add_security.html', msg=msg)
+    return people()
 
 @app.route('/R-Portal/security_home')
 def security_home():
@@ -308,12 +308,14 @@ def staff():
         elif not staff_username or not staff_password or not staff_mobile:
             msg = 'Please fill out the form!'
         else:
-            cursor.execute('INSERT INTO staff VALUES (NULL, %s, %s, %s, %s, %s, NULL)', (staff_username , staff_password , staff_name , staff_mobile, staff_code))
+            cursor.execute('INSERT INTO staff VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT)', (staff_username , staff_password , staff_name , staff_mobile, staff_code))
             mysql.connection.commit()
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
-        msg = 'elif code!' 
-    return render_template('secretary/add_staff.html', msg=msg)
+        msg = 'elif code!'
+    return people()
+
+  
 
 @app.route('/R-Portal/staff_home')
 def staff_home():
@@ -415,27 +417,47 @@ def sregister():
 def people():
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT Mname, member_status, Mmobile from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s AND member_status=%s', (session['id'],'active'))
+        cursor.execute('SELECT Mname, member_status, Mmobile ,Mid, Mflatno,Mwing from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s AND member_status=%s', (session['id'],'active'))
         account = cursor.fetchall()     
         cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor1.execute('SELECT Sname,secretarty_status, Smobile from secretary WHERE Sid = %s AND secretarty_status=%s', (session['id'],'active'))
         account1 = cursor1.fetchone()  
         cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor2.execute('SELECT security_name, security_status, security_mobile from secretary inner join security on secretary.Scode = security.security_code WHERE Sid = %s AND security_status=%s', (session['id'],'active'))
+        cursor2.execute('SELECT   security_id,security_name, security_status, security_mobile from secretary inner join security on secretary.Scode = security.security_code WHERE Sid = %s AND security_status=%s', (session['id'],'active'))
         account2 = cursor2.fetchall()     
         cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor3.execute('SELECT staff_name, staff_status, staff_mobile from secretary inner join staff on secretary.Scode = staff.staff_code WHERE Sid = %s AND staff_status=%s', (session['id'],'active'))
+        cursor3.execute('SELECT staff_name, staff_status, staff_mobile ,staff_id from secretary inner join staff on secretary.Scode = staff.staff_code WHERE Sid = %s AND staff_status=%s', (session['id'],'active'))
         account3 = cursor3.fetchall()        
         return render_template('secretary/people.html', account=account, account1=account1, account2=account2, account3=account3)
     return redirect(url_for('login'))
+
+@app.route('/R-Portal/inactive_people')
+def inpeople():
+    if 'loggedin' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT Mname, member_status, Mmobile, Mid from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s AND member_status=%s', (session['id'],'inactive'))
+        account = cursor.fetchall()     
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('SELECT Sname,secretarty_status, Smobile from secretary WHERE Sid = %s AND secretarty_status=%s', (session['id'],'inactive'))
+        account1 = cursor1.fetchone()  
+        cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor2.execute('SELECT security_name, security_status, security_mobile,security_id from secretary inner join security on secretary.Scode = security.security_code WHERE Sid = %s AND security_status=%s', (session['id'],'inactive'))
+        account2 = cursor2.fetchall()     
+        cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor3.execute('SELECT staff_name, staff_status, staff_mobile ,staff_id from secretary inner join staff on secretary.Scode = staff.staff_code WHERE Sid = %s AND staff_status=%s', (session['id'],'inactive'))
+        account3 = cursor3.fetchall()        
+        return render_template('secretary/inactive_people.html', account=account, account1=account1, account2=account2, account3=account3)
+    return redirect(url_for('login'))
+
 
 @app.route('/R-Portal/allow_members/')
 def allow_members():
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT Mid, Mname, member_status, Mmobile, Mwing, Mflatno from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s AND member_status=%s', (session['id'],'inactive'))
-        account = cursor.fetchall()           
-        return render_template('secretary/allow_members.html', account=account)
+        cursor.execute('SELECT Mid, Mname, member_status, Mmobile, Mwing, Mflatno from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s AND member_status=%s', (session['id'],'Request'))
+        account = cursor.fetchall() 
+        
+        return render_template('secretary/allow_members.html', account=account )
     return redirect(url_for('login'))
     
 
@@ -448,7 +470,30 @@ def a_members(Mid):
         cursor.execute("UPDATE member SET member_status = %s WHERE Mid = %s" ,('active',Mid,)) 
         mysql.connection.commit()
         msg = 'Member Allowed'
-        return render_template('secretary/allow_members.html', msg=msg)
+        return allow_members()
+    return redirect(url_for('login'))
+
+@app.route('/R-Portal/i_members/<int:Mid>', methods=['GET', 'POST'])
+def i_members(Mid):
+
+    if 'loggedin' in session: 
+        
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("UPDATE member SET member_status = %s WHERE Mid = %s" ,('inactive',Mid,)) 
+        mysql.connection.commit()
+        msg = 'Member Allowed'
+        return people()
+    return redirect(url_for('login'))
+@app.route('/R-Portal/ac_members/<int:Mid>', methods=['GET', 'POST'])
+def ac_members(Mid):
+
+    if 'loggedin' in session: 
+        
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("UPDATE member SET member_status = %s WHERE Mid = %s" ,('active',Mid,)) 
+        mysql.connection.commit()
+        msg = 'Member Allowed'
+        return inpeople()
     return redirect(url_for('login'))
 
 @app.route('/R-Portal/r_members/<int:Mid>')
@@ -458,8 +503,98 @@ def r_members(Mid):
         cursor.execute('DELETE FROM member WHERE Mid = %s',[Mid]) 
         mysql.connection.commit()
         msg = 'Member Delete'
-        return render_template('secretary/allow_members.html', msg=msg)
+        return allow_members()
     return redirect(url_for('login'))
+
+@app.route('/R-Portal/d_members/<int:Mid>')
+def d_members(Mid):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('DELETE FROM member WHERE Mid = %s',[Mid]) 
+        mysql.connection.commit()
+        msg = 'Member Delete'
+        return people()
+    return redirect(url_for('login'))
+
+@app.route('/R-Portal/din_members/<int:Mid>')
+def din_members(Mid):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('DELETE FROM member WHERE Mid = %s',[Mid]) 
+        mysql.connection.commit()
+        msg = 'Member Delete'
+        return inpeople()
+    return redirect(url_for('login'))
+
+@app.route('/R-Portal/i_security/<int:security_id>', methods=['GET', 'POST'])
+def i_security(security_id):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("UPDATE security SET security_status = %s WHERE security_id= %s" ,('inactive',security_id,)) 
+        mysql.connection.commit()
+        return people()
+        
+@app.route('/R-Portal/a_security/<int:security_id>', methods=['GET', 'POST'])
+def a_security(security_id):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("UPDATE security SET security_status = %s WHERE security_id= %s" ,('active',security_id,)) 
+        mysql.connection.commit()
+        return inpeople()
+
+
+@app.route('/R-Portal/d_security/<int:security_id>')
+def d_security(security_id):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('DELETE FROM security WHERE security_id = %s',[security_id]) 
+        mysql.connection.commit()
+        return people()
+
+@app.route('/R-Portal/din_security/<int:security_id>')
+def din_security(security_id):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('DELETE FROM security WHERE security_id = %s',[security_id]) 
+        mysql.connection.commit()
+        return inpeople()
+    return redirect(url_for('login'))
+
+#staff people
+@app.route('/R-Portal/i_staff/<int:staff_id>', methods=['GET', 'POST'])
+def i_staff(staff_id):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_id= %s" ,('inactive',staff_id,)) 
+        mysql.connection.commit()
+        return people()
+        
+@app.route('/R-Portal/a_staff/<int:staff_id>', methods=['GET', 'POST'])
+def a_staff(staff_id):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_id= %s" ,('active',staff_id,)) 
+        mysql.connection.commit()
+        return inpeople()
+
+
+@app.route('/R-Portal/d_staff/<int:staff_id>')
+def d_staff(staff_id):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('DELETE FROM staff WHERE staff_id = %s',[staff_id]) 
+        mysql.connection.commit()
+        return people()
+
+@app.route('/R-Portal/din_staff/<int:staff_id>')
+def din_staff(staff_id):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('DELETE FROM staff WHERE staff_id = %s',[staff_id]) 
+        mysql.connection.commit()
+        return inpeople()
+    return redirect(url_for('login'))
+
 
 @app.route('/R-Portal/shome')
 def shome():
@@ -585,10 +720,10 @@ def a_sec(Scode):
     if 'loggedin' in session: 
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute("UPDATE secretary SET secretarty_status = %s WHERE Scode = %s" ,('active',Scode,)) 
-        cursor.execute("UPDATE society SET society_status = %s WHERE code = %s" ,('active',Scode,)) 
-        cursor.execute("UPDATE member SET member_status = %s WHERE Mcode = %s" ,('active',Scode,)) 
-        cursor.execute("UPDATE security SET security_status = %s WHERE security_code = %s" ,('active',Scode,)) 
-        cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_code = %s" ,('active',Scode,)) 
+        cursor.execute("UPDATE society SET society_status = %s WHERE code = %s" ,('inactive',Scode,)) 
+        cursor.execute("UPDATE member SET member_status = %s WHERE Mcode = %s" ,('inactive',Scode,)) 
+        cursor.execute("UPDATE security SET security_status = %s WHERE security_code = %s" ,('inactive',Scode,)) 
+        cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_code = %s" ,('inactive',Scode,)) 
         mysql.connection.commit()
         msg = 'Society Allowed'
         return render_template('admin/admin_req.html', msg=msg)
@@ -601,8 +736,8 @@ def c_sec(Scode):
         cursor.execute("UPDATE secretary SET secretarty_status = %s WHERE Scode = %s" ,('inactive',Scode,)) 
         cursor.execute("UPDATE society SET society_status = %s WHERE code = %s" ,('inactive',Scode,)) 
         cursor.execute("UPDATE member SET member_status = %s WHERE Mcode = %s" ,('inactive',Scode,)) 
-        cursor.execute("UPDATE security SET security_status = %s WHERE security_code = %s" ,('inactive',Scode,)) 
-        cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_code = %s" ,('inactive',Scode,)) 
+        cursor.execute("UPDATE security SET security_status = %s WHERE security_code = %s" ,('active',Scode,)) 
+        cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_code = %s" ,('active',Scode,)) 
         mysql.connection.commit()
         msg = 'Society Disbanded'
         return render_template('admin/admin_req.html', msg=msg)
