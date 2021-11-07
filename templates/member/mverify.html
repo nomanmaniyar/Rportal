@@ -136,7 +136,7 @@ button:hover {
 		
 		<div class="Mregister">
 
-			
+			<h3>Member Registraion: </h3>
 			<h4><div class="msg">{{ msg }}</div></h4>
 
 			<label for="Mname">
@@ -194,14 +194,14 @@ button:hover {
   
   <div style="overflow:auto;">
     <div style="float:right;">
-      
+      <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
       
     </div>
   </div>
   <!-- Circles which indicates the steps of the form: -->
   <div style="text-align:center;margin-top:40px;">
-   <!---- <span class="step"></span>
-    <span class="step"></span>-->
+    <span class="step"></span>
+    <span class="step"></span>
     
   </div>
 </form>
@@ -223,7 +223,7 @@ function showTab(n) {
   if (n == (x.length - 1)) {
     document.getElementById("nextBtn").innerHTML = "Submit";
   } else {
-    document.getElementById("nextBtn").innerHTML = "Continue";
+    document.getElementById("nextBtn").innerHTML = "Next";
   }
   //... and run a function that will display the correct step indicator:
   fixStepIndicator(n)
@@ -282,4 +282,3 @@ function fixStepIndicator(n) {
 </script>
 
 </body>
-</html>
