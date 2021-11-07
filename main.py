@@ -227,7 +227,8 @@ def svalidate():
     if otp == int(user_otp):  
         return redirect(url_for('shome')) 
     else: 
-        return render_template("rportal.html")
+        msg = 'OTP Does not match! Try Again!!'
+        return render_template('secretary/sotp.html', msg=msg)
 
 @app.route('/mvalidate',methods=["POST"])
 def mvalidate():  
@@ -235,8 +236,9 @@ def mvalidate():
     if otp == int(user_otp):  
         return redirect(url_for('mhome')) 
     else: 
-        return render_template("rportal.html")  
-
+        msg = 'OTP Does not match! Try Again!!'
+        return render_template('member/motp.html', msg=msg)
+        
 @app.route('/R-Portal/logout')
 def logout():
    session.pop('loggedin', None)
