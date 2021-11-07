@@ -621,7 +621,7 @@ def mcode():
         if account:
             cursor.execute('select name, city, road, area, state, pin, semail from society inner join secretary WHERE code = %s', (code ,))
             account = cursor.fetchone()
-            return render_template('member/mverify.html', account=account)
+            return render_template('member/mverify.html', account=account, meg=meg)
         else:
             mysql.connection.commit()
             msg='Invalid Society Code!'
