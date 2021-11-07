@@ -619,7 +619,7 @@ def mcode():
         cursor.execute('SELECT * FROM society WHERE code = %s', (code,))
         account = cursor.fetchone()
         if account:
-            cursor.execute('select name, city, road, area, state, pin from society WHERE code = %s', (code ,))
+            cursor.execute('select name, city, road, area, state, pin, semail from society inner join secretary WHERE code = %s', (code ,))
             account = cursor.fetchone()
             return render_template('member/mverify.html', account=account)
         else:
