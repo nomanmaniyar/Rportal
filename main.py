@@ -621,7 +621,7 @@ def mcode():
         if account:
             cursor.execute('select name, city, road, area, state, pin, semail from society inner join secretary WHERE code = %s', (code ,))
             account = cursor.fetchone()
-            return render_template('member/mverify.html', account=account, meg=msg)
+            return render_template('member/mverify.html', account=account, msg=msg)
         else:
             mysql.connection.commit()
             msg='Invalid Society Code!'
@@ -662,7 +662,7 @@ def mregister():
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
         msg = 'Please fill out the form!'
-    return render_template('member/mregister.html', msg=msg)
+    return render_template('login.html', msg=msg)
 
 @app.route('/R-Portal/mhome')
 def mhome():
