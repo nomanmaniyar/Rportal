@@ -129,7 +129,7 @@ button:hover {
 		<label>Already have an account? : </label>
 		<a href="{{ url_for('login') }}">Login</a>
     <br<<br>
-    {{ account['semail'] }}
+    
 		</h3>
 	</div>
 
@@ -153,11 +153,9 @@ button:hover {
 			<input type="text" name="Musername" placeholder="Username" id="Musername" required>
 			<br><br>
 
-			<label for="Mcode">
-				<i class="fas fa-building"></i>
-			</label>
-			<input type="text" name="Mcode" placeholder="Society Code" id="Mcode" required>
-			<br><br>
+			
+			<input type="hidden" name="Mcode" value = {{ account['code'] }} id="Mcode" required>
+			
 
 			<label for="Memail">
 				<i class="fas fa-envelope"></i>
@@ -187,18 +185,22 @@ button:hover {
 				<i class="fas fa-lock"></i>
 			</label>
 			<input type="password" name="Mpassword" placeholder="Password" id="Mpassword" required>
+			<input type="hidden" name="Semail" value="{{ account['semail'] }}" id="Semail" required>
+			<input type="hidden" name="Susername" value="{{ account['Susername'] }}" id="Susername" required>
+			
 			<br><br>
-			<input type="submit" value="Register">
+			<button type="submit" value="Register">Register</button>
+		
+			<div style="float:right;">
+			  <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
+			  
+			</div>
 		</div>
 	</form>
 
   </div>
   
-  <div style="overflow:auto;">
-    <div style="float:right;">
-      <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
-      
-    </div>
+ 
   </div>
   <!-- Circles which indicates the steps of the form: -->
   <div style="text-align:center;margin-top:40px;">
