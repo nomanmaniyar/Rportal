@@ -17,15 +17,16 @@
             <th>Name</th>
             <th>Address</th>
             <th>Secretary Details</th>
-            <th>Society Code</th>
             <th>Bank Details</th>
             <th>KYC File</th>
-            <th>Status</th>
             <th>Change Status</th>
+            <th>Delete</th>
         </tr> 
         {% for data in account %}
             <tr>
-                <td>{{ data['name'] }}</td>
+                <td>{{ data['name'] }}<br><br>
+                    <b><a>Society Code: </a></b>{{ data['Scode'] }}<br>
+                </td>
                 <td>{{ data['road'] }}
                     {{ data['area'] }}<br>
                     {{ data['city'] }}
@@ -36,7 +37,6 @@
                     <b><a>Wing: </a></b> {{ data['Swing'] }}<br>
                     <b><a>Mobile: </a></b> {{ data['Smobile'] }}<br>
                     <b><a>Email: </a></b>  {{ data['Semail'] }}</td>
-                <td>{{ data['Scode'] }}</td>
                 <td><b><a>AC Name: </a></b>{{ data['acname'] }}<br>
                     <b><a>Ac Number: </a></b> {{ data['acno'] }}<br>
                     <b><a>MMID: </a></b> {{ data['mmid'] }}<br>
@@ -44,11 +44,18 @@
                     <b><a>Branch: </a></b>  {{ data['branch'] }}<br>
                     <b><a>IFSC Code: </a></b>  {{ data['ifsc'] }}</td>
                 <td><a href="/static/upload/{{data['kyc_file']}}" download="/static/upload/{{data['kyc_file']}}" target="blank"><button class='btn btn-primary'>Download</button></a></td>
-                <td>{{ data['secretarty_status'] }}</td>    
                 <td>
-                    <a  class="btn btn-danger" href="/R-Portal/c_sec/{{data.Scode}}"><i class="fas fa-user-minus" onclick="return confirm('Are You Sure to change status?')" style="color:#fa1808"></i>Deactivate</a><br><br>
-                    <a  class="btn btn-danger" href="/R-Portal/r_sec/{{data.Scode}}"><i class="fas fa-user-minus" onclick="return confirm('Are You Sure For Reject?')" style="color:#fa1808"></i>Delete</a>
-                </td>  
+                    <form action="/R-Portal/c_sec/{{data.Scode}}" >
+                    <b> Status: </b>
+                        <select onchange='if(this.value !=0 ) { this.form.submit(); }'>
+                       <option value='0'>{{ data['secretarty_status'] }}</option>
+                       <option value='1'>inactive</option>
+                      </select>
+                   </form>
+                 </td>
+                <td>    
+                    &nbsp;&nbsp;&nbsp;<a href="/R-Portal/r_sec/{{data.Scode}}"><i class="fa fa-trash" aria-hidden="true" onclick="return confirm('Are You Sure For delete ?')" style="color:black"></i></a>
+                 </td>  
             </tr>   
         {% endfor %}
 

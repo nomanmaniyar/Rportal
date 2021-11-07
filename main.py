@@ -482,6 +482,7 @@ def i_members(Mid):
         msg = 'Member Allowed'
         return people()
     return redirect(url_for('login'))
+
 @app.route('/R-Portal/ac_members/<int:Mid>', methods=['GET', 'POST'])
 def ac_members(Mid):
 
@@ -718,13 +719,28 @@ def a_sec(Scode):
     if 'loggedin' in session: 
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute("UPDATE secretary SET secretarty_status = %s WHERE Scode = %s" ,('active',Scode,)) 
-        cursor.execute("UPDATE society SET society_status = %s WHERE code = %s" ,('inactive',Scode,)) 
+        cursor.execute("UPDATE society SET society_status = %s WHERE code = %s" ,('active',Scode,)) 
         cursor.execute("UPDATE member SET member_status = %s WHERE Mcode = %s" ,('inactive',Scode,)) 
-        cursor.execute("UPDATE security SET security_status = %s WHERE security_code = %s" ,('inactive',Scode,)) 
-        cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_code = %s" ,('inactive',Scode,)) 
+        cursor.execute("UPDATE security SET security_status = %s WHERE security_code = %s" ,('active',Scode,)) 
+        cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_code = %s" ,('active',Scode,)) 
         mysql.connection.commit()
         msg = 'Society Allowed'
-        return render_template('admin/admin_req.html', msg=msg)
+        return admin_req()
+    return redirect(url_for('login'))
+
+
+@app.route('/R-Portal/al_sec/<string:Scode>')
+def al_sec(Scode):
+    if 'loggedin' in session: 
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("UPDATE secretary SET secretarty_status = %s WHERE Scode = %s" ,('active',Scode,)) 
+        cursor.execute("UPDATE society SET society_status = %s WHERE code = %s" ,('active',Scode,)) 
+        cursor.execute("UPDATE member SET member_status = %s WHERE Mcode = %s" ,('inactive',Scode,)) 
+        cursor.execute("UPDATE security SET security_status = %s WHERE security_code = %s" ,('active',Scode,)) 
+        cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_code = %s" ,('active',Scode,)) 
+        mysql.connection.commit()
+        msg = 'Society Allowed'
+        return isoc()
     return redirect(url_for('login'))
 
 @app.route('/R-Portal/c_sec/<string:Scode>')
@@ -738,7 +754,7 @@ def c_sec(Scode):
         cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_code = %s" ,('active',Scode,)) 
         mysql.connection.commit()
         msg = 'Society Disbanded'
-        return render_template('admin/admin_req.html', msg=msg)
+        return asoc()
     return redirect(url_for('login'))
 
 @app.route('/R-Portal/r_sec/<string:Scode>')
