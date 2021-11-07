@@ -187,6 +187,62 @@ def login():
                                                             msg = 'Incorrect username/password! Please check Username/Password and try again!'
     return render_template('login.html', msg=msg)
 
+@app.route('/R-Portal/login', methods=['GET', 'POST'])
+def login():
+    msg = ''
+    if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+        username = request.form['username']
+        password = request.form['password']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM secretary WHERE Susername = %s AND Spassword = %s AND secretarty_status=%s', (username, password,'active'))
+        account = cursor.fetchone()
+        if account:
+            session['loggedin'] = True
+            session['id'] = account['Sid']
+            session['username'] = account['Susername']
+            session['code'] = account['Scode']
+            return sotp() 
+        elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+            username = request.form['username']
+            password = request.form['password']
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT * FROM member WHERE Musername = %s AND Mpassword = %s AND member_status=%s', (username, password,'active'))
+            account = cursor.fetchone()
+            if account:
+                session['loggedin'] = True
+                session['id'] = account['Mid']
+                session['username'] = account['Musername']
+                session['code'] = account['Mcode']
+                return motp()           
+            elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+                username = request.form['username']
+                password = request.form['password']
+                cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                cursor.execute('SELECT * FROM security WHERE security_username = %s AND security_password = %s AND security_status=%s', (username, password,'active'))
+                account = cursor.fetchone()
+                if account:
+                    session['loggedin'] = True
+                    session['id'] = account['security_id']
+                    session['username'] = account['security_username']
+                    session['code'] = account['security_code']
+                    return render_template("security/security_home.html")       
+                elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+                    username = request.form['username']
+                    password = request.form['password']
+                    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                    cursor.execute('SELECT * FROM staff WHERE staff_username = %s AND staff_password = %s AND staff_status=%s', (username, password,'active'))
+                    account = cursor.fetchone()
+                    if account:
+                        session['loggedin'] = True
+                        session['id'] = account['staff_id']
+                        session['username'] = account['staff_username']
+                        session['code'] = account['staff_code']
+                        return render_template("staff/staff_home.html") 
+                    else:
+                        msg = 'Incorrect username/password! Please check Username/Password and try again!'
+    return render_template('login.html', msg=msg)
+
+
 def sotp(): 
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
