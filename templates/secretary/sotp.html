@@ -10,6 +10,7 @@
     <h1>R-Portal</h1>
 	<h3>OTP Verification</h3>
 	<h4><div class="msg1">{{ msg1 }}</div></h4>
+	<h4><div class="msg">{{ msg }}</div></h4>
    	<div class="form">
 		<form action = "/svalidate" method="post">   
             <h4> OTP has been sent to the email id. Please check the registered email for the confirmation.</h4> 
@@ -17,7 +18,10 @@
  			Enter OTP(One-time password): 
             <input type="text" name="otp"> 
 
- 			<input type="submit" value="Verify">  
+ 			<input type="submit" value="Verify"> 
+			 <br><br>
+			 <a href='javascript:self.history.back();'>Go Back</a>
+
 		</form>
 	</div>
 </body>
