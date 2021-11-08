@@ -46,6 +46,10 @@ We will love to help and assist you at any movement.
 
 Automated mail sent by R-Portal. Please do not reply.
 Regards! """
+part4 ="""\nIf you have any queries, feel free to contact us at ajinfotics@gmail.com. 
+We will love to help and assist you at any movement.
+Automated mail sent by R-Portal. Please do not reply.
+Regards! """
 mail = Mail(app)
 otp = random.randint(000000,999999)  
 
@@ -671,9 +675,9 @@ def mcode():
         cursor.execute('SELECT * FROM society WHERE code = %s', (code,))
         account = cursor.fetchone()
         if account:
-            cursor.execute('select name, city, road, area, state, pin from society WHERE code = %s', (code ,))
+            cursor.execute('select name, city, road, area, state, pin, code , semail from society inner join secretary WHERE code = %s', (code ,))
             account = cursor.fetchone()
-            return render_template('member/mverify.html', account=account)
+            return render_template('member/mverify.html', account=account, msg=msg)
         else:
             mysql.connection.commit()
             msg='Invalid Society Code!'
@@ -682,7 +686,7 @@ def mcode():
 @app.route('/R-Portal/mregister', methods=['GET', 'POST'])
 def mregister():
     msg = ''
-    if request.method == 'POST' and 'Musername' in request.form and 'Mpassword' in request.form and 'Memail' in request.form and 'Mcode' in request.form and 'Mname' in request.form and 'Mflatno' in request.form and 'Mwing' in request.form and 'Mmobile' in request.form:
+    if request.method == 'POST' and 'Musername' in request.form and 'Mpassword' in request.form and 'Memail' in request.form and 'Mcode' in request.form and 'Mname' in request.form and 'Mflatno' in request.form and 'Mwing' in request.form and 'Mmobile' in request.form and 'Semail' in request.form:
         username = request.form['Musername']
         passtext = request.form['Mpassword']
         password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
@@ -692,6 +696,7 @@ def mregister():
         flatno = request.form['Mflatno']
         wing = request.form['Mwing']
         mobile = request.form['Mmobile']   
+        Semail = request.form['Semail']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM member WHERE Musername = %s AND Memail = %s', (username, email))
         account = cursor.fetchone()
@@ -711,10 +716,14 @@ def mregister():
         else:
             cursor.execute('INSERT INTO member VALUES (NULL, %s, %s, %s, %s, %s, %s, %s,%s,DEFAULT,DEFAULT )', (username , password , code ,  email , name , flatno , wing , mobile))
             mysql.connection.commit()
+            msg = Message('New Member Request' ,sender ='Rportal<me@Rportal.com', recipients = [Semail]) 
+            text = "Hello \nYou have received new member request with followinh member details. \n Member details are :\n"
+            msg.body = text + "\n Flat No :" + wing + flatno + "\n Name : " + name + "\n phone No : " + mobile + "\n Email ID : " + email + part4
+            mail.send(msg)  
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
         msg = 'Please fill out the form!'
-    return render_template('member/mregister.html', msg=msg)
+    return render_template('member/mcode.html', msg=msg)
 
 @app.route('/R-Portal/mhome')
 def mhome():
