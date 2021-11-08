@@ -66,7 +66,8 @@ def login():
     msg = ''
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
         username = request.form['username']
-        password = request.form['password']
+        passtext = request.form['password']
+        password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM secretary WHERE Susername = %s AND Spassword = %s AND secretarty_status=%s', (username, password,'active'))
         account = cursor.fetchone()
@@ -78,7 +79,8 @@ def login():
             return sotp() 
         elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
             username = request.form['username']
-            password = request.form['password']
+            passtext = request.form['password']
+            password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('SELECT * FROM member WHERE Musername = %s AND Mpassword = %s AND member_status=%s', (username, password,'active'))
             account = cursor.fetchone()
@@ -90,7 +92,8 @@ def login():
                 return motp()       
             elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                 username = request.form['username']
-                password = request.form['password']
+                passtext = request.form['password']
+                password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
                 cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                 cursor.execute('SELECT * FROM admin WHERE Ausername = %s AND Apassword = %s', (username, password,))
                 account = cursor.fetchone()
@@ -101,7 +104,8 @@ def login():
                     return render_template("admin/admin.html")       
                 elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                     username = request.form['username']
-                    password = request.form['password']
+                    passtext = request.form['password']
+                    password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
                     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                     cursor.execute('SELECT * FROM security WHERE security_username = %s AND security_password = %s AND security_status=%s', (username, password,'active'))
                     account = cursor.fetchone()
@@ -113,7 +117,8 @@ def login():
                         return render_template("security/security_home.html")       
                     elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                         username = request.form['username']
-                        password = request.form['password']
+                        passtext = request.form['password']
+                        password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
                         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                         cursor.execute('SELECT * FROM staff WHERE staff_username = %s AND staff_password = %s AND staff_status=%s', (username, password,'active'))
                         account = cursor.fetchone()
@@ -125,7 +130,8 @@ def login():
                             return render_template("staff/staff_home.html") 
                         elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                             username = request.form['username']
-                            password = request.form['password']
+                            passtext = request.form['password']
+                            password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
                             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                             cursor.execute('SELECT * FROM secretary WHERE Susername = %s AND Spassword = %s AND secretarty_status=%s', (username, password,'request'))
                             account = cursor.fetchone()
@@ -133,7 +139,8 @@ def login():
                                 msg = 'Your account is not activated yet or under verification process! Please come back once your account get verified!!'
                             elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                                 username = request.form['username']
-                                password = request.form['password']
+                                passtext = request.form['password']
+                                password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
                                 cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                                 cursor.execute('SELECT * FROM member WHERE Musername = %s AND Mpassword = %s AND member_status=%s', (username, password,'request'))
                                 account = cursor.fetchone()
@@ -141,7 +148,8 @@ def login():
                                     msg = 'Your account is not activated yet or under verification process! Please come back once your account get verified!!'
                                 elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                                     username = request.form['username']
-                                    password = request.form['password']
+                                    passtext = request.form['password']
+                                    password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
                                     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                                     cursor.execute('SELECT * FROM security WHERE security_username = %s AND security_password = %s AND security_status=%s', (username, password,'request'))
                                     account = cursor.fetchone()
@@ -149,7 +157,8 @@ def login():
                                         msg = 'Your account is not activated yet or under verification process! Please come back once your account get verified!!'
                                     elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                                         username = request.form['username']
-                                        password = request.form['password']
+                                        passtext = request.form['password']
+                                        password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
                                         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                                         cursor.execute('SELECT * FROM staff WHERE staff_username = %s AND staff_password = %s AND staff_status=%s', (username, password,'request'))
                                         account = cursor.fetchone()
@@ -157,7 +166,8 @@ def login():
                                             msg = 'Your account is not activated yet or under verification process! Please come back once your account get verified!!'
                                         elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                                             username = request.form['username']
-                                            password = request.form['password']
+                                            passtext = request.form['password']
+                                            password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
                                             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                                             cursor.execute('SELECT * FROM secretary WHERE Susername = %s AND Spassword = %s AND secretarty_status=%s', (username, password,'inactive'))
                                             account = cursor.fetchone()
@@ -165,7 +175,8 @@ def login():
                                                 msg = 'Your account is temparorily disbanded! Contact Secretary of your society to learn more.'
                                             elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                                                 username = request.form['username']
-                                                password = request.form['password']
+                                                passtext = request.form['password']
+                                                password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
                                                 cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                                                 cursor.execute('SELECT * FROM member WHERE Musername = %s AND Mpassword = %s AND member_status=%s', (username, password,'inactive'))
                                                 account = cursor.fetchone()
@@ -173,7 +184,8 @@ def login():
                                                     msg = 'Your account is temparorily disbanded! Contact Secretary of your society to learn more.'
                                                 elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                                                     username = request.form['username']
-                                                    password = request.form['password']
+                                                    passtext = request.form['password']
+                                                    password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
                                                     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                                                     cursor.execute('SELECT * FROM security WHERE security_username = %s AND security_password = %s AND security_status=%s', (username, password,'inactive'))
                                                     account = cursor.fetchone()
@@ -181,7 +193,8 @@ def login():
                                                         msg = 'Your account is temparorily disbanded! Contact Secretary of your society to learn more.'
                                                     elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                                                         username = request.form['username']
-                                                        password = request.form['password']
+                                                        passtext = request.form['password']
+                                                        password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
                                                         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                                                         cursor.execute('SELECT * FROM staff WHERE staff_username = %s AND staff_password = %s AND staff_status=%s', (username, password,'inactive'))
                                                         account = cursor.fetchone()
@@ -197,7 +210,8 @@ def forgot_password():
     if request.method == 'POST' and 'username' in request.form and 'email' in request.form and 'password' in request.form:
         username = request.form['username']
         mail = request.form['email']
-        password = request.form['password']
+        passtext = request.form['password']
+        password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM secretary WHERE Susername = %s AND Semail = %s', (username, mail,))
         account = cursor.fetchone()
