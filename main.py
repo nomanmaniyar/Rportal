@@ -662,7 +662,7 @@ def mregister():
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
         msg = 'Please fill out the form!'
-    return render_template('login.html', msg=msg)
+    return render_template('member/mcode.html', msg=msg)
 
 @app.route('/R-Portal/mhome')
 def mhome():
