@@ -48,7 +48,7 @@ INSERT INTO `member` (`Mid`, `Musername`, `Mpassword`,`Mcode`, `Memail`,`Mname`,
 INSERT INTO `member` (`Mid`, `Musername`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('10', 'vishvanath', '1234', 'SAIR11', 'mem19@gmail.com','Vishwanath Baburao Tayde','10','B','9922338265');
 INSERT INTO `member` (`Mid`, `Musername`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('11', 'sharad', '1234', 'SAIR11', 'mem11@gmail.com','Sharad Damu Borase','11','B','9922338265');
 alter table member auto_increment = 12;
-select * from member where Mid=1;
+select * from member;
 
 CREATE TABLE IF NOT EXISTS `society` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
