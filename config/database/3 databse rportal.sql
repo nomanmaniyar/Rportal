@@ -1,6 +1,7 @@
 CREATE DATABASE IF NOT EXISTS `rportal` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `rportal`;
 SET GLOBAL sql_mode = '';
+SET SQL_SAFE_UPDATES = 0;
 
 CREATE TABLE IF NOT EXISTS `secretary` (
 	`Sid` int(11) NOT NULL AUTO_INCREMENT,
@@ -14,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `secretary` (
   	`Smobile` varchar(255) NOT NULL,
     `secretary_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
 	`secretarty_status` varchar(255) default 'request',
-    PRIMARY KEY (`Sid`)
+    PRIMARY KEY (`Sid`, `Susername`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 INSERT INTO `secretary` (`Sid`, `Susername`, `Spassword`,`Scode`, `Semail`,`Sname`,`Sflatno`,`Swing`,`Smobile`) VALUES (1, 'jay', '1234', 'GOKU11', 'jais65142@gmail.com','Jay Sharma','1001','A','9420829593');
 INSERT INTO `secretary` (`Sid`, `Susername`, `Spassword`,`Scode`, `Semail`,`Sname`,`Sflatno`,`Swing`,`Smobile`) VALUES (2, 'shinde', '1234', 'SAIR11', 'jay.sharma@matoshri.edu.in','Shivnath Sahebrao Shinde','1','B','9420829593');
@@ -33,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `member` (
   	`Mmobile` varchar(255) NOT NULL,
     `member_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
 	`member_status` varchar(255) default 'request',
-    PRIMARY KEY (`Mid`)
+    PRIMARY KEY (`Mid`, `Musername`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 INSERT INTO `member` (`Mid`, `Musername`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('1', 'aashutosh', '1234', 'GOKU11', 'aashutoshmali1460@gmail.com','Aashutosh Mali','1002','A','9922338265');
 INSERT INTO `member` (`Mid`, `Musername`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('2', 'dyaneshwar', '1234', 'SAIR11', 'aashutosh.mali@matoshri.edu.in','dyaneshwar Rangnath Vadnere','2','B','9922338265');
@@ -47,7 +48,7 @@ INSERT INTO `member` (`Mid`, `Musername`, `Mpassword`,`Mcode`, `Memail`,`Mname`,
 INSERT INTO `member` (`Mid`, `Musername`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('10', 'vishvanath', '1234', 'SAIR11', 'mem19@gmail.com','Vishwanath Baburao Tayde','10','B','9922338265');
 INSERT INTO `member` (`Mid`, `Musername`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('11', 'sharad', '1234', 'SAIR11', 'mem11@gmail.com','Sharad Damu Borase','11','B','9922338265');
 alter table member auto_increment = 12;
-select * from member;
+select * from member where Mid=1;
 
 CREATE TABLE IF NOT EXISTS `society` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,

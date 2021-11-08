@@ -41,61 +41,8 @@
 							<label for="Password" class="form-label font-weight-bold">Password</label>
 							<input type="password" class="form-control bg-grey border-0 mb-2"
 								placeholder="Enter your password" id="password" name="password" required>
-							<a href="forgot_password" id="emailHelp" class="form-text text-mute text-decoration-none">Have you
+							<a href="{{ url_for('forgot_password') }}" id="emailHelp" class="form-text text-mute text-decoration-none">Have you
 								forgotten your password?</a>
-
-								 <!-- The Modal -->
-<div id="myModal" class="modal">
-
-	<!-- Modal content -->
-	<div class="modal-content">
-	  <div class="modal-header">
-		<span class="close">×</span>
-		<h2>Forgot Password</h2>
-	  </div>
-	  <div class="modal-body">
-		
-	  <form action="{{ url_for('forgot_password') }}"  enctype = "multipart/form-data" method="POST" autocomplete="on">
-		  
-		  <div class="forgot_password">
-  
-			  <h4><div class="msg">{{ msg }}</div></h4>
-  
-			  <label for="username">
-				  <i class="fas fa-user"></i>
-			  </label>
-			  <input type="text" name="username" placeholder="Enter Username" id="username" required>
-			  <br><br>
-				  
-			  <label for="email">
-				  <i class="fas fa-envelope"></i>
-			  </label>
-			  <input type="email" name="email" placeholder="Enter Email ID" id="email" required>
-			  <br><br>
-  
-			  <label for="password">
-				  <i class="fas fa-lock"></i>
-			  </label>
-			  <input type="password" name="password" placeholder="Enter New Password" id="password" required>
-			  <br><br>
-  
-		 
-  
-			  <input clas="btn btn-primary" type="submit" value="Change Password"/>
-			  
-  
-		  </div>
-	  </form>
-	  </div>
-	  <div class="modal-footer">
-		<h3></h3>
-	  </div>
-	</div>
-  
-  </div>
-
-
-
 						</div>
 						<button type="submit" class="btn btn-primary w-100">Log in</button>
 					</form>

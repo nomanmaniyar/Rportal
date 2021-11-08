@@ -190,7 +190,7 @@ def login():
 @app.route('/R-Portal/forgot_password', methods=['GET', 'POST'])
 def forgot_password():
     msg = ''
-    if request.method == 'POST' and 'username' in request.form and 'email' in request.form and password in request.form:
+    if request.method == 'POST' and 'username' in request.form and 'email' in request.form and 'password' in request.form:
         username = request.form['username']
         mail = request.form['email']
         password = request.form['password']
@@ -199,11 +199,11 @@ def forgot_password():
         account = cursor.fetchone()
         if account:
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute("UPDATE secretary SET Spassword = %s WHERE Susername = %s" ,(password,username))  
+            cursor.execute('UPDATE secretary SET Spassword = %s WHERE Susername = %s', (password,username))  
             mysql.connection.commit()
             msg = 'Password Changed Sucsessfully'
-            return render_template("login.html", msg=msg)
-        elif request.method == 'POST' and 'username' in request.form and 'email' in request.form and password in request.form:
+            return render_template('forgot_password.html', msg=msg)
+        elif request.method == 'POST' and 'username' in request.form and 'email' in request.form and 'password' in request.form:
             username = request.form['username']
             mail = request.form['email']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -211,10 +211,10 @@ def forgot_password():
             account = cursor.fetchone()
             if account:
                 cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-                cursor.execute("UPDATE member SET Mpassword = %s WHERE Musername = %s" ,(password,username)) 
+                cursor.execute('UPDATE member SET Mpassword = %s WHERE Musername = %s' ,(password,username)) 
                 mysql.connection.commit()
                 msg = 'Password Changed Sucsessfully'
-                return render_template("login.html", msg=msg)
+                return render_template('forgot_password.html', msg=msg)
             elif request.method == 'POST' and 'username' in request.form:
                 username = request.form['username']
                 cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -222,7 +222,7 @@ def forgot_password():
                 account = cursor.fetchone()
                 if account:
                     msg = 'Cannot change password for Security! Contact Secretary to change your password.'
-                    return render_template("login.html", msg=msg)       
+                    return render_template('forgot_password.html', msg=msg)       
                 elif request.method == 'POST' and 'username' in request.form:
                     username = request.form['username']
                     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -230,10 +230,11 @@ def forgot_password():
                     account = cursor.fetchone()
                     if account:
                         msg = 'Cannot change password for Staff! Contact Secretary to change your password.'
-                        return render_template("login.html", msg=msg)    
+                        return render_template('forgot_password.html', msg=msg)    
                     else:
                         msg = 'Invalid username/Email! Please check Username/Email and try again!'
-    return render_template('login.html', msg=msg)
+                        return render_template('forgot_password.html', msg=msg)    
+    return render_template('forgot_password.html', msg=msg)
 
 
 def sotp(): 
