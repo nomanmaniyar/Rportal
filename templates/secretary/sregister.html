@@ -1,161 +1,95 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>R-Portal - Secretary Registeration</title>
-		<link rel="stylesheet" href="/static/styles.css">
-	<!----<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">-->
-		<link rel="stylesheet" href="/static/css/bootstrap.min.css">
-		<script src="static/js/bootstrap.min.js"></script>
-	</head>
-	
-<body>
-	<h1>Secretary Registeration</h1>
+<head>
+	<meta charset="utf-8">
+	<title>R-Portal - Secretary Registeration</title>
 
-	<div class="links">
-		<h3>
-		<label>Already have an account? : </label>
-		<a href="{{ url_for('login') }}">Login</a>
-		</h3>
+	<!--meta tags-->
+	<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+
+	<!--Linking CSS Files -->
+	<link rel="stylesheet" href="/static/sregister.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+	
+
+
+	
+	<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+</head>
+<body>
+
+	<div class="row">
+		<div class="col-md-12 col-md-offset-3">
+			<form id="form" action="{{ url_for('sregister') }}"  enctype = "multipart/form-data" method="POST" autocomplete="on">
+
+				<ul id="progressbar">
+					<li class="active">Secretary Registetion</li>
+					<li>Society Location</li>
+					<li>Society Account Details</li>
+				</ul>
+
+				<fieldset>
+					<h2 class="title">Secretary Registetion</h2>
+					<input type="text" name="Sname" placeholder="Enter Name" id="Sname" required>
+                    <input type="text" name="Susername" placeholder="Username" id="Susername" required>
+                    <input type="email" name="Semail" placeholder="Email ID" id="Semail" required>
+                    <input type="text" name="Sflatno" placeholder="Flat Number" id="Sflatno" required>
+                    <input type="text" name="Swing" placeholder="Wing Name" id="Swing" required>
+                    <input type="text" name="Smobile" placeholder="Mobile Number" id="Smobile" required>
+                    <input type="password" name="Spassword" placeholder="Password" id="Spassword" required>
+
+					<input type="button" name="next" class="next action-button" value="next">
+				</fieldset>
+				<fieldset>
+					<h2 class="title">Society Location</h2>
+					<input type="text" name="name" placeholder="Enter Society Name" id="name" required>
+                    <input type="text" name="area" placeholder="Area" id="area" required>
+                    <input type="text" name="road" placeholder="Road/Street" id="road" required>
+                    <input type="text" name="city" placeholder="City" id="city" required>
+                    <input type="text" name="state" placeholder="State" id="state" required>
+                    <input type="text" name="pin" placeholder="PIN" id="pin" required>
+
+					<input type="button" name="previous" class="previous action-button-previous" value="Previous">
+
+
+					<input type="button" name="next" class="next action-button" value="next">
+				</fieldset>
+				<fieldset>
+					<h2 class="title">Society Account Details</h2>
+					<input type="text" name="acname" placeholder="Account Name" id="acname" required>
+                    <input type="text" name="acno" placeholder="Account Number" id="acno" required>
+                    <input type="text" name="mmid" placeholder="MMID" id="mmid">
+                    <input type="text" name="bankname" placeholder="Name of Bank" id="bankname" required>
+                    <input type="text" name="branch" placeholder="Branch" id="branch" required>
+                    <input type="text" name="ifsc" placeholder="IFSC Code" id="ifsc" required />
+                    <input placeholder="KYC" type = "file" name = "file"  required/>
+
+					<input type="button" name="previous" class="previous action-button-previous" value="Previous">
+
+
+					<input type="submit" name="submit" class="submit action-button" value="submit">
+				</fieldset>
+				
+			</form>
+			<div class="links">
+				<h4>
+				<label>Already have an account? : </label>
+				<a href="{{ url_for('login') }}">Login</a>
+				</h4>
+			</div>
+		</div>
+		
+		
 	</div>
 
-	<h2>Please enter few Personal and Society details below:</h2>
-
-	<form action="{{ url_for('sregister') }}"  enctype = "multipart/form-data" method="POST" autocomplete="on">
-		
-		<div class="Sregister">
-
-			<h3>Secretary Registraion: </h3>
-			<h3><div class="msg">{{ msg }}</div></h3>
-
-			<label for="Sname">
-				<i class="fas fa-heart"></i>
-			</label>
-			<input type="text" name="Sname" placeholder="Enter Name" id="Sname" required>
-			<br><br>
-			
-			<label for="Susername">
-				<i class="fas fa-user"></i>
-			</label>
-			<input type="text" name="Susername" placeholder="Username" id="Susername" required>
-			<br><br>
-
-			<label for="Semail">
-				<i class="fas fa-envelope"></i>
-			</label>
-			<input type="email" name="Semail" placeholder="Email ID" id="Semail" required>
-			<br><br>
-				
-			<label for="Sflatno">
-				<i class="fas fa-building"></i>
-			</label>
-			<input type="text" name="Sflatno" placeholder="Flat Number" id="Sflatno" required>
-			<br><br>
-				
-			<label for="Swing">
-				<i class="fas fa-building"></i>
-			</label>
-			<input type="text" name="Swing" placeholder="Wing Name" id="Swing" required>
-			<br><br>
-				
-			<label for="Smobile">
-				<i class="fas fa-mobile"></i>
-			</label>
-			<input type="text" name="Smobile" placeholder="Mobile Number" id="Smobile" required>
-			<br><br>
-
-			<label for="Spassword">
-				<i class="fas fa-lock"></i>
-			</label>
-			<input type="password" name="Spassword" placeholder="Password" id="Spassword" required>
-			<br><br>
-
-			<h3>Society Registraion: </h3>
-			
-			<h4>Society Location:</h4>
-			<label for="name">
-				<i class="fas fa-building"></i>
-			</label>
-			<input type="text" name="name" placeholder="Enter Society Name" id="name" required>
-			<br><br>
-
-			<label for="area">
-				<i class="fas fa-map-marker-alt"></i>
-			</label>
-			<input type="text" name="area" placeholder="Area" id="area" required>
-			<br><br>
-			
-			<label for="road">
-				<i class="fas fa-map-marker-alt"></i>
-			</label>
-			<input type="text" name="road" placeholder="Road/Street" id="road" required>
-			<br><br>
-			
-			<label for="city">
-				<i class="fas fa-map-marker-alt"></i>
-			</label>
-			<input type="text" name="city" placeholder="City" id="city" required>
-			<br><br>
-				
-			<label for="state">
-				<i class="fas fa-map-marker-alt"></i>
-			</label>
-			<input type="text" name="state" placeholder="State" id="state" required>
-			<br><br>
-				
-			<label for="pin">
-				<i class="fas fa-map-pin"></i>	
-			</label>
-			<input type="text" name="pin" placeholder="PIN" id="pin" required>
-			<br><br>
-
-			<h4>Society Account Details:</h4>
-			
-			<label for="acname">
-				<i class="fas fa-university"></i>
-			</label>
-			<input type="text" name="acname" placeholder="Account Name" id="acname" required>
-			<br><br>
-
-			<label for="acno">
-				<i class="fas fa-university"></i>
-			</label>
-			<input type="text" name="acno" placeholder="Account Number" id="acno" required>
-			<br><br>
 	
-			<label for="mmid">
-				<i class="fas fa-university"></i>
-			</label>
-			<input type="text" name="mmid" placeholder="MMID" id="mmid">
-			<br><br>
 
-			<label for="bankname">
-				<i class="fas fa-university"></i>
-			</label>
-			<input type="text" name="bankname" placeholder="Name of Bank" id="bankname" required>
-			<br><br>
-				
-			<label for="branch">
-				<i class="fas fa-university"></i>
-			</label>
-			<input type="text" name="branch" placeholder="Branch" id="branch" required>
-			<br><br>
-				
-			<label for="ifsc">
-				<i class="fas fa-university"></i>
-			</label>
-			<input type="text" name="ifsc" placeholder="IFSC Code" id="ifsc" required />
-			<br><br>
-			<h3>KYC: </h3>
-			<label for="KYC">
-				<i class="fas fa-kyc"></i>
-			</label>
-			<input  type = "file" name = "file"  required/>
-			<br><br>
-	
-			<input clas="btn btn-primary" type="submit" value="Register"/>
-			
-		</div>
-	</form>
+	<!-- Linking JS Files -->
+	<script type="text/javascript" src="/static/js/sregister.js"></script>
+
 </body>
 </html>
