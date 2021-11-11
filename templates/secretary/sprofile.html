@@ -6,6 +6,7 @@
 <h2>Secretary Profile Page</h2>
 <div>
     <h3>Your account details are below:</h3>
+
     <h4>Personal Details:</h4>
     <table>
         <tr>
@@ -18,15 +19,7 @@
         </tr>
         <tr>
             <td>Flat Number:</td>
-            <td>{{ account['Sflatno'] }}</td>
-        </tr>
-        <tr>
-            <td>Wing:</td>
-            <td>{{ account['Swing'] }}</td>
-        </tr>
-        <tr>
-            <td>Society Code:</td>
-            <td>{{ account['Scode'] }}</td>
+            <td>{{ account['Swing'] }} {{ account['Sflatno'] }}</td>
         </tr>
         <tr>
             <td>Email:</td>
@@ -36,46 +29,55 @@
             <td>Mobile Number:</td>
             <td>{{ account['Smobile'] }}</td>
         </tr>
-        <tr>
-            <td>Password:</td>
-            <td>{{ account['Spassword'] }}</td>
-        </tr>
+      
+       
+       
     </table>
     <h3>Your Society details are below:</h3>
     <h4>Society Location:</h4>
     <table>
         <tr>
-            <td>Name:</td>
-            <td>{{ account['name'] }}</td>
-        </tr>
-        <tr>    
-            <td>Road:</td>
-            <td>{{ account['road'] }}</td>
-        </tr>
-        <tr>
-            <td>Area:</td>
-            <td>{{ account['area'] }}</td>
-        </tr>
-        <tr>
-            <td>City:</td>
-            <td>{{ account['city'] }}</td>
-        </tr>
-        <tr>
-            <td>State:</td>
-            <td>{{ account['state'] }}</td>
-        </tr>
-        <tr>
-            <td>Pin code:</td>
-            <td>{{ account['pin'] }}</td>
+        <td>Address :
+        <td>{{ account['name'] }} ,{{ account['road'] }},<br>
+             {{ account['area'] }}, {{ account['city'] }},<br>
+             {{ account['state'] }}, {{ account['pin'] }}.</td>
+             </td>
         </tr>
         <tr>
             <td>Society Code:</td>
-            <td>{{ account['code'] }}</td>
+            <td>{{ account['Scode'] }}
+                <button class="share-btn">
+                    <i class="fas fa-share-alt"></i>
+                </button>
+                <div class="share-options">
+                    <p class="title">share</p>
+                    <canvas id="qr-code"></canvas>
+                    <div class="social-media">
+                        <a class="social-media-btn" href="" id="qr"  onClick="downloadQR()" ><i class="far fa-save"></i></a >
+                        <a class="social-media-btn"  href="whatsapp://send?text=http://127.0.0.1:5000/R-Portal/mcode/{{account['Scode']}}"  data-action="share/whatsapp/share"  
+                        target="_blank"><i class="fab fa-whatsapp"></i></a>
+                        <button class="social-media-btn"><i class="fab fa-instagram"></i></button>
+                        <button class="social-media-btn"><i class="fab fa-twitter"></i></button>
+                        <button class="social-media-btn"><i class="fab fa-facebook-f"></i></button>
+                        <button class="social-media-btn"><i class="fab fa-linkedin-in"></i></button>
+                    </div>
+                    
+                    <div class="link-container">
+                        <p class="link">http://127.0.0.1:5000/R-Portal/mcode/{{account['Scode']}}</p>
+                        <button class="copy-btn">copy</button>
+                    </div>
+                </div>
+               
+            </td>
+        
+           
         </tr>
+
     </table>
     <h4>Society Account Details:</h4>
     <table>
         <tr>
+            
             <td>Account Name:</td>
             <td>{{ account['acname'] }}</td>
         </tr>
@@ -115,4 +117,190 @@
     <br>
     <a href='javascript:self.history.back();'>Go Back</a>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+<script>
+    var qr;
+    (function() {
+            qr = new QRious({
+            element: document.getElementById('qr-code'),
+            size: 150,
+            value: "http://127.0.0.1:5000/R-Portal/mcode/{{account['Scode']}}"
+            
+        });
+        downloadQR(); 
+
+    })();
+    
+    function downloadQR() {
+        var link = document.createElement('a');
+        link.download = 'Rportal.png';
+        link.href = document.getElementById('qr').toDataURL()
+        
+        link.click();
+    } 
+  
+</script>
+<script>
+    const shareBtn = document.querySelector('.share-btn');
+const shareOptions = document.querySelector('.share-options');
+
+shareBtn.addEventListener('click', () => {
+    shareOptions.classList.toggle('active');
+})
+
+</script>
+<style>
+
+*{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+
+.share-btn{
+    position: relative;
+    border: none;
+    background: #fff;
+    color: #0f0c20;
+    border-radius: 40%;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    padding-top: 1px;
+    padding-right: 3px;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.share-options{
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    width: auto;
+    height: auto;
+    transform-origin: bottom left;
+    transform: scale(0);
+    border-top-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    background: rgba(15, 15, 15, 0.5);
+    color: #fff;
+    padding: 20px;
+    font-family: 'roboto';
+    transition: .5s;
+    transition-delay: .5s;;
+}
+
+.share-options.active{
+    transform: scale(1);
+    transition-delay: 0s;
+}
+
+.title{
+    opacity: 0;
+    transition: .5s;
+    transition-delay: 0s;
+    font-size: 20px;
+    text-transform: capitalize;
+    border-bottom: 1px solid #fff;
+    width: fit-content;
+    padding: 0 20px 3px 0;
+}
+
+.social-media{
+    opacity: 0;
+    transition: .5s;
+    transition-delay: 0s;
+    width: 200px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 10px 0;
+}
+
+.social-media-btn{
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #000;
+    color: #fff;
+    line-height: 50px;
+    font-size: 25px;
+    cursor: pointer;
+    margin: 0 5px;
+    text-align: center;
+}
+
+.social-media-btn:nth-child(1){
+    background: #FFA654;
+}
+
+.social-media-btn:nth-child(2){
+    background: #25D366;
+}
+
+.social-media-btn:nth-child(3){
+    background: #E4405F;
+}
+
+.social-media-btn:nth-child(4){
+    background: #1DA1F2;
+}
+
+.social-media-btn:nth-child(5){
+    background: #1877F2;
+}
+
+.social-media-btn:nth-child(6){
+    background: #0A66C2;
+}
+
+.link-container{
+    opacity: 0;
+    transition: .5s;
+    transition-delay: 0s;
+    width: 100%;
+    position: relative;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    border-radius: 40px;
+    background-color: #fff;
+    overflow: hidden;
+    padding: 0 10px;
+}
+
+.link{
+    width: 80%;
+    height: 100%;
+    line-height: 40px;
+    color: #000;
+}
+
+.copy-btn{
+    position: absolute;
+    right: 0;
+    cursor: pointer;
+    background: #000;
+    color: #fff;
+    border: none;
+    height: 100%;
+    width: 30%;
+    text-transform: capitalize;
+    font-size: 16px;
+}
+
+.share-options.active .title,
+.share-options.active .social-media,
+.share-options.active .link-container{
+    opacity: 1;
+    transition: .5s;
+    transition-delay: .5s;
+}
+
+</style>
+
 {% endblock %}
