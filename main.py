@@ -869,6 +869,7 @@ def r_sec(Scode):
         msg = 'Society Rejected/Deleted'
         return render_template('admin/admin_req.html', msg=msg)
     return redirect(url_for('login'))
+    
 @app.route('/R-Portal/contactdata')
 def contactdata():
     if 'loggedin' in session:

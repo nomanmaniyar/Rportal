@@ -128,9 +128,15 @@ INSERT INTO `notification` (`noti_id`, `noti_message`, `noti_code`) VALUES ('1',
 INSERT INTO `notification` (`noti_id`, `noti_message`, `noti_code`) VALUES ('2', 'Test notofocation Message', 'SAIR11');
 alter table notification auto_increment = 3;
 select * from notification;
+
 CREATE TABLE `contactus` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `message` varchar(500) NOT NULL,
+  `time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO `contactus` (`id`, `name`, `email`,`message`) VALUES ('1', 'Jay', 'jais65142@gmail.com', 'Test Contact Message');
+alter table contactus auto_increment = 2;
+select * from contactus;
