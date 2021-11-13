@@ -484,10 +484,10 @@ def sregister():
         account1 = cursor1.fetchone()
         cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor3.execute('SELECT * FROM member WHERE Memail = %s', (email))
-        account3 = cursor.fetchone()
+        account3 = cursor3.fetchone()
         cursor4 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor4.execute('SELECT * FROM secretary WHERE Susername = %s', (username))
-        account4 = cursor1.fetchone()
+        account4 = cursor4.fetchone()
         cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor2.execute('SELECT * FROM society WHERE code = %s', (code,))
         account2 = cursor2.fetchone()
@@ -746,14 +746,24 @@ def mregister():
         mobile = request.form['Mmobile']   
         Semail = request.form['Semail']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM member WHERE Musername = %s AND Memail = %s', (username, email))
+        cursor.execute('SELECT * FROM member WHERE Musername = %s', (username))
         account = cursor.fetchone()
         cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor1.execute('SELECT * FROM secretary WHERE Susername = %s AND Semail = %s', (username, email))
+        cursor1.execute('SELECT * FROM secretary WHERE Susername = %s', (username))
         account1 = cursor1.fetchone()
+        cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor2.execute('SELECT * FROM member WHERE Memail = %s', (email))
+        account2 = cursor2.fetchone()
+        cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor3.execute('SELECT * FROM secretary WHERE Semail = %s', (email))
+        account3 = cursor3.fetchone()
         if account:
-            msg = 'Warning! Account already exists!!'
+            msg = 'Warning! Username already exists!!'
         elif account1:
+            msg = 'Warning! Username already exists!!'
+        elif account2:
+            msg = 'Warning! Account already exists!!'
+        elif account3:
             msg = 'Warning! Account already exists!!'
         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
             msg = 'Invalid email address!'
