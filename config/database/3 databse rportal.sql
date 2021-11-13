@@ -22,6 +22,7 @@ INSERT INTO `secretary` (`Sid`, `Susername`, `Spassword`,`Scode`, `Semail`,`Snam
 alter table secretary auto_increment = 3;
 select * from secretary;
 
+
 CREATE TABLE IF NOT EXISTS `member` (
 	`Mid` int(11) NOT NULL AUTO_INCREMENT,
   	`Musername` varchar(50) NOT NULL,
