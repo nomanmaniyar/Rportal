@@ -808,7 +808,7 @@ def isoc():
 def admin_req():
     if 'admin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT Sname, secretarty_status, Smobile, Semail, Scode, secretary_time, area, road, city, state, pin, name from secretary inner join society on secretary.Scode = society.code WHERE  secretarty_status = %s', ('request',))
+        cursor.execute('SELECT Sname, secretarty_status, Smobile, Semail, Scode, secretary_time, area, road, city, state, pin, name, kyc_file from secretary inner join society on secretary.Scode = society.code WHERE  secretarty_status = %s', ('request',))
         account = cursor.fetchall()           
         return render_template('admin/admin_req.html', account=account)
     return redirect(url_for('login'))
@@ -870,7 +870,7 @@ def r_sec(Scode):
         return render_template('admin/admin_req.html', msg=msg)
     return redirect(url_for('login'))
     
-    
+
 @app.route('/R-Portal/contactdata')
 def contactdata():
     if 'loggedin' in session:
