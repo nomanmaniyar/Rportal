@@ -118,13 +118,35 @@ alter table staff auto_increment = 3;
 select * from staff;
 
 CREATE TABLE IF NOT EXISTS `notification` (
-	`noti_id` int(11) NOT NULL AUTO_INCREMENT,
-	`noti_message` varchar(500) NOT NULL,
-	`noti_code` varchar(30) NOT NULL,
-    `noti_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  	PRIMARY KEY (`noti_id`)
+	`notification_id` int(11) NOT NULL AUTO_INCREMENT,
+	`notification_message` varchar(500) NOT NULL,
+  	PRIMARY KEY (`notification_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-INSERT INTO `notification` (`noti_id`, `noti_message`, `noti_code`) VALUES ('1', 'Test notofocation Message', 'GOKU11');
-INSERT INTO `notification` (`noti_id`, `noti_message`, `noti_code`) VALUES ('2', 'Test notofocation Message', 'SAIR11');
+INSERT INTO `notification` (`notification_id`, `notification_message`) VALUES ('1', 'New Member Request');
+INSERT INTO `notification` (`notification_id`, `notification_message`) VALUES ('2', 'You have a new notification');
 alter table notification auto_increment = 3;
 select * from notification;
+
+CREATE TABLE `contactus` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `message` varchar(500) NOT NULL,
+  `time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO `contactus` (`id`, `name`, `email`,`message`) VALUES ('1', 'Jay', 'jais65142@gmail.com', 'Test Contact Message');
+alter table contactus auto_increment = 2;
+select * from contactus;
+
+CREATE TABLE IF NOT EXISTS `notice` (
+	`notice_id` int(11) NOT NULL AUTO_INCREMENT,
+	`notice_message` varchar(500) NOT NULL,
+	`notice_code` varchar(30) NOT NULL,
+    `notice_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  	PRIMARY KEY (`notice_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO `notice` (`notice_id`, `notice_message`, `notice_code`) VALUES ('1', 'Test Notice Message', 'GOKU11');
+INSERT INTO `notice` (`notice_id`, `notice_message`, `notice_code`) VALUES ('2', 'Test Notice Message', 'SAIR11');
+alter table notice auto_increment = 3;
+select * from notice;

@@ -1,0 +1,35 @@
+{% extends 'admin/admin.html' %}
+
+{% block title %}R-Portal x Ajinfotics!{% endblock %}
+
+{% block content %}	
+<style>
+    table, th, td {
+      border:1px solid black;
+    }
+</style>
+	
+<h2>Contact Data:</h2>
+<div>
+    <h4><div class="msg">{{ msg }}</div></h4>
+    <table  class="table" style="width:100%">
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Message</th>
+            
+        </tr> 
+        {% for data in account %}
+           
+                <td>{{ data['name'] }}</td>
+                <td> {{ data['email'] }}</td>
+                <td> {{ data['message'] }}</td>
+              
+            </tr>   
+        {% endfor %}
+
+    </table>
+    <br>    
+    <a href='javascript:self.history.back();'>Go Back</a>
+</div>
+{% endblock %}
