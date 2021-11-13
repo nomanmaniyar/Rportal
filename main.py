@@ -874,7 +874,7 @@ def createnotice():
         email = request.form['email']
         message = request.form['message']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('INSERT INTO contactus VALUES (NULL, %s, %s, %s)', (name , email , message))
+        cursor.execute('INSERT INTO notice VALUES (NULL, %s, %s, %s)', (name , email , message))
         mysql.connection.commit()
         return render_template('createnotice.html')
 
