@@ -5,19 +5,19 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>R-Portal - Home</title>
-	<link rel="stylesheet" href="/static/styles.css">
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.0/font/bootstrap-icons.css"
-		integrity="sha384-7ynz3n3tAGNUYFZD3cWe5PDcE36xj85vyFkawcF6tIwxvIecqKvfwLiaFdizhPpN" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.0/font/bootstrap-icons.css" integrity="sha384-7ynz3n3tAGNUYFZD3cWe5PDcE36xj85vyFkawcF6tIwxvIecqKvfw
+		LiaFdizhPpN" crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css2?family=Spartan:wght@300;600&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="{{ url_for('static', filename='rportal.css') }}">
 </head>
 
 <body>
 	<!-- Header -->
-	<nav class="navbar navbar-expand-lg navbar-light bg-primary py-3 fixed-top">
+	<nav class="navbar navbar-expand-lg navbar-light bg-primary py-lg-3 p-2 fixed-top">
 		<div class="container">
-			<a href="#" class="navbar-brand">R-Portal</a>
+			<a href="#" class="navbar-brand" id="title">R-Portal</a>
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
 				<span class="navbar-toggler-icon"></span>
 			</button>
@@ -25,7 +25,8 @@
 				<ul class="navbar-nav mx-auto">
 					<li class=" nav-item">
 						<a class="nav-link" href="#">Home</a>
-					</li><li class="nav-item">
+					</li>
+					<li class="nav-item">
 						<a class="nav-link" href="#Features">Features</a>
 					</li>
 					<li class="nav-item">
@@ -51,11 +52,11 @@
 	<!-- Showcase -->
 	<section class="bg-primary text-dark p-5 p-lg-0 pt-lg-5 text-center text-sm-start">
 		<div class="container">
-			<div class="d-sm-flex align-items-center justify-content-between pb-1">
+			<div class="d-sm-flex align-items-center justify-content-between pb-1 pt-4">
 				<div>
 					<h3>Let's take your</h3>
-					<h1 class="text-light"> Residential </h1>
-					<h3>online</h3>
+					<span id="ShowcaseTitle2">Residential</span>
+					<h3>Online</h3>
 					<p class="lead my-4">
 						Our goal is to connect all the neigbhor and take care of all the Residential
 						work on a single tap and make your tenant finding and lease aggrement process eassy
@@ -423,7 +424,6 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
 		crossorigin="anonymous"></script>
-	<script src="https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.js"></script>
 	<script src='https://code.jquery.com/jquery-3.3.1.slim.min.js'></script>
 </body>
 

@@ -14,6 +14,7 @@ body{
 .bg-dark { background-color: var(--dark);}
 .bg-dark-x { background-color: var(--dark-x);}
 .bg-grey { background-color: var(--grey);}
+.bg-light{background-color: var(--light);}
 
 .form-control, .btn{
     min-height: 3.125rem;
