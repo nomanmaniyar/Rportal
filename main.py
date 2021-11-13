@@ -1,3 +1,4 @@
+from email import message
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
@@ -769,7 +770,7 @@ def asoc():
         return render_template('admin/asoc.html', account=account)
     else:
         return redirect(url_for('login'))
-
+    
 @app.route('/R-Portal/isoc')
 def isoc():
     if 'loggedin' in session:
@@ -845,6 +846,37 @@ def r_sec(Scode):
         msg = 'Society Rejected/Deleted'
         return render_template('admin/admin_req.html', msg=msg)
     return redirect(url_for('login'))
+@app.route('/R-Portal/contactdata')
+def contactdata():
+    if 'loggedin' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT  * from contactus') 
+        account = cursor.fetchall() 
+        return render_template('admin/contactdata.html', account=account)
+    else:
+        return redirect(url_for('login'))
+
+@app.route('/R-Portal/contactus', methods=['GET', 'POST'] )
+def contactus():
+    if request.method == 'POST' and 'name' in request.form and 'email' in request.form and 'message' in request.form :
+        name = request.form['name']
+        email = request.form['email']
+        message = request.form['message']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('INSERT INTO contactus VALUES (NULL, %s, %s, %s)', (name , email , message))
+        mysql.connection.commit()
+        return render_template('rportal.html')
+
+@app.route('/R-Portal/createnotice', methods=['GET', 'POST'] )
+def createnotice():
+    if request.method == 'POST' and 'name' in request.form and 'email' in request.form and 'message' in request.form :
+        name = request.form['name']
+        email = request.form['email']
+        message = request.form['message']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('INSERT INTO contactus VALUES (NULL, %s, %s, %s)', (name , email , message))
+        mysql.connection.commit()
+        return render_template('createnotice.html')
 
 if __name__ == '__main__':
    app.run(debug=True)

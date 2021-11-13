@@ -128,3 +128,9 @@ INSERT INTO `notification` (`noti_id`, `noti_message`, `noti_code`) VALUES ('1',
 INSERT INTO `notification` (`noti_id`, `noti_message`, `noti_code`) VALUES ('2', 'Test notofocation Message', 'SAIR11');
 alter table notification auto_increment = 3;
 select * from notification;
+CREATE TABLE `contactus` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `message` varchar(500) NOT NULL,
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
