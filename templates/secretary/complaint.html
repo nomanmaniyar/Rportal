@@ -1,0 +1,43 @@
+{% extends 'secretary/slayout.html' %}
+
+{% block title %}R-Portal - Secretary Home{% endblock %}
+
+{% block content %}
+<style>
+    table, th, td {
+      border:1px solid black;
+    }
+</style>
+<h3>Manage Complaint</h3>
+<div>
+    <h4>Active Complaints:</h4>
+    <br>
+    <table class="table" style="width:100%">
+        <tr>
+            <th>Name</th>
+            <th>Subject</th>
+            <th>Complaint Matter</th>
+            <th>Time</th>
+        </tr> 
+        {% for data in account %}
+            <tr>
+                <td>{{ data['complaint_name'] }}<br><br>
+                    <b><a>Username: </a></b>{{ data['complaint_username'] }}<br>
+                </td>
+                <td>
+                    {{ data['complaint_subject'] }}
+                </td>
+                <td>
+                    {{ data['complaint_message'] }}
+                </td>
+                <td>
+                    {{ data['complaint_time'] }}
+                </td>
+            </tr>   
+        {% endfor %}
+    </table>
+    <br>    
+    <br>
+    <a href='javascript:self.history.back();'>Go Back</a>
+</div>
+{% endblock %}

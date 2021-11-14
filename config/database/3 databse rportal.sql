@@ -22,7 +22,6 @@ INSERT INTO `secretary` (`Sid`, `Susername`, `Spassword`,`Scode`, `Semail`,`Snam
 alter table secretary auto_increment = 3;
 select * from secretary;
 
-
 CREATE TABLE IF NOT EXISTS `member` (
 	`Mid` int(11) NOT NULL AUTO_INCREMENT,
   	`Musername` varchar(50) NOT NULL,
@@ -151,3 +150,18 @@ INSERT INTO `notice` (`notice_id`, `notice_message`, `notice_code`) VALUES ('1',
 INSERT INTO `notice` (`notice_id`, `notice_message`, `notice_code`) VALUES ('2', 'Test Notice Message', 'SAIR11');
 alter table notice auto_increment = 3;
 select * from notice;
+
+CREATE TABLE IF NOT EXISTS `complaint` (
+	`complaint_id` int(11) NOT NULL AUTO_INCREMENT,
+	`complaint_username` varchar(50) NOT NULL,
+	`complaint_name` varchar(255) NOT NULL,
+	`complaint_subject` varchar(500) NOT NULL,
+	`complaint_message` varchar(500) NOT NULL,
+	`complaint_code` varchar(30) NOT NULL,
+    `complaint_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  	PRIMARY KEY (`complaint_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO `complaint` (`complaint_id`, `complaint_username`, `complaint_name`, `complaint_subject`, `complaint_message`, `complaint_code`) VALUES ('1', 'aashutosh', 'Aashutosh Mali', 'Cleaning', 'Test Complaint Message', 'GOKU11');
+INSERT INTO `complaint` (`complaint_id`, `complaint_username`, `complaint_name`, `complaint_subject`, `complaint_message`, `complaint_code`) VALUES ('2', 'dyaneshwar', 'dyaneshwar Rangnath Vadnere', 'Maintainance', 'Test complaint Message', 'SAIR11');
+alter table complaint auto_increment = 3;
+select * from complaint;
