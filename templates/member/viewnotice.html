@@ -4,12 +4,42 @@
 
 {% block content %}
 
-{% for data in account %}
-<h4 >{{ data[' time'] }}</h4>
-<p>
-    {{ data[' notice_message'] }}
-</p>
-{% endfor %}
-<a href='javascript:self.history.back();'>Go Back</a>
+<div>
+   
+    <table  class="table" style="size: auto;">
+        <tr>
+           
+            
+            
+        </tr> 
+        {% for data in account %}
+       Date: {{ data['notice_time'] }}</tr>
+       
+                <div id="div" type="hidden"><article>{{ data['notice_message'] }}</article></div>
+               
+              
+     
+
+      
+    </table>
+
+   
+    {% endfor %}
+    <br>   
+
+    <a href='javascript:self.history.back();'>Go Back</a>
+</div>
+
+    <script>
+        $.fn.toHtml=function(){
+        
+       return $(this).html($(this).text())
+     
+    }
+    $('#div').toHtml()
+
+    
+    </script>
+    
 
 {% endblock %}
