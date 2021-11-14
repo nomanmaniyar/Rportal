@@ -1,24 +1,160 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title></title>
-        <link rel="stylesheet" href="uikit.min.css" />
-        <script src="jquery.js"></script>
-        <script src="uikit.min.js"></script>
+{% extends 'secretary/slayout.html' %}
 
-        <!-- Codemirror and marked dependencies -->
-        <link rel="stylesheet" href="codemirror/lib/codemirror.css">
-        <script src="codemirror/lib/codemirror.js"></script>
-        <script src="codemirror/mode/markdown/markdown.js"></script>
-        <script src="codemirror/addon/mode/overlay.js"></script>
-        <script src="codemirror/mode/xml/xml.js"></script>
-        <script src="codemirror/mode/gfm/gfm.js"></script>
-        <script src="marked.js"></script>
+{% block title %}Create Notice{% endblock %}
 
-        <!-- HTML editor CSS and JavaScript -->
-        <link rel="stylesheet" href="htmleditor.css">
-        <script src="htmleditor.js"></script>
-    </head>
-    <body>
-    </body>
-</html>
+{% block content %}
+
+<form class="mb-5" action="{{ url_for('createnotice') }}" method="post"  >
+
+  <textarea  name="editor1"></textarea>
+  <button type="submit" class="btn btn-primary" >Publish</button>
+  </form>
+  <script>
+          CKEDITOR.replace( 'editor1' );
+  </script>
+   <script>
+    ClassicEditor
+            .create( document.querySelector( '#editor' ) )
+            .then( editor => {
+                    console.log( editor );
+            } )
+            .catch( error => {
+                    console.error( error );
+            } );
+</script>
+  <script src="https://cdn.ckeditor.com/[version.number]/[distribution]/ckeditor.js"></script>
+
+<!--<div class="dx-viewport demo-container">
+
+    <div name="notice_message"   class="html-editor">
+    
+    </div>
+    <div class="options">
+      <div class="caption"></div>
+      <div class="option">
+        <div  id="multiline"></div>
+     
+      </div>
+  </div>
+  </div> 
+
+  <button type="submit" class="btn btn-primary" >Publish</button>
+</form>
+
+
+  <style>
+     .dx-htmleditor-content img {
+  vertical-align: middle;
+  padding-right: 10px;
+}
+
+.dx-htmleditor-content table {
+  width: 50%;
+}
+
+.options {
+  padding: 20px;
+  background-color: rgba(191, 191, 191, 0.15);
+  margin-top: 20px;
+}
+
+.caption {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.option {
+  margin-top: 10px;
+}
+
+
+  </style>
+  <script>
+      $(() => {
+  const editor = $(".html-editor")
+    .dxHtmlEditor({
+      height: 725,
+      value: markup,
+      toolbar: {
+        items: [
+          "undo",
+          "redo",
+          "separator",
+          {
+            name: "size",
+            acceptedValues: [
+              "8pt",
+              "10pt",
+              "12pt",
+              "14pt",
+              "18pt",
+              "24pt",
+              "36pt"
+            ]
+          },
+          {
+            name: "font",
+            acceptedValues: [
+              "Arial",
+              "Courier New",
+              "Georgia",
+              "Impact",
+              "Lucida Console",
+              "Tahoma",
+              "Times New Roman",
+              "Verdana"
+            ]
+          },
+          "separator",
+          "bold",
+          "italic",
+          "strike",
+          "underline",
+          "separator",
+          "alignLeft",
+          "alignCenter",
+          "alignRight",
+          "alignJustify",
+          "separator",
+          "orderedList",
+          "bulletList",
+          "separator",
+          {
+            name: "header",
+            acceptedValues: [false, 1, 2, 3, 4, 5]
+          },
+          "separator",
+          "color",
+          "background",
+          "separator",
+          "link",
+          "image",
+          "separator",
+          "clear",
+          "codeBlock",
+          "blockquote",
+          "separator",
+          "insertTable",
+          "deleteTable",
+          "insertRowAbove",
+          "insertRowBelow",
+          "deleteRow",
+          "insertColumnLeft",
+          "insertColumnRight",
+          "deleteColumn"
+        ]
+      },
+      mediaResizing: {
+        enabled: true
+      }
+    })
+    .dxHtmlEditor("instance");
+
+  
+});
+
+const markup = `Type here... `;
+
+  </script>-->
+
+{% endblock %}

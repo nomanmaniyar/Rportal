@@ -90,6 +90,7 @@ def login():
                 session['id'] = account['Mid']
                 session['username'] = account['Musername']
                 session['code'] = account['Mcode']
+                session['name'] = account['Mname']
                 return motp()       
             elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                 username = request.form['username']
@@ -321,6 +322,7 @@ def logout():
         session.pop('id', None)
         session.pop('username', None)
         session.pop('code', None)
+        session.pop('name',None)
         return redirect(url_for('rportal'))
     elif 'admin' in session:
         session.pop('admin', None)
@@ -786,7 +788,7 @@ def mregister():
 @app.route('/R-Portal/mhome')
 def mhome():
     if 'member' in session:
-        return render_template('member/mhome.html', Musername=session['username'])
+        return render_template('member/mhome.html', Mname=session['name'])
     return redirect(url_for('login'))
 
 @app.route('/R-Portal/mprofile')
@@ -893,7 +895,7 @@ def r_sec(Scode):
 
 @app.route('/R-Portal/contactdata')
 def contactdata():
-    if 'loggedin' in session:
+    if 'admin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT  * from contactus') 
         account = cursor.fetchall() 
@@ -914,14 +916,53 @@ def contactus():
 
 @app.route('/R-Portal/createnotice', methods=['GET', 'POST'] )
 def createnotice():
-    if request.method == 'POST' and 'name' in request.form and 'email' in request.form and 'message' in request.form :
-        name = request.form['name']
-        email = request.form['email']
-        message = request.form['message']
+    if 'secretary' in session:
+        if request.method == 'POST' and 'editor1'  :
+            notice_message = request.form['editor1']
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('INSERT INTO notice VALUES (NULL, %s, %s, DEFAULT )', (notice_message , session['code'] ))
+            mysql.connection.commit()
+        return render_template('secretary/createnotice.html')
+    else:
+        return redirect(url_for('login'))
+
+@app.route('/R-Portal/viewnotice')
+def viewnotice():
+    if 'member' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('INSERT INTO notice VALUES (NULL, %s, %s, %s)', (name , email , message))
+        cursor.execute('SELECT *  from notice WHERE notice_code = %s', (session['code'],) ) 
+        account = cursor.fetchall() 
+        return render_template('member/viewnotice.html', account=account)
+    else:
+        return redirect(url_for('login'))
+
+
+#
+#           COMPLAINT SECTION
+#
+@app.route('/R-Portal/complaint', methods=['GET','POST'])
+def member_complaint():
+    msg = ''
+    if request.method == 'POST' and 'complaint_subject' in request.form and 'complaint_message' in request.form:
+        compaint_subject = request.form['complaint_subject']
+        complaint_message = request.form['complaint_message']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('INSERT INTO complaint VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT)', (session['username'] , session['name'] , compaint_subject, complaint_message, session['code']))
         mysql.connection.commit()
-        return render_template('createnotice.html')
+        msg = 'Complaint Added Succsesfully!'
+    elif request.method == 'POST':
+        msg = 'Please fill out the form!'
+    return render_template('member/member_complaint.html', msg=msg)
+
+@app.route('/R-Portal/manage_complaint', methods=['GET','POST'])
+def complaint():
+    if 'secretary' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)        
+        cursor.execute('SELECT * FROM complaint WHERE complaint_code = %s', (session['code'],))
+        account = cursor.fetchall()
+        return render_template('secretary/complaint.html', account=account)
+    else:
+        return redirect(url_for('login'))
 
 if __name__ == '__main__':
    app.run(debug=True)
