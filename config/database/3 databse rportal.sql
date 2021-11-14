@@ -141,7 +141,7 @@ select * from contactus;
 
 CREATE TABLE IF NOT EXISTS `notice` (
 	`notice_id` int(11) NOT NULL AUTO_INCREMENT,
-	`notice_message` varchar(500) NOT NULL,
+	`notice_message` varchar(2000) NOT NULL,
 	`notice_code` varchar(30) NOT NULL,
     `notice_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   	PRIMARY KEY (`notice_id`)
@@ -155,8 +155,8 @@ CREATE TABLE IF NOT EXISTS `complaint` (
 	`complaint_id` int(11) NOT NULL AUTO_INCREMENT,
 	`complaint_username` varchar(50) NOT NULL,
 	`complaint_name` varchar(255) NOT NULL,
-	`complaint_subject` varchar(500) NOT NULL,
-	`complaint_message` varchar(500) NOT NULL,
+	`complaint_subject` varchar(2000) NOT NULL,
+	`complaint_message` varchar(2000) NOT NULL,
 	`complaint_code` varchar(30) NOT NULL,
     `complaint_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   	PRIMARY KEY (`complaint_id`)
