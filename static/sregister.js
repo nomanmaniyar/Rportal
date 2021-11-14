@@ -108,9 +108,9 @@ $(document).ready(function () {
             if (chkError == false) {
                 $("#next").removeClass("disabled");
                 $('#submit').addClass("disabled");
-                if (child <= 2) {
-                    $(this).addClass("disabled");
-                }
+            }
+            if (child <= 2) {
+                $(this).addClass("disabled");
             }
             if (child > 1) {
                 child--;
@@ -389,7 +389,7 @@ $(document).ready(function () {
                 document.getElementById("Sparea").innerHTML = areaEror;
                 console.log(area, ' Length is: ', area.length);
             }
-            else {
+            else if (child == 2) {
                 child--;
                 chkError = true;
                 areaEror = "Area is required"
@@ -404,7 +404,7 @@ $(document).ready(function () {
                 document.getElementById("Sproad").innerHTML = roadEror;
                 console.log(road, ' Length is: ', road.length);
             }
-            else {
+            else if (child == 2) {
                 child--;
                 chkError = true;
                 roadEror = "Landmark is required"
@@ -419,7 +419,7 @@ $(document).ready(function () {
                 document.getElementById("Spcity").innerHTML = cityEror;
                 console.log(city, ' Length is: ', city.length);
             }
-            else {
+            else if (child == 2) {
                 child--;
                 chkError = true;
                 cityEror = "City is required"
@@ -434,7 +434,7 @@ $(document).ready(function () {
                 document.getElementById("Spstate").innerHTML = stateEror;
                 console.log(state, ' Length is: ', state.length);
             }
-            else {
+            else if (child == 2) {
                 child--;
                 chkError = true;
                 stateEror = "State is required"
@@ -450,7 +450,7 @@ $(document).ready(function () {
                 document.getElementById("Sppin").innerHTML = pinEror;
                 console.log(pin, ' Length is: ', pin.length);
             }
-            else {
+            else if (child == 2) {
                 child--;
                 chkError = true;
                 pinEror = "Pincode is required"
