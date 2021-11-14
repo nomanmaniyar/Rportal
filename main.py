@@ -893,7 +893,7 @@ def r_sec(Scode):
 
 @app.route('/R-Portal/contactdata')
 def contactdata():
-    if 'loggedin' in session:
+    if 'admin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT  * from contactus') 
         account = cursor.fetchall() 
@@ -914,14 +914,26 @@ def contactus():
 
 @app.route('/R-Portal/createnotice', methods=['GET', 'POST'] )
 def createnotice():
-    if request.method == 'POST' and 'name' in request.form and 'email' in request.form and 'message' in request.form :
-        name = request.form['name']
-        email = request.form['email']
-        message = request.form['message']
+    if 'secretary' in session:
+        if request.method == 'POST' and 'editor1'  :
+            notice_message = request.form['editor1']
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('INSERT INTO notice VALUES (NULL, %s, %s, DEFAULT )', (notice_message , session['code'] ))
+            mysql.connection.commit()
+        return render_template('secretary/createnotice.html')
+    else:
+        return redirect(url_for('login'))
+
+@app.route('/R-Portal/viewnotice')
+def viewnotice():
+    if 'member' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('INSERT INTO notice VALUES (NULL, %s, %s, %s)', (name , email , message))
-        mysql.connection.commit()
-        return render_template('createnotice.html')
+        cursor.execute('SELECT *  from notice WHERE notice_code = %s', (session['code'],) ) 
+        account = cursor.fetchall() 
+        return render_template('member/viewnotice.html', account=account)
+    else:
+        return redirect(url_for('login'))
+
 
 if __name__ == '__main__':
    app.run(debug=True)

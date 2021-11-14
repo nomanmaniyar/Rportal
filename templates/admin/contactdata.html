@@ -11,7 +11,7 @@
 	
 <h2>Contact Data:</h2>
 <div>
-    <h4><div class="msg">{{ msg }}</div></h4>
+   
     <table  class="table" style="width:100%">
         <tr>
             <th>Name</th>
@@ -23,7 +23,7 @@
            
                 <td>{{ data['name'] }}</td>
                 <td> {{ data['email'] }}</td>
-                <td> {{ data['message'] }}</td>
+                <td>[{{ data['time'] }}]- &nbsp; {{ data['message'] }}</td>
               
             </tr>   
         {% endfor %}

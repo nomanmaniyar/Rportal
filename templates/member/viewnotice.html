@@ -1,0 +1,15 @@
+{% extends 'member/mlayout.html' %}
+
+{% block title %}R-Portal - Member Profile{% endblock %}
+
+{% block content %}
+
+{% for data in account %}
+<h4 >{{ data[' time'] }}</h4>
+<p>
+    {{ data[' notice_message'] }}
+</p>
+{% endfor %}
+<a href='javascript:self.history.back();'>Go Back</a>
+
+{% endblock %}
