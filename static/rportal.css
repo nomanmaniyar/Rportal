@@ -1,33 +1,49 @@
 @import url("https://fonts.googleapis.com/css2?family=Spartan:wght@300;600&display=swap");
-
-:root{
-    --dark:#16191c;
-    --dark-x:#1e2126;
-    --dark-blue: #3f3d56
-    --grey:#9e9e9e;
-    --lightGrey:#cec7c7; 
-    --light:#ffffff;
+:root {
+    --dark: #16191c;
+    --dark-x: #1e2126;
+    --dark-blue: #3f3d56 --grey: #c4c4c4;
+    --lightGrey: #cec7c7;
+    --light: #ffffff;
     --blue: #5fa9f8;
 }
 
+.bg-dark {
+    background-color: var(--dark);
+}
 
-.bg-dark { background-color: var(--dark);}
-.bg-dark-x { background-color: var(--dark-x);}
-.bg-dark-blue { background-color: var(--dark-blue);}
-.bg.light {background-color: var(--light);}
-.bg-grey { background-color: var(--grey);}
-.bg-lightGrey { background-color: var(--lightGrey);}
-.bg-blue {background-color: var(--blue);}
+.bg-dark-x {
+    background-color: var(--dark-x);
+}
+
+.bg-dark-blue {
+    background-color: var(--dark-blue);
+}
+
+.bg.light {
+    background-color: var(--light);
+}
+
+.bg-grey {
+    background-color: var(--grey);
+}
+
+.bg-lightGrey {
+    background-color: var(--lightGrey);
+}
+
+.bg-blue {
+    background-color: var(--blue);
+}
 
 span#ShowcaseTitle2 {
     font-family: 'Spartan', sans-serif;
     font-weight: 200;
     font-size: 50px;
-
-    color:#FF6584;
+    color: #FF6584;
 }
 
-a#title{
+a#title {
     font-family: 'Spartan', sans-serif;
     font-weight: 300;
 }
