@@ -35,7 +35,7 @@ mail = Mail(app)
 app.config["MAIL_SERVER"]='smtp.gmail.com'  
 app.config["MAIL_PORT"] =465 #465 or 587 
 app.config["MAIL_USERNAME"] = 'ajinfotics@gmail.com'  
-app.config['MAIL_PASSWORD'] = 'Rportal@1234'  
+app.config['MAIL_PASSWORD'] = 'Ajinfo@1234'  
 #app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 part2 ="Your One Time Password for logging into R-Portal is\n\n" 
@@ -917,10 +917,11 @@ def contactus():
 @app.route('/R-Portal/createnotice', methods=['GET', 'POST'] )
 def createnotice():
     if 'secretary' in session:
-        if request.method == 'POST' and 'editor1'  :
-            notice_message = request.form['editor1']
+        if request.method == 'POST' and 'editor' in request.form and 'subject' :
+            notice_subject = request.form['subject']
+            notice_message = request.form['editor']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('INSERT INTO notice VALUES (NULL, %s, %s, DEFAULT )', (notice_message , session['code'] ))
+            cursor.execute('INSERT INTO notice VALUES (NULL, %s , %s, %s, DEFAULT )', (  notice_subject,notice_message , session['code'] ))
             mysql.connection.commit()
         return render_template('secretary/createnotice.html')
     else:
