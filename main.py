@@ -935,8 +935,6 @@ def viewnotice():
         return render_template('member/viewnotice.html', account=account)
     else:
         return redirect(url_for('login'))
-
-
 #
 #           COMPLAINT SECTION
 #
