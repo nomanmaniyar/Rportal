@@ -3,33 +3,45 @@
 {% block title %}R-Portal - Member Profile{% endblock %}
 
 {% block content %}
-<script>
-    $.fn.toHtml=function(){
-   return $(this).html($(this).text())
-}
-$('#div').toHtml()
-</script>
 
-<style>
-    table, th, td {
-      border:1px solid black;
-    }
-</style>
 <div>
+    <div id="div">
+   
     <table  class="table" style="size: auto;">
+        
+        
         {% for data in account %}
-        <tr>
-            Date: {{ data['notice_time'] }}
-        </tr>
-        <tr>
-            <div id="div" type="hidden">
-                <article>{{ data['notice_message'] }}</article>
-            </div>
-        </tr>
-        <br>
-        {% endfor %}
+        
+       <td> <b>Date: </b>{{ data['notice_time'] }}</td>
+    
+       <b>Subject :</b><h3>{{ data['notice_subject'] }}</h3>
+       
+       <td> <article>{{ data['notice_message'] }}</article><br><br></td>
+               
+              
+     
+
+            
     </table>
+
+   
+    {% endfor %}
+</div>
     <br>   
+
     <a href='javascript:self.history.back();'>Go Back</a>
 </div>
+
+    <script>
+        $.fn.toHtml=function(){
+        
+       return $(this).html($(this).text())
+     
+    }
+    $('#div').toHtml()
+
+    
+    </script>
+    
+
 {% endblock %}
