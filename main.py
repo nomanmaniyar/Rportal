@@ -1,4 +1,5 @@
 from email import message
+import email
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
@@ -601,13 +602,21 @@ def ac_members(Mid):
         return inpeople()
     return redirect(url_for('login'))
 
-@app.route('/R-Portal/r_members/<int:Mid>')
-def r_members(Mid):
+@app.route('/R-Portal/r_members', methods=['GET', 'POST'])
+def r_members():
     if 'secretary' in session: 
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('DELETE FROM member WHERE Mid = %s',[Mid]) 
-        mysql.connection.commit()
-        msg = 'Member Delete'
+        if request.method == 'POST' and 'email' in request.form and 'message'  in request.form and 'Mid' :
+            email = request.form['email']
+            message = request.form['message']
+            Mid = request.form['Mid']
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('DELETE FROM member WHERE Mid = %s',[Mid]) 
+            mysql.connection.commit()
+            msg = Message('Member Rejected' ,sender ='Rportal<me@Rportal.com', recipients = [email])
+            msg.body ="Hi \n"+ message
+            mail.send(msg)  
+            msg = 'Member Rejected/Deleted'
+            
         return allow_members()
     return redirect(url_for('login'))
 
@@ -878,17 +887,25 @@ def c_sec(Scode):
         return asoc()
     return redirect(url_for('login'))
 
-@app.route('/R-Portal/r_sec/<string:Scode>')
-def r_sec(Scode):
+@app.route('/R-Portal/r_sec' , methods=['GET', 'POST'])
+def r_sec():
     if 'admin' in session: 
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('DELETE FROM secretary WHERE Scode = %s',[Scode]) 
-        cursor.execute('DELETE FROM society WHERE code = %s',[Scode]) 
-        cursor.execute('DELETE FROM member WHERE Mcode = %s',[Scode]) 
-        cursor.execute('DELETE FROM security WHERE security_code = %s',[Scode]) 
-        cursor.execute('DELETE FROM staff WHERE staff_code = %s',[Scode]) 
-        mysql.connection.commit()
-        msg = 'Society Rejected/Deleted'
+        if request.method == 'POST' and 'email' in request.form and 'message'  in request.form and 'Scode' :
+            email = request.form['email']
+            message = request.form['message']
+            Scode = request.form['Scode']
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('DELETE FROM secretary WHERE Scode = %s',[Scode]) 
+            cursor.execute('DELETE FROM society WHERE code = %s',[Scode]) 
+            cursor.execute('DELETE FROM member WHERE Mcode = %s',[Scode]) 
+            cursor.execute('DELETE FROM security WHERE security_code = %s',[Scode]) 
+            cursor.execute('DELETE FROM staff WHERE staff_code = %s',[Scode]) 
+            mysql.connection.commit()
+           
+            msg = Message('Society Rejected' ,sender ='Rportal<me@Rportal.com', recipients = [email])
+            msg.body ="Hi \n"+ message
+            mail.send(msg)  
+            msg = 'Society Rejected/Deleted'
         return render_template('admin/admin_req.html', msg=msg)
     return redirect(url_for('login'))
     
@@ -914,6 +931,10 @@ def contactus():
         mysql.connection.commit()
         return render_template('rportal.html')
 
+#
+#Notice#
+#
+
 @app.route('/R-Portal/createnotice', methods=['GET', 'POST'] )
 def createnotice():
     if 'secretary' in session:
@@ -923,6 +944,7 @@ def createnotice():
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('INSERT INTO notice VALUES (NULL, %s , %s, %s, DEFAULT )', (  notice_subject,notice_message , session['code'] ))
             mysql.connection.commit()
+        
         return render_template('secretary/createnotice.html')
     else:
         return redirect(url_for('login'))

@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <div class="container mt-3 mb-4">
   
-
+  <h4><div class="msg">{{ msg }}</div></h4>
 <form class="mb-5" action="{{ url_for('createnotice') }}" method="post"  >
 
   <!--<textarea  name="editor1"></textarea>-->
@@ -14,6 +14,7 @@
   <input class="w3-input" type="text" placeholder="Subject" name="subject"  required> 
   <br><br>
   <textarea id="editor" name="editor" ></textarea>
+  <br><br>
   <button type="submit" class="btn btn-primary" >Publish</button>
   </form>
 
