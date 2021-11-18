@@ -665,8 +665,8 @@ def r_members():
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('DELETE FROM member WHERE Mid = %s',[Mid]) 
             mysql.connection.commit()
-            msg = Message('Member Rejected' ,sender ='Rportal<me@Rportal.com', recipients = [email])
-            msg.body ="Hi \n"+ message
+            msg = Message('Member request rejected' ,sender ='Rportal<me@Rportal.com', recipients = [email])
+            msg.body ="Hello \n Your member request for the "+ name + "is rejected by "+ Sname + "!\n Reason:" + message +"\n\n Thank you for using R-Portal!\n" +part4
             mail.send(msg)  
             msg = 'Member Rejected/Deleted'
         return allow_members()
