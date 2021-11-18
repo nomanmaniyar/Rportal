@@ -799,7 +799,7 @@ def createnotice():
             notice_subject = request.form['subject']
             notice_message = request.form['editor']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('INSERT INTO notice VALUES (NULL, %s , %s, %s, DEFAULT )', (  notice_subject,notice_message , session['code'] ))
+            cursor.execute('INSERT INTO notice VALUES (NULL, %s , %s, %s, DEFAULT )', (notice_subject ,notice_message , session['code'] ))
             mysql.connection.commit()
         return render_template('secretary/createnotice.html')
     else:
