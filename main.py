@@ -55,6 +55,7 @@ Regards! """
 mail = Mail(app)
 otp = random.randint(000000,999999)  
 
+#   Index Page - R-Portal
 @app.route('/')
 def index():
     return rportal()
@@ -62,6 +63,230 @@ def index():
 @app.route('/R-Portal/')
 def rportal():
     return render_template('rportal.html')
+
+#
+#   Registrations
+#
+
+#   Secretary Registration 
+def invitation():
+    num = '0123456789'
+    string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    num1 = ""
+    str1 = ""
+    length = len(string)
+    length1 = len(num)
+    for i in range(4):
+        str1 += string[math.floor(random.random() * length)]
+    for i in range(2):
+        num1 += num[math.floor(random.random() * length1)]
+    code = str(str1 + num1)
+    return code
+    
+@app.route('/R-Portal/sregister', methods=['GET','POST'])
+def sregister():
+    msg = ''
+    target = os.path.join( '/Rportal/static/upload/')
+    if not os.path.isdir(target):
+        os.makedirs(target)
+    if request.method == 'POST' and 'Sname' in request.form and 'Susername' in request.form and 'Semail' in request.form:
+        username = request.form['Susername']
+        email = request.form['Semail']
+        passtext = request.form['Spassword']
+        password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
+        Aname = request.form['Sname']
+        flatno = request.form['Sflatno']
+        wing = request.form['Swing']
+        mobile = request.form['Smobile'] 
+        acname = request.form['acname']  
+        acno = request.form['acno']
+        mmid = request.form['mmid']
+        bankname = request.form['bankname']
+        branch = request.form['branch']
+        ifsc = request.form['ifsc']
+        name = request.form['name']
+        area = request.form['area']
+        road = request.form['road']   
+        city = request.form['city']
+        state = request.form['state']
+        pin = request.form['pin']
+        ...
+        file = request.files['file']
+        file_name = file.filename or ''
+        destination = ''.join([target, file_name])
+        file.save(destination)
+        kyc_file  = file_name;
+        ...
+        code = ""
+        code =invitation()
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM member WHERE Musername = %s', (username,))
+        account = cursor.fetchone()
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('SELECT * FROM secretary WHERE Semail = %s', (email,))
+        account1 = cursor1.fetchone()
+        cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor3.execute('SELECT * FROM member WHERE Memail = %s', (email,))
+        account3 = cursor3.fetchone()
+        cursor4 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor4.execute('SELECT * FROM secretary WHERE Susername = %s', (username,))
+        account4 = cursor4.fetchone()
+        cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor2.execute('SELECT * FROM society WHERE code = %s', (code,))
+        account2 = cursor2.fetchone()
+        if account:
+            msg = 'Warning! Username already exists!!'
+        elif account1:
+            msg = 'Warning! Account already exists!!'
+        elif account3:
+            msg = 'Warning! Account already exists!!'
+        elif account4:
+            msg = 'Warning! Username already exists!!'
+        elif account2:
+            msg = 'Something went wrong:( Please try again!'
+        elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+            msg = 'Invalid email address!'
+        elif not re.match(r'[A-Za-z0-9]+', username):
+            msg = 'Username must contain only characters and numbers!'
+        elif not username or not password or not email:
+            msg = 'Please fill out the form!'
+        else:
+            cursor1.execute('INSERT INTO secretary VALUES (NULL, %s, %s, %s, %s, %s, %s, %s,%s , DEFAULT , DEFAULT)', (username , password , code ,  email , Aname , flatno , wing , mobile ,))
+            cursor2.execute('INSERT INTO society VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, NULL, NULL,%s, DEFAULT , DEFAULT)', (code , name , city , road , area , state , pin , acname, acno, mmid, bankname, branch, ifsc, kyc_file))
+            mysql.connection.commit()
+            msg = 'You have successfully registered!'
+    elif request.method == 'POST':
+        msg = 'elif code!' 
+    return render_template('secretary/sregister.html', msg=msg)
+
+#   Member Registration
+@app.route('/R-Portal/mcode', methods=['GET', 'POST'])
+def mcode():
+    msg = ''
+    if request.method == 'POST' and 'code' in request.form:
+        code = request.form['code']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM society WHERE code = %s', (code,))
+        account = cursor.fetchone()
+        if account:
+            cursor.execute('select name, city, road, area, state, pin, code , semail from society inner join secretary WHERE code = %s', (code ,))
+            account = cursor.fetchone()
+            return render_template('member/mverify.html', account=account, msg=msg)
+        else:
+            mysql.connection.commit()
+            msg='Invalid Society Code!'
+    return render_template('member/mcode.html', msg=msg)
+
+@app.route('/R-Portal/mregister', methods=['GET', 'POST'])
+def mregister():
+    msg = ''
+    if request.method == 'POST' and 'Musername' in request.form and 'Mpassword' in request.form and 'Memail' in request.form and 'Mcode' in request.form and 'Mname' in request.form and 'Mflatno' in request.form and 'Mwing' in request.form and 'Mmobile' in request.form and 'Semail' in request.form:
+        username = request.form['Musername']
+        passtext = request.form['Mpassword']
+        password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
+        code = request.form['Mcode']
+        email = request.form['Memail']
+        name = request.form['Mname']
+        flatno = request.form['Mflatno']
+        wing = request.form['Mwing']
+        mobile = request.form['Mmobile']   
+        Semail = request.form['Semail']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM member WHERE Musername = %s', (username,))
+        account = cursor.fetchone()
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('SELECT * FROM secretary WHERE Susername = %s', (username,))
+        account1 = cursor1.fetchone()
+        cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor2.execute('SELECT * FROM member WHERE Memail = %s', (email,))
+        account2 = cursor2.fetchone()
+        cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor3.execute('SELECT * FROM secretary WHERE Semail = %s', (email,))
+        account3 = cursor3.fetchone()
+        if account:
+            msg = 'Warning! Username already exists!!'
+        elif account1:
+            msg = 'Warning! Username already exists!!'
+        elif account2:
+            msg = 'Warning! Account already exists!!'
+        elif account3:
+            msg = 'Warning! Account already exists!!'
+        elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+            msg = 'Invalid email address!'
+        elif not re.match(r'[A-Za-z0-9]+', username):
+            msg = 'Username must contain only characters and numbers!'
+        elif not username or not password or not email:
+            msg = 'Please fill out the form!'
+        else:
+            cursor.execute('INSERT INTO member VALUES (NULL, %s, %s, %s, %s, %s, %s, %s,%s,DEFAULT,DEFAULT )', (username , password , code ,  email , name , flatno , wing , mobile))
+            mysql.connection.commit()
+            msg = Message('New Member Request' ,sender ='Rportal<me@Rportal.com', recipients = [Semail]) 
+            text = "Hello \nYou have received new member request with followinh member details. \n Member details are :\n"
+            msg.body = text + "\n Flat No :" + wing + flatno + "\n Name : " + name + "\n phone No : " + mobile + "\n Email ID : " + email + part4
+            mail.send(msg)  
+            msg = 'You have successfully registered!'
+    elif request.method == 'POST':
+        msg = 'Please fill out the form!'
+    return render_template('member/mcode.html', msg=msg)
+
+#   Security Guard Registeration
+@app.route('/R-Portal/add_security', methods=['GET','POST'])
+def security():
+    msg = ''
+    if request.method == 'POST' and 'security_name' in request.form and 'security_username' in request.form and 'security_password' in request.form:
+        security_username = request.form['security_username']
+        security_mobile = request.form['security_mobile'] 
+        passtext  = request.form['security_password']
+        security_password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
+        security_name = request.form['security_name']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM security WHERE security_username = %s AND security_mobile = %s', (security_username, security_mobile))
+        account = cursor.fetchone()
+        if account:
+            msg = 'Warning! Account already exists!!'
+        elif not re.match(r'[A-Za-z0-9]+', security_username):
+            msg = 'Username must contain only characters and numbers!'
+        elif not security_username or not security_password or not security_mobile:
+            msg = 'Please fill out the form!'
+        else:
+            cursor.execute('INSERT INTO security VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT)', (security_username , security_password , security_name , security_mobile, session['code']))
+            mysql.connection.commit()
+            msg = 'You have successfully registered!'
+    elif request.method == 'POST':
+        msg = 'elif code!' 
+    return people()
+
+#   Staff Member Registaration
+@app.route('/R-Portal/add_staff', methods=['GET','POST'])
+def staff():
+    msg = ''
+    if request.method == 'POST' and 'staff_name' in request.form and 'staff_username' in request.form and 'staff_password' in request.form:
+        
+        staff_username = request.form['staff_username']
+        staff_mobile = request.form['staff_mobile']
+        passtext  = request.form['staff_password']
+        staff_password  = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
+        staff_name = request.form['staff_name']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM staff WHERE staff_username = %s AND staff_mobile = %s', (staff_username, staff_mobile))
+        account = cursor.fetchone()
+        if account:
+            msg = 'Warning! Account already exists!!'
+        elif not re.match(r'[A-Za-z0-9]+', staff_username):
+            msg = 'Username must contain only characters and numbers!'
+        elif not staff_username or not staff_password or not staff_mobile:
+            msg = 'Please fill out the form!'
+        else:
+            cursor.execute('INSERT INTO staff VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT)', (staff_username , staff_password , staff_name , staff_mobile, session['code']))
+            mysql.connection.commit()
+            msg = 'You have successfully registered!'
+    elif request.method == 'POST':
+        msg = 'elif code!'
+    return people()
+
+#
+#   Login Page
+#
 
 @app.route('/R-Portal/login', methods=['GET', 'POST'])
 def login():
@@ -207,6 +432,61 @@ def login():
                                                             msg = 'Incorrect username/password! Please check Username/Password and try again!'
     return render_template('login.html', msg=msg)
 
+#   Secretary OTP Validators
+@app.route('/svalidate',methods=["POST"])
+def svalidate():  
+    user_otp = request.form['otp']  
+    if otp == int(user_otp):  
+        return redirect(url_for('shome')) 
+    else: 
+        msg = 'OTP Does not match! Try Again!!'
+        return render_template('secretary/sotp.html', msg=msg)
+
+def sotp(): 
+    if 'secretary' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM secretary WHERE Sid = %s', (session['id'],))
+        account = cursor.fetchone()
+        if account:
+            email = account['Semail']
+            msg = Message('OTP confirmation for RPortal' ,sender ='Rportal<me@Rportal.com', recipients = [email])
+            msg.body = part2 + str(otp)+ part3 
+            mail.send(msg) 
+            msg1 = 'OTP: ',otp
+            return render_template('secretary/sotp.html', msg1=msg1)
+        else:
+            msg = 'Something went wrong:( Please try again!'
+    else: 
+        return logout()
+
+#   Member OTP Validators
+@app.route('/mvalidate',methods=["POST"])
+def mvalidate():  
+    user_otp = request.form['otp']  
+    if otp == int(user_otp):  
+        return redirect(url_for('mhome')) 
+    else: 
+        msg = 'OTP Does not match! Try Again!!'
+        return render_template('member/motp.html', msg=msg)
+
+def motp():
+    if 'member' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM member WHERE Mid = %s ', (session['id'],))
+        account = cursor.fetchone()
+        if account:
+            email = account['Memail']
+            msg = Message('OTP confirmation for RPortal' ,sender ='Rportal<me@Rportal.com', recipients = [email]) 
+            msg.body = part2 + str(otp) + part3 
+            mail.send(msg)  
+            msg1 = 'OTP: ',otp
+            return render_template('member/Motp.html', msg1=msg1)
+        else:
+            msg = 'Something went wrong:( Please try again!'
+    else:
+        return logout()
+ 
+#   Forgot Password
 @app.route('/R-Portal/forgot_password', methods=['GET', 'POST'])
 def forgot_password():
     msg = ''
@@ -257,59 +537,7 @@ def forgot_password():
                         return render_template('forgot_password.html', msg=msg)    
     return render_template('forgot_password.html', msg=msg)
 
-
-def sotp(): 
-    if 'secretary' in session:
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM secretary WHERE Sid = %s', (session['id'],))
-        account = cursor.fetchone()
-        if account:
-            email = account['Semail']
-            msg = Message('OTP confirmation for RPortal' ,sender ='Rportal<me@Rportal.com', recipients = [email])
-            msg.body = part2 + str(otp)+ part3 
-            mail.send(msg) 
-            msg1 = 'OTP: ',otp
-            return render_template('secretary/sotp.html', msg1=msg1)
-        else:
-            msg = 'Something went wrong:( Please try again!'
-    else:
-        return render_template("rportal.html")
-    
-def motp():
-    if 'member' in session:
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM member WHERE Mid = %s ', (session['id'],))
-        account = cursor.fetchone()
-        if account:
-            email = account['Memail']
-            msg = Message('OTP confirmation for RPortal' ,sender ='Rportal<me@Rportal.com', recipients = [email]) 
-            msg.body = part2 + str(otp) + part3 
-            mail.send(msg)  
-            msg1 = 'OTP: ',otp
-            return render_template('member/Motp.html', msg1=msg1)
-        else:
-            msg = 'Something went wrong:( Please try again!'
-    else:
-        return render_template("rportal.html")
-
-@app.route('/svalidate',methods=["POST"])
-def svalidate():  
-    user_otp = request.form['otp']  
-    if otp == int(user_otp):  
-        return redirect(url_for('shome')) 
-    else: 
-        msg = 'OTP Does not match! Try Again!!'
-        return render_template('secretary/sotp.html', msg=msg)
-
-@app.route('/mvalidate',methods=["POST"])
-def mvalidate():  
-    user_otp = request.form['otp']  
-    if otp == int(user_otp):  
-        return redirect(url_for('mhome')) 
-    else: 
-        msg = 'OTP Does not match! Try Again!!'
-        return render_template('member/motp.html', msg=msg)
-        
+#   Logout 
 @app.route('/R-Portal/logout')
 def logout():
     if 'secretary' in session:
@@ -343,182 +571,9 @@ def logout():
         session.pop('code', None)
         return redirect(url_for('rportal'))
 
-@app.route('/R-Portal/add_security', methods=['GET','POST'])
-def security():
-    msg = ''
-    if request.method == 'POST' and 'security_name' in request.form and 'security_username' in request.form and 'security_password' in request.form:
-        
-        security_username = request.form['security_username']
-        security_mobile = request.form['security_mobile'] 
-        passtext  = request.form['security_password']
-        security_password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
-        security_name = request.form['security_name']
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM security WHERE security_username = %s AND security_mobile = %s', (security_username, security_mobile))
-        account = cursor.fetchone()
-        if account:
-            msg = 'Warning! Account already exists!!'
-        elif not re.match(r'[A-Za-z0-9]+', security_username):
-            msg = 'Username must contain only characters and numbers!'
-        elif not security_username or not security_password or not security_mobile:
-            msg = 'Please fill out the form!'
-        else:
-            cursor.execute('INSERT INTO security VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT)', (security_username , security_password , security_name , security_mobile, session['code']))
-            mysql.connection.commit()
-            msg = 'You have successfully registered!'
-    elif request.method == 'POST':
-        msg = 'elif code!' 
-    return people()
-
-@app.route('/R-Portal/security_home')
-def security_home():
-    if 'security' in session:
-        return render_template('security/security_home.html', security_username=session['username'])
-    return redirect(url_for('login'))
-
-@app.route('/R-Portal/security_profile')
-def security_profile():
-    if 'security' in session:
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT security_username, security_password, security_name, security_mobile, security_code FROM security WHERE security_id = %s;', (session['id'],))
-        account = cursor.fetchone()
-        return render_template('security/security_profile.html', account=account)
-    return redirect(url_for('login'))
-
-@app.route('/R-Portal/add_staff', methods=['GET','POST'])
-def staff():
-    msg = ''
-    if request.method == 'POST' and 'staff_name' in request.form and 'staff_username' in request.form and 'staff_password' in request.form:
-        
-        staff_username = request.form['staff_username']
-        staff_mobile = request.form['staff_mobile']
-        passtext  = request.form['staff_password']
-        staff_password  = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
-        staff_name = request.form['staff_name']
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM staff WHERE staff_username = %s AND staff_mobile = %s', (staff_username, staff_mobile))
-        account = cursor.fetchone()
-        if account:
-            msg = 'Warning! Account already exists!!'
-        elif not re.match(r'[A-Za-z0-9]+', staff_username):
-            msg = 'Username must contain only characters and numbers!'
-        elif not staff_username or not staff_password or not staff_mobile:
-            msg = 'Please fill out the form!'
-        else:
-            cursor.execute('INSERT INTO staff VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT)', (staff_username , staff_password , staff_name , staff_mobile, session['code']))
-            mysql.connection.commit()
-            msg = 'You have successfully registered!'
-    elif request.method == 'POST':
-        msg = 'elif code!'
-    return people()
-
-@app.route('/R-Portal/staff_home')
-def staff_home():
-    if 'staff' in session:
-        return render_template('staff/staff_home.html', staff_username=session['username'])
-    return redirect(url_for('login'))
-
-@app.route('/R-Portal/staff_profile')
-def staff_profile():
-    if 'staff' in session:
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT staff_username, staff_password, staff_name, staff_mobile, staff_code FROM staff WHERE staff_id = %s;', (session['id'],))
-        account = cursor.fetchone()
-        return render_template('staff/staff_profile.html', account=account)
-    return redirect(url_for('login'))
-
-def invitation():
-    num = '0123456789'
-    string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    num1 = ""
-    str1 = ""
-    length = len(string)
-    length1 = len(num)
-    for i in range(4):
-        str1 += string[math.floor(random.random() * length)]
-    for i in range(2):
-        num1 += num[math.floor(random.random() * length1)]
-    code = str(str1 + num1)
-    return code
-    
-@app.route('/R-Portal/sregister', methods=['GET','POST'])
-def sregister():
-    msg = ''
-    target = os.path.join( '/Rportal/static/upload/')
-    if not os.path.isdir(target):
-        os.makedirs(target)
-    if request.method == 'POST' and 'Sname' in request.form and 'Susername' in request.form and 'Semail' in request.form:
-        
-        username = request.form['Susername']
-        email = request.form['Semail']
-        passtext = request.form['Spassword']
-        password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
-        Aname = request.form['Sname']
-        flatno = request.form['Sflatno']
-        wing = request.form['Swing']
-        mobile = request.form['Smobile'] 
-        acname = request.form['acname']  
-        acno = request.form['acno']
-        mmid = request.form['mmid']
-        bankname = request.form['bankname']
-        branch = request.form['branch']
-        ifsc = request.form['ifsc']
-        name = request.form['name']
-        area = request.form['area']
-        road = request.form['road']   
-        city = request.form['city']
-        state = request.form['state']
-        pin = request.form['pin']
-        ...
-        file = request.files['file']
-        file_name = file.filename or ''
-        destination = ''.join([target, file_name])
-        file.save(destination)
-        kyc_file  = file_name;
-        ...
-        
-        code = ""
-        code =invitation()
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM member WHERE Musername = %s', (username,))
-        account = cursor.fetchone()
-        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor1.execute('SELECT * FROM secretary WHERE Semail = %s', (email,))
-        account1 = cursor1.fetchone()
-        cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor3.execute('SELECT * FROM member WHERE Memail = %s', (email,))
-        account3 = cursor3.fetchone()
-        cursor4 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor4.execute('SELECT * FROM secretary WHERE Susername = %s', (username,))
-        account4 = cursor4.fetchone()
-        cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor2.execute('SELECT * FROM society WHERE code = %s', (code,))
-        account2 = cursor2.fetchone()
-        if account:
-            msg = 'Warning! Username already exists!!'
-        elif account1:
-            msg = 'Warning! Account already exists!!'
-        elif account3:
-            msg = 'Warning! Account already exists!!'
-        elif account4:
-            msg = 'Warning! Username already exists!!'
-        elif account2:
-            msg = 'Something went wrong:( Please try again!'
-        elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-            msg = 'Invalid email address!'
-        elif not re.match(r'[A-Za-z0-9]+', username):
-            msg = 'Username must contain only characters and numbers!'
-        elif not username or not password or not email:
-            msg = 'Please fill out the form!'
-        else:
-            cursor1.execute('INSERT INTO secretary VALUES (NULL, %s, %s, %s, %s, %s, %s, %s,%s , DEFAULT , DEFAULT)', (username , password , code ,  email , Aname , flatno , wing , mobile ,))
-            cursor2.execute('INSERT INTO society VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, NULL, NULL,%s, DEFAULT , DEFAULT)', (code , name , city , road , area , state , pin , acname, acno, mmid, bankname, branch, ifsc, kyc_file))
-            mysql.connection.commit()
-            msg = 'You have successfully registered!'
-    elif request.method == 'POST':
-        msg = 'elif code!' 
-    return render_template('secretary/sregister.html', msg=msg)
-
+#
+#   Secretary Part
+#
 @app.route('/R-Portal/society_details')
 def people():
     if 'secretary' in session:
@@ -535,7 +590,8 @@ def people():
         cursor3.execute('SELECT staff_name, staff_status, staff_mobile ,staff_id from secretary inner join staff on secretary.Scode = staff.staff_code WHERE Sid = %s AND staff_status=%s', (session['id'],'active'))
         account3 = cursor3.fetchall()        
         return render_template('secretary/people.html', account=account, account1=account1, account2=account2, account3=account3)
-    return redirect(url_for('login'))
+    else:
+        return logout()
 
 @app.route('/R-Portal/inactive_people')
 def inpeople():
@@ -553,8 +609,8 @@ def inpeople():
         cursor3.execute('SELECT staff_name, staff_status, staff_mobile ,staff_id from secretary inner join staff on secretary.Scode = staff.staff_code WHERE Sid = %s AND staff_status=%s', (session['id'],'inactive'))
         account3 = cursor3.fetchall()        
         return render_template('secretary/inactive_people.html', account=account, account1=account1, account2=account2, account3=account3)
-    return redirect(url_for('login'))
-
+    else:
+        return logout()
 
 @app.route('/R-Portal/allow_members/')
 def allow_members():
@@ -563,48 +619,45 @@ def allow_members():
         cursor.execute('SELECT Mid, Mname, member_status, Mmobile, Mwing, Mflatno from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s AND member_status=%s', (session['id'],'Request'))
         account = cursor.fetchall() 
         return render_template('secretary/allow_members.html', account=account )
-    return redirect(url_for('login'))
+    else:
+        return logout()
     
-
 @app.route('/R-Portal/a_members/<int:Mid>')
 def a_members(Mid):
-
-    if 'secretary' in session: 
-
+    if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute("UPDATE member SET member_status = %s WHERE Mid = %s" ,('active',Mid,)) 
         mysql.connection.commit()
         msg = 'Member Allowed'
         return allow_members()
-    return redirect(url_for('login'))
+    else:
+        return logout()
 
 @app.route('/R-Portal/i_members/<int:Mid>', methods=['GET', 'POST'])
 def i_members(Mid):
-
-    if 'secretary' in session: 
-        
+    if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute("UPDATE member SET member_status = %s WHERE Mid = %s" ,('inactive',Mid,)) 
         mysql.connection.commit()
         msg = 'Member Allowed'
         return people()
-    return redirect(url_for('login'))
+    else:
+        return logout()
 
 @app.route('/R-Portal/ac_members/<int:Mid>', methods=['GET', 'POST'])
 def ac_members(Mid):
-
-    if 'secretary' in session: 
-        
+    if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute("UPDATE member SET member_status = %s WHERE Mid = %s" ,('active',Mid,)) 
         mysql.connection.commit()
         msg = 'Member Allowed'
         return inpeople()
-    return redirect(url_for('login'))
+    else:
+        return logout()
 
 @app.route('/R-Portal/r_members', methods=['GET', 'POST'])
 def r_members():
-    if 'secretary' in session: 
+    if 'secretary' in session:
         if request.method == 'POST' and 'email' in request.form and 'message'  in request.form and 'Mid' :
             email = request.form['email']
             message = request.form['message']
@@ -616,105 +669,118 @@ def r_members():
             msg.body ="Hi \n"+ message
             mail.send(msg)  
             msg = 'Member Rejected/Deleted'
-            
         return allow_members()
-    return redirect(url_for('login'))
+    else:
+        return logout()
 
 @app.route('/R-Portal/d_members/<int:Mid>')
 def d_members(Mid):
-    if 'secretary' in session: 
+    if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('DELETE FROM member WHERE Mid = %s',[Mid]) 
         mysql.connection.commit()
         msg = 'Member Delete'
         return people()
-    return redirect(url_for('login'))
+    else:
+        return logout()
 
 @app.route('/R-Portal/din_members/<int:Mid>')
 def din_members(Mid):
-    if 'secretary' in session: 
+    if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('DELETE FROM member WHERE Mid = %s',[Mid]) 
         mysql.connection.commit()
         msg = 'Member Delete'
         return inpeople()
-    return redirect(url_for('login'))
+    else:
+        return logout()
 
 @app.route('/R-Portal/i_security/<int:security_id>', methods=['GET', 'POST'])
 def i_security(security_id):
-    if 'secretary' in session: 
+    if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute("UPDATE security SET security_status = %s WHERE security_id= %s" ,('inactive',security_id,)) 
         mysql.connection.commit()
         return people()
+    else:
+        return logout()
         
 @app.route('/R-Portal/a_security/<int:security_id>', methods=['GET', 'POST'])
 def a_security(security_id):
-    if 'secretary' in session: 
+    if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute("UPDATE security SET security_status = %s WHERE security_id= %s" ,('active',security_id,)) 
         mysql.connection.commit()
         return inpeople()
-
+    else:
+        return logout()
 
 @app.route('/R-Portal/d_security/<int:security_id>')
 def d_security(security_id):
-    if 'secretary' in session: 
+    if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('DELETE FROM security WHERE security_id = %s',[security_id]) 
         mysql.connection.commit()
         return people()
+    else:
+        return logout()
 
 @app.route('/R-Portal/din_security/<int:security_id>')
 def din_security(security_id):
-    if 'secretary' in session: 
+    if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('DELETE FROM security WHERE security_id = %s',[security_id]) 
         mysql.connection.commit()
         return inpeople()
-    return redirect(url_for('login'))
+    else:
+        return logout()
 
-#staff people
 @app.route('/R-Portal/i_staff/<int:staff_id>', methods=['GET', 'POST'])
 def i_staff(staff_id):
-    if 'secretary' in session: 
+    if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_id= %s" ,('inactive',staff_id,)) 
         mysql.connection.commit()
         return people()
+    else:
+        return logout()
         
 @app.route('/R-Portal/a_staff/<int:staff_id>', methods=['GET', 'POST'])
 def a_staff(staff_id):
-    if 'secretary' in session: 
+    if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_id= %s" ,('active',staff_id,)) 
         mysql.connection.commit()
         return inpeople()
-
+    else:
+        return logout()
 
 @app.route('/R-Portal/d_staff/<int:staff_id>')
 def d_staff(staff_id):
-    if 'secretary' in session: 
+    if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('DELETE FROM staff WHERE staff_id = %s',[staff_id]) 
         mysql.connection.commit()
         return people()
+    else:
+        return logout()
 
 @app.route('/R-Portal/din_staff/<int:staff_id>')
 def din_staff(staff_id):
-    if 'secretary' in session: 
+    if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('DELETE FROM staff WHERE staff_id = %s',[staff_id]) 
         mysql.connection.commit()
         return inpeople()
-    return redirect(url_for('login'))
-
+    else:
+        return logout()
 
 @app.route('/R-Portal/shome')
 def shome():
     if 'secretary' in session:
         return render_template('secretary/shome.html')
-    return redirect(url_for('login'))
+    else:
+        return logout()
 
 @app.route('/R-Portal/sprofile')
 def sprofile():
@@ -723,82 +789,41 @@ def sprofile():
         cursor.execute('SELECT * FROM secretary INNER JOIN society ON secretary.Scode = society.code WHERE Sid = %s', (session['id'],))
         account = cursor.fetchone()
         return render_template('secretary/sprofile.html', account=account)
-    return redirect(url_for('login'))
+    else:
+        return logout()
 
-@app.route('/R-Portal/mcode', methods=['GET', 'POST'])
-def mcode():
-    msg = ''
-    if request.method == 'POST' and 'code' in request.form:
-        code = request.form['code']
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM society WHERE code = %s', (code,))
-        account = cursor.fetchone()
-        if account:
-            cursor.execute('select name, city, road, area, state, pin, code , semail from society inner join secretary WHERE code = %s', (code ,))
-            account = cursor.fetchone()
-            return render_template('member/mverify.html', account=account, msg=msg)
-        else:
+@app.route('/R-Portal/createnotice', methods=['GET', 'POST'] )
+def createnotice():
+    if 'secretary' in session:
+        if request.method == 'POST' and 'editor' in request.form and 'subject' :
+            notice_subject = request.form['subject']
+            notice_message = request.form['editor']
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('INSERT INTO notice VALUES (NULL, %s , %s, %s, DEFAULT )', (  notice_subject,notice_message , session['code'] ))
             mysql.connection.commit()
-            msg='Invalid Society Code!'
-    return render_template('member/mcode.html', msg=msg)
+        return render_template('secretary/createnotice.html')
+    else:
+        return logout()
+    
+@app.route('/R-Portal/manage_complaint', methods=['GET','POST'])
+def complaint():
+    if 'secretary' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)        
+        cursor.execute('SELECT * FROM complaint WHERE complaint_code = %s', (session['code'],))
+        account = cursor.fetchall()
+        return render_template('secretary/complaint.html', account=account)
+    else:
+        return logout()
 
-@app.route('/R-Portal/mregister', methods=['GET', 'POST'])
-def mregister():
-    msg = ''
-    if request.method == 'POST' and 'Musername' in request.form and 'Mpassword' in request.form and 'Memail' in request.form and 'Mcode' in request.form and 'Mname' in request.form and 'Mflatno' in request.form and 'Mwing' in request.form and 'Mmobile' in request.form and 'Semail' in request.form:
-        username = request.form['Musername']
-        passtext = request.form['Mpassword']
-        password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
-        code = request.form['Mcode']
-        email = request.form['Memail']
-        name = request.form['Mname']
-        flatno = request.form['Mflatno']
-        wing = request.form['Mwing']
-        mobile = request.form['Mmobile']   
-        Semail = request.form['Semail']
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM member WHERE Musername = %s', (username,))
-        account = cursor.fetchone()
-        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor1.execute('SELECT * FROM secretary WHERE Susername = %s', (username,))
-        account1 = cursor1.fetchone()
-        cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor2.execute('SELECT * FROM member WHERE Memail = %s', (email,))
-        account2 = cursor2.fetchone()
-        cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor3.execute('SELECT * FROM secretary WHERE Semail = %s', (email,))
-        account3 = cursor3.fetchone()
-        if account:
-            msg = 'Warning! Username already exists!!'
-        elif account1:
-            msg = 'Warning! Username already exists!!'
-        elif account2:
-            msg = 'Warning! Account already exists!!'
-        elif account3:
-            msg = 'Warning! Account already exists!!'
-        elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-            msg = 'Invalid email address!'
-        elif not re.match(r'[A-Za-z0-9]+', username):
-            msg = 'Username must contain only characters and numbers!'
-        elif not username or not password or not email:
-            msg = 'Please fill out the form!'
-        else:
-            cursor.execute('INSERT INTO member VALUES (NULL, %s, %s, %s, %s, %s, %s, %s,%s,DEFAULT,DEFAULT )', (username , password , code ,  email , name , flatno , wing , mobile))
-            mysql.connection.commit()
-            msg = Message('New Member Request' ,sender ='Rportal<me@Rportal.com', recipients = [Semail]) 
-            text = "Hello \nYou have received new member request with followinh member details. \n Member details are :\n"
-            msg.body = text + "\n Flat No :" + wing + flatno + "\n Name : " + name + "\n phone No : " + mobile + "\n Email ID : " + email + part4
-            mail.send(msg)  
-            msg = 'You have successfully registered!'
-    elif request.method == 'POST':
-        msg = 'Please fill out the form!'
-    return render_template('member/mcode.html', msg=msg)
-
+#
+#   Member Part
+#
 @app.route('/R-Portal/mhome')
 def mhome():
     if 'member' in session:
         return render_template('member/mhome.html', Mname=session['name'])
-    return redirect(url_for('login'))
+    else:
+        return logout()
 
 @app.route('/R-Portal/mprofile')
 def mprofile():
@@ -807,13 +832,45 @@ def mprofile():
         cursor.execute('SELECT Musername, Mpassword, Memail, Mname, Mflatno, Mwing, Mmobile, code, name, city, road, area, state, pin FROM member INNER JOIN society ON member.Mcode = society.code WHERE Mid = %s;', (session['id'],))
         account = cursor.fetchone()
         return render_template('member/mprofile.html', account=account)
-    return redirect(url_for('login'))
+    else:
+        return logout()
 
+@app.route('/R-Portal/viewnotice')
+def viewnotice():
+    if 'member' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT *  from notice WHERE notice_code = %s', (session['code'],) ) 
+        account = cursor.fetchall() 
+        return render_template('member/viewnotice.html', account=account)
+    else:
+        return logout()
+    
+@app.route('/R-Portal/complaint', methods=['GET','POST'])
+def member_complaint():
+    if 'member' in session:
+        msg = ''
+        if request.method == 'POST' and 'complaint_subject' in request.form and 'complaint_message' in request.form:
+            compaint_subject = request.form['complaint_subject']
+            complaint_message = request.form['complaint_message']
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('INSERT INTO complaint VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT)', (session['username'] , session['name'] , compaint_subject, complaint_message, session['code']))
+            mysql.connection.commit()
+            msg = 'Complaint Added Succsesfully!'
+        elif request.method == 'POST':
+            msg = 'Please fill out the form!'
+        return render_template('member/member_complaint.html', msg=msg)
+    else:
+        return logout()
+
+#
+#   Admin Part
+#
 @app.route('/R-Portal/admin_home')
 def admin_home():
     if 'admin' in session:
         return render_template('admin/admin_home.html', Ausername=session['username'])
-    return redirect(url_for('login'))
+    else:
+        return logout()
 
 @app.route('/R-Portal/asoc')
 def asoc():
@@ -823,8 +880,8 @@ def asoc():
         account = cursor.fetchall() 
         return render_template('admin/asoc.html', account=account)
     else:
-        return redirect(url_for('login'))
-    
+        return logout()
+  
 @app.route('/R-Portal/isoc')
 def isoc():
     if 'admin' in session:
@@ -833,8 +890,8 @@ def isoc():
         account = cursor.fetchall() 
         return render_template('admin/isoc.html', account=account)
     else:
-        return redirect(url_for('login'))
-
+        return logout()
+    
 @app.route('/R-Portal/admin_req/')
 def admin_req():
     if 'admin' in session:
@@ -842,11 +899,12 @@ def admin_req():
         cursor.execute('SELECT Sname, secretarty_status, Smobile, Semail, Scode, secretary_time, area, road, city, state, pin, name, kyc_file from secretary inner join society on secretary.Scode = society.code WHERE  secretarty_status = %s', ('request',))
         account = cursor.fetchall()           
         return render_template('admin/admin_req.html', account=account)
-    return redirect(url_for('login'))
+    else:
+        return logout()
 
 @app.route('/R-Portal/a_sec/<string:Scode>')
 def a_sec(Scode):
-    if 'admin' in session: 
+    if 'admin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute("UPDATE secretary SET secretarty_status = %s WHERE Scode = %s" ,('active',Scode,)) 
         cursor.execute("UPDATE society SET society_status = %s WHERE code = %s" ,('active',Scode,)) 
@@ -856,12 +914,12 @@ def a_sec(Scode):
         mysql.connection.commit()
         msg = 'Society Allowed'
         return admin_req()
-    return redirect(url_for('login'))
-
+    else:
+        return logout()
 
 @app.route('/R-Portal/al_sec/<string:Scode>')
 def al_sec(Scode):
-    if 'admin' in session: 
+    if 'admin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute("UPDATE secretary SET secretarty_status = %s WHERE Scode = %s" ,('active',Scode,)) 
         cursor.execute("UPDATE society SET society_status = %s WHERE code = %s" ,('active',Scode,)) 
@@ -871,11 +929,12 @@ def al_sec(Scode):
         mysql.connection.commit()
         msg = 'Society Allowed'
         return isoc()
-    return redirect(url_for('login'))
+    else:
+        return logout()
 
 @app.route('/R-Portal/c_sec/<string:Scode>')
 def c_sec(Scode):
-    if 'admin' in session: 
+    if 'admin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute("UPDATE secretary SET secretarty_status = %s WHERE Scode = %s" ,('inactive',Scode,)) 
         cursor.execute("UPDATE society SET society_status = %s WHERE code = %s" ,('inactive',Scode,)) 
@@ -885,11 +944,12 @@ def c_sec(Scode):
         mysql.connection.commit()
         msg = 'Society Disbanded'
         return asoc()
-    return redirect(url_for('login'))
+    else:
+        return logout()
 
 @app.route('/R-Portal/r_sec' , methods=['GET', 'POST'])
 def r_sec():
-    if 'admin' in session: 
+    if 'admin' in session:
         if request.method == 'POST' and 'email' in request.form and 'message'  in request.form and 'Scode' :
             email = request.form['email']
             message = request.form['message']
@@ -907,8 +967,8 @@ def r_sec():
             mail.send(msg)  
             msg = 'Society Rejected/Deleted'
         return render_template('admin/admin_req.html', msg=msg)
-    return redirect(url_for('login'))
-    
+    else:
+        return logout()
 
 @app.route('/R-Portal/contactdata')
 def contactdata():
@@ -918,8 +978,53 @@ def contactdata():
         account = cursor.fetchall() 
         return render_template('admin/contactdata.html', account=account)
     else:
-        return redirect(url_for('login'))
+        return logout()
+   
+#
+#   Security Part
+#
+@app.route('/R-Portal/security_home')
+def security_home():
+    if 'security' in session:
+        return render_template('security/security_home.html', security_username=session['username'])
+    else:
+        return logout()
 
+@app.route('/R-Portal/security_profile')
+def security_profile():
+    if 'security' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT security_username, security_password, security_name, security_mobile, security_code FROM security WHERE security_id = %s;', (session['id'],))
+        account = cursor.fetchone()
+        return render_template('security/security_profile.html', account=account)
+    else:
+        return logout()
+
+#
+#   Staff Part
+
+@app.route('/R-Portal/staff_home')
+def staff_home():
+    if 'staff' in session:
+        return render_template('staff/staff_home.html', staff_username=session['username'])
+    else:
+        return logout()
+
+@app.route('/R-Portal/staff_profile')
+def staff_profile():
+    if 'staff' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT staff_username, staff_password, staff_name, staff_mobile, staff_code FROM staff WHERE staff_id = %s;', (session['id'],))
+        account = cursor.fetchone()
+        return render_template('staff/staff_profile.html', account=account)
+    else:
+        return logout()
+
+#
+#   Other Modules
+#
+
+#   Contact Us
 @app.route('/R-Portal/contactus', methods=['GET', 'POST'] )
 def contactus():
     if request.method == 'POST' and 'name' in request.form and 'email' in request.form and 'message' in request.form :
@@ -931,59 +1036,11 @@ def contactus():
         mysql.connection.commit()
         return render_template('rportal.html')
 
-#
-#Notice#
-#
+#   Module Name Here
 
-@app.route('/R-Portal/createnotice', methods=['GET', 'POST'] )
-def createnotice():
-    if 'secretary' in session:
-        if request.method == 'POST' and 'editor' in request.form and 'subject' :
-            notice_subject = request.form['subject']
-            notice_message = request.form['editor']
-            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('INSERT INTO notice VALUES (NULL, %s , %s, %s, DEFAULT )', (  notice_subject,notice_message , session['code'] ))
-            mysql.connection.commit()
-        
-        return render_template('secretary/createnotice.html')
-    else:
-        return redirect(url_for('login'))
 
-@app.route('/R-Portal/viewnotice')
-def viewnotice():
-    if 'member' in session:
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT *  from notice WHERE notice_code = %s', (session['code'],) ) 
-        account = cursor.fetchall() 
-        return render_template('member/viewnotice.html', account=account)
-    else:
-        return redirect(url_for('login'))
 #
-#           COMPLAINT SECTION
+#   Runner Code
 #
-@app.route('/R-Portal/complaint', methods=['GET','POST'])
-def member_complaint():
-    msg = ''
-    if request.method == 'POST' and 'complaint_subject' in request.form and 'complaint_message' in request.form:
-        compaint_subject = request.form['complaint_subject']
-        complaint_message = request.form['complaint_message']
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('INSERT INTO complaint VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT)', (session['username'] , session['name'] , compaint_subject, complaint_message, session['code']))
-        mysql.connection.commit()
-        msg = 'Complaint Added Succsesfully!'
-    elif request.method == 'POST':
-        msg = 'Please fill out the form!'
-    return render_template('member/member_complaint.html', msg=msg)
-
-@app.route('/R-Portal/manage_complaint', methods=['GET','POST'])
-def complaint():
-    if 'secretary' in session:
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)        
-        cursor.execute('SELECT * FROM complaint WHERE complaint_code = %s', (session['code'],))
-        account = cursor.fetchall()
-        return render_template('secretary/complaint.html', account=account)
-    else:
-        return redirect(url_for('login'))
-
 if __name__ == '__main__':
    app.run(debug=True)
