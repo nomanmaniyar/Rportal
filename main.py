@@ -616,7 +616,7 @@ def inpeople():
 def allow_members():
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT Mid, Mname, member_status, Mmobile, Mwing, Mflatno, Memail from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s AND member_status=%s', (session['id'],'Request'))
+        cursor.execute('SELECT Mid, Mname, member_status, Mmobile, Mwing, Mflatno, Memail, Sname, name from secretary inner join member inner join society on secretary.Scode = member.Mcode AND secretary.Scode = society.code WHERE Sid = %s AND member_status=%s', (session['id'],'Request'))
         account = cursor.fetchall() 
         return render_template('secretary/allow_members.html', account=account )
     else:
@@ -661,12 +661,14 @@ def r_members():
         if request.method == 'POST' and 'email' in request.form and 'message'  in request.form and 'Mid' :
             email = request.form['email']
             message = request.form['message']
+            Sname = request.form['Sname']
+            name = request.form['name']
             Mid = request.form['Mid']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('DELETE FROM member WHERE Mid = %s',[Mid]) 
             mysql.connection.commit()
-            msg = Message('Member Rejected' ,sender ='Rportal<me@Rportal.com', recipients = [email])
-            msg.body = "Hi \n" +  message
+            msg = Message('Member Request Rejected' ,sender ='Rportal<me@Rportal.com', recipients = [email])
+            msg.body ="Hello! \n Your member request for the "+ name + " is rejected by "+ Sname + "!\n Reason: " + message +"\n\n Thank you for using R-Portal!\n" +part4
             mail.send(msg)  
             msg = 'Member Rejected/Deleted'
         return allow_members()
