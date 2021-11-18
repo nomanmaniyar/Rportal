@@ -4,21 +4,26 @@
 
 {% block content %}
 <div>
-    <table  class="table" size="auto">
-    <div id="scri">
-        {% for data in account %}
-        <tr>
-            <h5>Subject: {{ data['notice_subject'] }}</h5>
-            <h6>Date: {{ data['notice_time'] }}</h6>
-            <article id="scri">{{ data['notice_message'] }}</article><br>
-        </tr> 
-        {% endfor %}
-    </div>
-    </table>
+    <div id="div">
 
+        {% for data in account %}
+        
+       &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+       &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&emsp;&nbsp;
+        <h6>Date: {{ data['notice_time'] }}</h6>
+      
+       &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&nbsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&nbsp;&emsp;&nbsp;
+        <h5>Subject: {{ data['notice_subject'] }}</h5>
+        <h5>Subject: {{ data['notice_subject'] }}</h5>
+           
+            {{ data['notice_message'] }}
+     __________________________________________________________________________________________________________________________________________________
+    {% endfor %}
+</div></div>
     <br>   
     <a href='javascript:self.history.back();'>Go Back</a>
-</div>
+
 
     <script>
         $.fn.toHtml=function(){
@@ -26,7 +31,7 @@
        return $(this).html($(this).text())
      
     }
-    $('#scri').toHtml()
+    $('#div').toHtml()
 
     
     </script>
