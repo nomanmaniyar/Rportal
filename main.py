@@ -560,7 +560,7 @@ def inpeople():
 def allow_members():
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT Mid, Mname, member_status, Mmobile, Mwing, Mflatno from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s AND member_status=%s', (session['id'],'Request'))
+        cursor.execute('SELECT Mid, Mname, member_status, Mmobile, Mwing, Mflatno ,Memail from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s AND member_status=%s', (session['id'],'Request'))
         account = cursor.fetchall() 
         return render_template('secretary/allow_members.html', account=account )
     return redirect(url_for('login'))
@@ -613,11 +613,9 @@ def r_members():
             cursor.execute('DELETE FROM member WHERE Mid = %s',[Mid]) 
             mysql.connection.commit()
             msg = Message('Member Rejected' ,sender ='Rportal<me@Rportal.com', recipients = [email])
-            msg.body ="Hi \n"+ message
+            msg.body = "Hi \n" +  message
             mail.send(msg)  
-            msg = 'Member Rejected/Deleted'
-            
-        return allow_members()
+            return allow_members()
     return redirect(url_for('login'))
 
 @app.route('/R-Portal/d_members/<int:Mid>')
