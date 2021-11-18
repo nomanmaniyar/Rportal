@@ -616,7 +616,7 @@ def inpeople():
 def allow_members():
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT Mid, Mname, member_status, Mmobile, Mwing, Mflatno from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s AND member_status=%s', (session['id'],'Request'))
+        cursor.execute('SELECT Mid, Mname, member_status, Mmobile, Mwing, Mflatno, Memail from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s AND member_status=%s', (session['id'],'Request'))
         account = cursor.fetchall() 
         return render_template('secretary/allow_members.html', account=account )
     else:
