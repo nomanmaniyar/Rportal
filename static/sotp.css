@@ -3,12 +3,18 @@
     --dark-x: #1e2126;
     --grey: #c4c4c4;
     --light: #ffffff;
+    --light-pink: #fff4f6;
 }
 
 body {
     font-family: 'Spartan', sans-serif;
     font-weight: 300;
     color: var(--light);
+    background-color: var(--light-pink);
+}
+
+.bg-light-pink {
+    background-color: var(--light-pink);
 }
 
 .bg-dark {
@@ -25,6 +31,10 @@ body {
 
 .bg-light {
     background-color: var(--light);
+}
+
+.shadow {
+    box-shadow: 0 3px 6px rgba(3, 0, 71, .1)!important
 }
 
 .form-control,
