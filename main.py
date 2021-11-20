@@ -307,6 +307,7 @@ def login():
             session['id'] = account['Sid']
             session['username'] = account['Susername']
             session['code'] = account['Scode']
+            session['mail'] = account['Semail']
             return sotp() 
         elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
             username = request.form['username']
@@ -549,6 +550,7 @@ def logout():
         session.pop('id', None)
         session.pop('username', None)
         session.pop('code', None)
+        session.pop('mail', None)
         return redirect(url_for('rportal'))
     elif 'member' in session:
         session.pop('member', None)
