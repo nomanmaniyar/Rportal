@@ -1040,11 +1040,10 @@ def contactus():
 
 #   
 #Zoom meet JWT
-#@app.route('/R-Portal/createmeeting', methods=['GET', 'POST'] )
+
 # create a function to generate a token 
 # using the pyjwt library
 def generateToken():
- #if 'secretary' in session:
     token = jwt.encode(
         
         # Create a payload of the token containing 
@@ -1063,15 +1062,28 @@ def generateToken():
   
   
 # create json data for post requests
-meetingdetails = {"topic": "The title of your zoom meeting",
+
+  
+# send a request with headers including 
+# a token and meeting details
+@app.route('/R-Portal/createmeeting', methods=['GET', 'POST'] )
+def createmeeting():
+    if 'secretary' in session:
+        if request.method == 'POST' and 'topic' in request.form and 'starttime' in request.form and 'duration' in request.form and 'agenda' in request.form  :
+            topic = request.form['topic']
+            start_time = request.form['starttime']
+            duration = request.form['duration']
+            agenda = request.form['agenda']
+            
+            meetingdetails = {"topic":  topic,
                   "type": 2,
-                  "start_time": "2019-06-14T10: 21: 57",
-                  "duration": "45",
+                  "start_time":  start_time,
+                  "duration":  duration,
                   "timezone": "Europe/Madrid",
-                  "agenda": "test",
+                  "agenda":  agenda,
   
                   "recurrence": {"type": 1,
-                                 "repeat_interval": 1
+                                 "repeat_interval": 2
                                  },
                   "settings": {"host_video": "true",
                                "participant_video": "true",
@@ -1083,31 +1095,30 @@ meetingdetails = {"topic": "The title of your zoom meeting",
                                }
                   }
    
-
-  
-# send a request with headers including 
-# a token and meeting details
-def createMeeting():
-    headers = {'authorization': 'Bearer %s' % generateToken(),
+        headers = {'authorization': 'Bearer %s' % generateToken(),
                'content-type': 'application/json'}
-    r = requests.post(
+        r = requests.post(
         f'https://api.zoom.us/v2/users/me/meetings', 
-      headers=headers, data=json.dumps(meetingdetails))
+        headers=headers, data=json.dumps(meetingdetails))
   
-    print("\n creating zoom meeting ... \n")
-    # print(r.text)
-    # converting the output into json and extracting the details
-    y = json.loads(r.text)
-    join_URL = y["join_url"]
-    meetingPassword = y["password"]
+        print("\n creating zoom meeting ... \n")
+        # print(r.text)
+        # converting the output into json and extracting the details
+        y = json.loads(r.text)
+        join_URL = y["join_url"]
+        meetingPassword = y["password"]
   
-    print(
-        f'\n here is your zoom meeting link {join_URL} and your \
-        password: "{meetingPassword}"\n')
+        print(
+             f'\n here is your zoom meeting link {join_URL} and your \
+                password: "{meetingPassword}"\n')
+        return render_template('secretary/createmeeting.html')
+    else:
+        return logout()
+
   
   
 # run the create meeting function
-createMeeting()
+#createMeeting()
 
 #
 #   Runner Code
