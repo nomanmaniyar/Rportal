@@ -6,12 +6,13 @@
 <br>
 <h3>Create Scheduled Meeting</h3>
 
-<form action="{{ url_for('member_complaint') }}" method="post" autocomplete="on">
+<form action="{{ url_for('createmeeting') }}" method="post" autocomplete="on">
 		
     <div class="member_complaint">
 
         <h3>Add Meeting Details Below: </h3>
         <h4><div class="msg">{{ msg }}</div></h4>
+        <h4><div class="msg">{{ msg1 }}</div></h4>
 
         <label for="topic">
             <i class="fas fa-sticky-note"></i>
@@ -22,7 +23,7 @@
         <label for="complaint_message">
             <i class="fas fa-sticky-note"></i>
         </label>
-        <input type="datetime" name="starttime" placeholder="Enter Start Time" id="starttime" required>
+        <input type="time" name="starttime" placeholder="Enter Start Time" id="starttime" required>
         <br><br>
 
         <label for="complaint_subject">
