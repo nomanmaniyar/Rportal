@@ -826,6 +826,7 @@ def generateToken():
         API_SEC,
         algorithm = 'HS256'  
     )
+    return token
 
 @app.route('/R-Portal/createmeeting', methods=['GET', 'POST'] )
 def createmeeting():
@@ -842,7 +843,7 @@ def createmeeting():
                 "type": 2,
                 "start_time":  start_time,
                 "duration":  duration,
-                "timezone": "India/",
+                "timezone": "India/Mumbai",
                 "agenda":  agenda,
                 "recurrence": {"type": 1,
                             "repeat_interval": 2
