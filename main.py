@@ -844,18 +844,19 @@ def createmeeting():
             exprieation_time = time_now + datetime.timedelta(seconds=20)
             rounded_off_exp_time = round(exprieation_time.timestamp())
 
-            header ={"alg" : "HS256", "type": "JWT"}
+            headers ={"alg" : "HS256", "type": "JWT"}
             payload ={"iss" : "DVKW9UngTg2lI1FnqrQVWA" ,"exp" : rounded_off_exp_time}
-            encode_jwt = jwt.encode(payload, "ZIN4AsaniiKYBBA0cQHLSupJOIZwMEdbcRm2" , algorithm="HS256")
-            email= session['mail']
+            encode_jwt = jwt.encode(payload,"ZIN4AsaniiKYBBA0cQHLSupJOIZwMEdbcRm2" , algorithm="HS256")
+            email= "aashutoshmali1460@gmail.com"
             url= "https://api.zoom.us/v2/users/{}/meetings".format(email)
-            obj = {"topic" : topic ,"start_time" : date + start_time , "duration" : duration , "password" : password , "agenda" :    agenda }
+            obj = {"topic" : topic ,"start_time" : date + '\t' + start_time , "duration" : duration , "password" : password  }
             header = {"authorization": "Bearer {}".format(encode_jwt) }
             create_meeting = requests.post (url,json=obj ,headers = header) 
        
-            print( create_meeting)
-            msg = create_meeting
+            print( create_meeting.text)
+            msg = create_meeting.text
             msg1 = "link "+ url + "password" + password
+            password
         return render_template('secretary/createmeeting.html', msg = msg , msg1= msg1) 
     else:
         return logout()
