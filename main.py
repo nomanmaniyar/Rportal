@@ -19,6 +19,7 @@ import jwt
 import requests
 import json
 from time import time
+import datetime
 #sys.path.insert(0, 'Rportal/config')
 #from config import credentials as cred
 API_KEY = 'DVKW9UngTg2lI1FnqrQVWA'
@@ -823,58 +824,38 @@ def complaint():
     else:
         return logout()
 
-def generateToken():
-    token = jwt.encode( {'iss': API_KEY, 'exp': time() + 5000},
-        API_SEC,
-        algorithm = 'HS256'  
-    )
-    return token
+
 
 @app.route('/R-Portal/createmeeting', methods=['GET', 'POST'] )
 def createmeeting():
     if 'secretary' in session:
         msg = ''
         msg1 = ''
-        if request.method == 'POST' and 'topic' in request.form and 'starttime' in request.form and 'duration' in request.form and 'agenda' in request.form  :
+        if request.method == 'POST' and 'topic' in request.form and 'starttime' in request.form and 'duration' in request.form and 'agenda' in request.form and 'date' in request.form and 'password' in request.form :
             topic = request.form['topic']
             start_time = request.form['starttime']
             duration = request.form['duration']
             agenda = request.form['agenda']
-            meetingdetails = {
-                "topic":  topic,
-                "type": 2,
-                "start_time":  start_time,
-                "duration":  duration,
-                "timezone": "India/Mumbai",
-                "agenda":  agenda,
-                "recurrence": {"type": 1,
-                            "repeat_interval": 2
-                            },
-                "settings": {"host_video": "true",
-                            "participant_video": "true",
-                            "join_before_host": "False",
-                            "mute_upon_entry": "False",
-                            "watermark": "true",
-                            "audio": "voip",
-                            "auto_recording": "cloud"
-                            }
-                }
-            headers = {'authorization': 'Bearer %s' % generateToken(),
-               'content-type': 'application/json'}
-            r = requests.post(
-            f'https://api.zoom.us/v2/users/me/meetings', 
-            headers=headers, data=json.dumps(meetingdetails))
-    
-            print("\n creating zoom meeting ... \n")
-            y = json.loads(r.text)
-            join_URL = y["join_url"]
-            meetingPassword = y["password"]
-            print(
-                f'\n here is your zoom meeting link {join_URL} and your \
-                password: "{meetingPassword}"\n')
-            msg = join_URL
-            msg1 = meetingPassword
-        return render_template('secretary/createmeeting.html', msg = msg, msg1 = msg1)
+            date = request.form['date']
+            password = request.form['password']
+
+            time_now = datetime.datetime.now()
+            exprieation_time = time_now + datetime.timedelta(seconds=20)
+            rounded_off_exp_time = round(exprieation_time.timestamp())
+
+            header ={"alg" : "HS256", "type": "JWT"}
+            payload ={"iss" : "DVKW9UngTg2lI1FnqrQVWA" ,"exp" : rounded_off_exp_time}
+            encode_jwt = jwt.encode(payload, "ZIN4AsaniiKYBBA0cQHLSupJOIZwMEdbcRm2" , algorithm="HS256")
+            email= session['mail']
+            url= "https://api.zoom.us/v2/users/{}/meetings".format(email)
+            obj = {"topic" : topic ,"start_time" : date + start_time , "duration" : duration , "password" : password}
+            header = {"authorization": "Bearer {}".format(encode_jwt) }
+            create_meeting = (url,json ,obj,header) 
+       
+            print( create_meeting)
+            msg = create_meeting
+            msg1 = "link "+ url + "password" + password
+        return render_template('secretary/createmeeting.html', msg = msg , msg1= msg1) 
     else:
         return logout()
 
