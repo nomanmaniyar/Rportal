@@ -1,5 +1,6 @@
 from email import message
 import email
+from json import decoder
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
@@ -848,9 +849,9 @@ def createmeeting():
             encode_jwt = jwt.encode(payload, "ZIN4AsaniiKYBBA0cQHLSupJOIZwMEdbcRm2" , algorithm="HS256")
             email= session['mail']
             url= "https://api.zoom.us/v2/users/{}/meetings".format(email)
-            obj = {"topic" : topic ,"start_time" : date + start_time , "duration" : duration , "password" : password}
+            obj = {"topic" : topic ,"start_time" : date + start_time , "duration" : duration , "password" : password , "agenda" :    agenda }
             header = {"authorization": "Bearer {}".format(encode_jwt) }
-            create_meeting = (url,json ,obj,header) 
+            create_meeting = requests.post (url,json=obj ,headers = header) 
        
             print( create_meeting)
             msg = create_meeting
