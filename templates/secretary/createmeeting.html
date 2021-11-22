@@ -11,7 +11,7 @@
     <div class="member_complaint">
 
         <h3>Add Meeting Details Below: </h3>
-        <h4><div class="msg">{{ msg }}</div></h4>
+        <h4><div class="msg"><a herf='{{ msg }}'> {{msg}}</a></div></h4><br>
         <h4><div class="msg">{{ msg1 }}</div></h4>
 
         <label for="topic">
@@ -38,7 +38,7 @@
         <input type="text" name="agenda" placeholder="Enter Agenda of the meeting" id="agenda" required>
         <br><br>
 
-        <button type="submit" value="add">Create Meeting</button>
+        <button type="submit" class="btn btn-primary" value="add">Create Meeting</button>
     
         </div>
     </div>
