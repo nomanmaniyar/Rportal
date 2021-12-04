@@ -181,6 +181,21 @@ def mcode():
             msg='Invalid Society Code!'
     return render_template('member/mcode.html', msg=msg)
 
+@app.route('/R-Portal/mcode1/<string:code>', methods=['GET', 'POST'])
+def mcode1(code):
+    msg = ''
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT * FROM society WHERE code = %s', (code,))
+    account = cursor.fetchone()
+    if account:
+        cursor.execute('select name, city, road, area, state, pin, code , semail from society inner join secretary WHERE code = %s', (code ,))
+        account = cursor.fetchone()
+        return render_template('member/mverify.html', account=account, msg=msg)
+    else:
+        mysql.connection.commit()
+        msg='Invalid Society Code!'
+        return render_template('member/mcode.html', msg=msg)
+
 @app.route('/R-Portal/mregister', methods=['GET', 'POST'])
 def mregister():
     msg = ''
