@@ -1,26 +1,44 @@
-.login {
-    min-height: 100vh;
-  }
-  
-  .bg-image {
-    background-size: cover;
-    background-position: center;
-  }
-  
-  .login-heading {
+:root {
+    --dark: #16191c;
+    --dark-x: #1e2126;
+    --grey: #c4c4c4;
+    --light: #ffffff;
+    --light-pink: #fff4f6;
+}
+
+body {
+    font-family: 'Spartan', sans-serif;
     font-weight: 300;
-  }
-  
-  .btn-login {
-    font-size: 0.9rem;
-    letter-spacing: 0.05rem;
-    padding: 0.75rem 1rem;
-  }
-  .container-fluid{
-      margin-top: 5px;
-  }
-  
-  .backgraund{
-    background-color: #3274d6;
-  }
-  
+    color: var(--light);
+    background-color: var(--light-pink);
+}
+
+.bg-light-pink {
+    background-color: var(--light-pink);
+}
+
+.bg-dark {
+    background-color: var(--dark);
+}
+
+.bg-dark-x {
+    background-color: var(--dark-x);
+}
+
+.bg-grey {
+    background-color: var(--grey);
+}
+
+.bg-light {
+    background-color: var(--light);
+}
+
+.shadow {
+    box-shadow: 0 3px 6px rgba(3, 0, 71, .1)!important
+}
+
+.form-control,
+.btn {
+    min-height: 3.125rem;
+    line-height: initial;
+}

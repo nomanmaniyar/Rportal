@@ -1,26 +1,43 @@
+@import url("https://fonts.googleapis.com/css2?family=Spartan:wght@300;600&display=swap");
+
 .login {
-    min-height: 100vh;
-  }
-  
-  .bg-image {
-    background-size: cover;
-    background-position: center;
-  }
-  
-  .login-heading {
-    font-weight: 300;
-  }
-  
-  .btn-login {
-    font-size: 0.9rem;
-    letter-spacing: 0.05rem;
-    padding: 0.75rem 1rem;
-  }
-  .container-fluid{
-      margin-top: 5px;
-  }
-  
-  .backgraund{
-    background-color: #3274d6;
-  }
-  
+  min-height: 100vh;
+}
+
+body {
+  font-family: 'Spartan', sans-serif;
+  font-weight: 300;
+  background: url('/static/Icon/mcode.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  text-align: center;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.bg-image {
+  background-size: cover;
+  background-position: center;
+}
+
+.login-heading {
+  font-weight: 300;
+}
+
+.btn-login {
+  font-size: 0.9rem;
+  letter-spacing: 0.05rem;
+  padding: 0.75rem 1rem;
+}
+
+.container-fluid {
+  margin-top: 5px;
+}
+
+.backgraund {
+  background-color: #3274d6;
+}

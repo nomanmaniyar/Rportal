@@ -9,71 +9,55 @@
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
     <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-primary py-3 fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-light py-3 fixed-top">
         <div class="container">
             <a href="{{ url_for('rportal') }}" class="navbar-brand">R-Portal</a>
         </div>
     </nav>
-    <div class="container-fluid ps-md-0">
-        <div class="row g-0 align-items-center">
-            <div class="d-none d-md-flex col-md-6 col-lg-6 bg-image">
-                <img src="/static/Icon/mcode2.svg" class="img-fluid">
-            </div>
-            <div class="col-md-8 col-lg-6">
-                <div class="login d-flex align-items-center py-5">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-9 col-lg-8 mx-auto">
-                                <h1 class="font-weight-bold mb-4">OTP Verification</h1>
-
-                                <form action="/mvalidate" method="post">
-
-                                    <h5 class="font-weight-bold">OTP has been sent to the email id. Please check the registered email for the confirmation. </h5>
-                                    <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" name="otp" placeholder="Enter OTP">
-                                        <label for="floatingInput">Enter OTP</label>
-                                    </div>
-                                    <div class="alert alert-danger msg" role="alert">
-                                        {{ msg }}
-                                    </div>
-                                    {% if msg=='' %}
-                                    <div></div>
-
-                                    {% else %}
-                                    <div class="alert alert-danger msg" role="alert">
-                                        {{ msg1 }}
-                                    </div>
-                                    {% endif %}
-
-                            </div>
-
-                            <div class="d-grid">
-                                <button class="btn btn-lg btn-primary btn-login font-weight-bold mb-2" type="submit" value="Verify">Verify</button>
-                            </div>
-
-                            </form>
-                        </div>
+    <section class="bg-light-pink text-dark p-lg-0 pt-lg-5 text-start text-sm-start">
+        <div class="container">
+            <div class="d-sm-flex align-items-center justify-content-between pb-1">
+                <div class="px-lg-5 py-lg-5 p-4 w-100 align-self-center shadow">
+                    <h1 class="font-weight-bold mb-4">2-Step
+                        <br>Authentication
+                    </h1>
+                    {% if msg=='Something went wrong:( Please try again!' %}
+                    <div class="alert alert-danger msg" role="alert">
+                        {{ msg }}
                     </div>
+                    {% else %} {% endif %}
+                    <div class="msg1">{{ msg1 }}</div>
+                    <div class="msg">{{ msg }}</div>
+                    <form class="mb-5" action="/mvalidate" method="post">
+                        <div class="mb-4">
+                            <label for="Otp" class="form-label font-weight-bold">Please enter your OTP here</label>
+                            <input type="text" class="form-control bg-grey border-0" placeholder="Enter your OTP"
+                                id="otp" name="otp" aria-describedby="emailHelp" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Virefy</button>
+                    </form>
+                    <p class="d-inline-block mb-0">Wan'na go
+                        <a class="text-info font-weight-bold text-decoration-none" href="{{ url_for('rportal') }}">back
+                        </a>?
+                    </p>
                 </div>
+                <img class="img-fluid w-50 d-none d-sm-block" src="../static/Icon/sotp.svg" alt="" />
             </div>
         </div>
-    </div>
-    </div>
+    </section>
     <!-- Footer -->
-    <footer class="pb-2 backgraund text-dark text-center position-relative">
+    <footer class="bg-light-pink text-dark text-center">
         <div class="container">
             <p class="lead">Copyright &copy; 2021 R-Portal
                 <!-- <img src="../static/Icon/DenApp.svg" class="img-fluid w-25" alt="" />  -->
             </p>
-
-            <a href="#" class="position-absolute bottom-0 end-0 p-2">
+            <!-- <a href="#" class="position-absolute bottom-0 end-0 p-2">
                 <i class="bi bi-arrow-up-circle h1"></i>
-            </a>
+            </a> -->
         </div>
     </footer>
 
