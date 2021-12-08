@@ -3,32 +3,23 @@
 {% block title %}R-Portal - Member Profile{% endblock %}
 
 {% block content %}
-
 <div>
-   
-    <table  class="table" style="size: auto;">
-        <tr>
-           
-            
-            
-        </tr> 
+    <div id="div">
+
         {% for data in account %}
-       Date: {{ data['notice_time'] }}</tr>
-       
-                <div id="div" type="hidden"><article>{{ data['notice_message'] }}</article></div>
-               
-              
-     
-
-      
-    </table>
-
+    
+       <h6>Date: {{ data['notice_time'] }}</h6>
+        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&nbsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&nbsp;&emsp;&nbsp;
+        <h5>Subject: {{ data['notice_subject'] }}</h5>
    
+            {{ data['notice_message'] }}
+     __________________________________________________________________________________________________________________________________________________
     {% endfor %}
+</div></div>
     <br>   
-
     <a href='javascript:self.history.back();'>Go Back</a>
-</div>
+
 
     <script>
         $.fn.toHtml=function(){
