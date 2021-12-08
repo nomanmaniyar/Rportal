@@ -169,6 +169,7 @@ def sregister():
     return render_template('secretary/sregister.html', msg=msg)
 
 #   Member Registration
+
 @app.route('/R-Portal/mcode', methods=['GET', 'POST'])
 def mcode():
     msg = ''
@@ -189,7 +190,8 @@ def mcode():
 @app.route('/R-Portal/mregister', methods=['GET', 'POST'])
 def mregister():
     msg = ''
-    if request.method == 'POST' and 'Musername' in request.form and 'Mpassword' in request.form and 'Memail' in request.form:
+    if request.method == 'POST' and 'Musername' in request.form and 'Mpassword' in request.form and 'Memail' in request.form and 'Mcode' in request.form and 'Mname' in request.form and 'Mflatno' in request.form and 'Mwing' in request.form and 'Mmobile' in request.form:
+        # and 'Semail' in request.form:
         username = request.form['Musername']
         passtext = request.form['Mpassword']
         password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
@@ -199,7 +201,7 @@ def mregister():
         flatno = request.form['Mflatno']
         wing = request.form['Mwing']
         mobile = request.form['Mmobile']   
-       # Semail = request.form['Semail']
+        #Semail = request.form['Semail']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM member WHERE Musername = %s', (username,))
         account = cursor.fetchone()
@@ -212,6 +214,19 @@ def mregister():
         cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor3.execute('SELECT * FROM secretary WHERE Semail = %s', (email,))
         account3 = cursor3.fetchone()
+        cursor4 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor4.execute('SELECT Semail FROM secretary WHERE Scode = %s', (code,))
+        Semail = cursor4.fetchone()
+        print(Semail);       
+        print(Semail);       
+        print(Semail);       
+        print(Semail);       
+        print(Semail);       
+        print(Semail);       
+        print(Semail);       
+        print(Semail);       
+        print(Semail);       
+        print(Semail);       
         if account:
             msg = 'Warning! Username already exists!!'
         elif account1:
@@ -229,12 +244,15 @@ def mregister():
         else:
             cursor.execute('INSERT INTO member VALUES (NULL, %s, %s, %s, %s, %s, %s, %s,%s,DEFAULT,DEFAULT )', (username , password , code ,  email , name , flatno , wing , mobile))
             mysql.connection.commit()
-            #msg = Message('New Member Request' ,sender ='Rportal<me@Rportal.com', recipients = [Semail]) 
-            #text = "Hello \nYou have received new member request with followinh member details. \n Member details are :\n"
-            #msg.body = text + "\n Flat No :" + wing + flatno + "\n Name : " + name + "\n phone No : " + mobile + "\n Email ID : " + email + part4
-            #mail.send(msg)  
+            msg = Message('New Member Request' ,sender ='Rportal<me@Rportal.com', recipients = [Semail]) 
+            text = "Hello \nYou have received new member request with followinh member details. \n Member details are :\n"
+            msg.body = text + "\n Flat No :" + wing + flatno + "\n Name : " + name + "\n phone No : " + mobile + "\n Email ID : " + email + part4
+            mail.send(msg)  
             msg = 'You have successfully registered!'
+    elif request.method == 'POST':
+        msg = 'Please fill out the form!'
     return render_template('member/mregister.html', msg=msg)
+
 
 #   Security Guard Registeration
 @app.route('/R-Portal/add_security', methods=['GET','POST'])
