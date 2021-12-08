@@ -41,8 +41,12 @@
                         </ul>
                       </div>
                       <div class="thumb">
-                      <a class="btn btn-success" href="/R-Portal/a_members/{{data.Mid}}"><i class="fas fa-user-plus" ></i>Allow</a>
-                        <button id="myBtn" class="btn btn-danger"><i class="fas fa-user-minus" style="color:#fa1808"></i>Reject</button>
+                      <form action="/R-Portal/a_members/{{data.Mid}}" method="post">
+                      <input type="hidden" name="Memail" value={{ data['Memail'] }}></input>
+                      <input type="hidden" name="Mname" value={{ data['Mname'] }}></input>
+                      <button class="btn btn-success" type="submit"><i class="fas fa-user-plus" ></i>Allow</button>
+                      </form>
+                      <button id="myBtn" class="btn btn-danger"><i class="fas fa-user-minus" style="color:#fa1808"></i>Reject</button>
               
                       </div>
                     </div>

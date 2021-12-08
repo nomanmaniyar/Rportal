@@ -157,7 +157,7 @@ select * from complaint;
 CREATE TABLE IF NOT EXISTS `notice` (
 	`notice_id` int(11) NOT NULL AUTO_INCREMENT,
 	`notice_subject` varchar(500) NOT NULL,
-	`notice_message` varchar(500) NOT NULL,
+	`notice_message` varchar(5000) NOT NULL,
 	`notice_code` varchar(30) NOT NULL,
     `notice_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   	PRIMARY KEY (`notice_id`)
@@ -166,3 +166,22 @@ INSERT INTO `notice` (`notice_id`,`notice_subject`, `notice_message`, `notice_co
 INSERT INTO `notice` (`notice_id`,`notice_subject`, `notice_message`, `notice_code`) VALUES ('2', 'Test Subject', 'Test Notice Message', 'SAIR11');
 alter table notice auto_increment = 3;
 select * from notice;
+ALTER TABLE staff add column `post` varchar(255) ;
+CREATE TABLE IF NOT EXISTS `document` (
+	`doc_id` int(11) NOT NULL AUTO_INCREMENT,
+	`doc_filename` varchar(255) NOT NULL,
+	`society_code` varchar(255) NOT NULL,
+  	PRIMARY KEY (`doc_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE complaint add column `complaint_against` varchar(255) ;
+ALTER TABLE complaint add column `complaint_status` varchar(255)  ;
+ALTER TABLE complaint add column `complaint_reply` varchar(255)  ;
+ALTER TABLE document add column `document` varchar(255) ;
+CREATE TABLE IF NOT EXISTS `message` (
+	`msg_id` int(11) NOT NULL AUTO_INCREMENT,
+	`msg_username` varchar(255) NOT NULL,
+	`message` varchar(255) NOT NULL,
+	`society_code` varchar(255) NOT NULL,
+	`msg_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  	PRIMARY KEY (`msg_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

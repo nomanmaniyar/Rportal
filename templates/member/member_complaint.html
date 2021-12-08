@@ -4,7 +4,37 @@
 
 {% block content %}
 <br>
-<h3>Make Complaint</h3>
+
+
+
+<button id="myBtn" class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add New Complaint</button>
+<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo"><i class="fa fa-history" aria-hidden="true"></i> Previous Complaint</button>
+<div id="demo" class="collapse">
+<table class="table" style="width:100%">
+
+    {% for data1 in account2 %}
+    <div class="content">
+        <tr><br>
+  
+           
+            <b>Complaint Subject:</b>&nbsp;{{ data1['complaint_subject'] }}<br><br>
+            <b>Complaint Against</b>&nbsp;{{data1['complaint_against']}}<br><br>
+            <b>Complaint message:</b>&nbsp;{{ data1['complaint_message'] }}<br><br>
+            <b>Complaint Date Time: </b>&nbsp;{{ data1['complaint_time'] }}<br><br>
+           
+        </tr> 
+    </div>
+    {% endfor %}
+
+</table>
+</div> 
+
+<div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h3>Make Complaint</h3>
 
 <form action="{{ url_for('member_complaint') }}" method="post" autocomplete="on">
 		
@@ -14,21 +44,105 @@
         <h4><div class="msg">{{ msg }}</div></h4>
 
         <label for="complaint_subject">
-            <i class="fas fa-sticky-note"></i>
+       
         </label>
         <input type="text" name="complaint_subject" placeholder="Enter Subject" id="complaint_subject" required>
         <br><br>
-        
-        <label for="complaint_message">
-            <i class="fas fa-sticky-note"></i>
-        </label>
-        <input type="text" name="complaint_message" placeholder="Enter Details" id="complaint_message" required>
-        <br><br>
 
-        <button type="submit" value="add">Add Complaint</button>
+        <b>Complaint Against:</b><br>
+
+            <select name="complaint_against" >
+            <option>Security</option>
+            {% for data in account %}
+           <option >{{ data['post'] }}</option>
+           {% endfor %} 
+          </select><br><br>
+
+        <label for="complaint_message">
+        
+        </label>
+        <textarea type="text" name="complaint_message"  placeholder="Enter Details" id="complaint_message" required></textarea>
+        <br><br>
+        <button type="submit" class="btn btn-primary" value="add">Add Complaint</button>
     
         </div>
     </div>
 </form>
+    </div>
+  
+  </div>
 
+
+
+
+<script>
+    // Get the modal
+    var modal = document.getElementById("myModal");
+    
+    // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+    
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+    
+    // When the user clicks the button, open the modal 
+    btn.onclick = function() {
+      modal.style.display = "block";
+    }
+    
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+    
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+    </script>
+
+<style>
+    body {font-family: Arial, Helvetica, sans-serif;}
+    
+    /* The Modal (background) */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 1; /* Sit on top */
+      padding-top: 100px; /* Location of the box */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+    
+    /* Modal Content */
+    .modal-content {
+      background-color: #fefefe;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+    }
+    
+    /* The Close Button */
+    .close {
+      color: #aaaaaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    
+    .close:hover,
+    .close:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    </style>
 {% endblock %}
