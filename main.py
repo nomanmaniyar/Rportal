@@ -217,16 +217,7 @@ def mregister():
         cursor4 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor4.execute('SELECT Semail FROM secretary WHERE Scode = %s', (code,))
         Semail = cursor4.fetchone()
-        print(Semail);       
-        print(Semail);       
-        print(Semail);       
-        print(Semail);       
-        print(Semail);       
-        print(Semail);       
-        print(Semail);       
-        print(Semail);       
-        print(Semail);       
-        print(Semail);       
+        print(Semail['Semail']);
         if account:
             msg = 'Warning! Username already exists!!'
         elif account1:
@@ -244,7 +235,7 @@ def mregister():
         else:
             cursor.execute('INSERT INTO member VALUES (NULL, %s, %s, %s, %s, %s, %s, %s,%s,DEFAULT,DEFAULT )', (username , password , code ,  email , name , flatno , wing , mobile))
             mysql.connection.commit()
-            msg = Message('New Member Request' ,sender ='Rportal<me@Rportal.com', recipients = [Semail]) 
+            msg = Message('New Member Request' ,sender ='Rportal<me@Rportal.com', recipients = [Semail['Semail']]) 
             text = "Hello \nYou have received new member request with followinh member details. \n Member details are :\n"
             msg.body = text + "\n Flat No :" + wing + flatno + "\n Name : " + name + "\n phone No : " + mobile + "\n Email ID : " + email + part4
             mail.send(msg)  
