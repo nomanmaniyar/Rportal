@@ -166,3 +166,22 @@ INSERT INTO `notice` (`notice_id`,`notice_subject`, `notice_message`, `notice_co
 INSERT INTO `notice` (`notice_id`,`notice_subject`, `notice_message`, `notice_code`) VALUES ('2', 'Test Subject', 'Test Notice Message', 'SAIR11');
 alter table notice auto_increment = 3;
 select * from notice;
+
+CREATE TABLE IF NOT EXISTS `contact` (
+	`contact_id` int(11) NOT NULL AUTO_INCREMENT,
+	`contact_code` varchar(30) NOT NULL,
+    `police` int(20),
+    `hospital` int(20),
+    `blood_bank` int(20),
+    `muncipal` int(20),
+    `ambulance` int(20),
+    `railway` int(20), 
+    `plumber` int(20),
+    `electrition` int(20),
+    `gas` int(20),
+    `fire` int(20),
+  	PRIMARY KEY (`contact_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO `contact` (`contact_id`,`contact_code`, `police`, `hospital`, `railway`) VALUES ('1', 'GOKU11', '100', '108', '139');
+alter table contact auto_increment = 2;
+select * from contact;

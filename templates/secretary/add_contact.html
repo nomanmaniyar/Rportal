@@ -1,0 +1,83 @@
+{% extends 'secretary/slayout.html' %}
+
+{% block title %}R-Portal - Add Contacts{% endblock %}
+
+{% block content %}
+<br>
+<h3>Add Important Contacts</h3>
+
+<form action="{{ url_for('add_contact') }}" method="post" autocomplete="on">
+		
+    <div class="add_contact">
+
+        <h3>Add Important Contacts Below: </h3>
+        <h4>Note: Please add previously addded contacts again incase you're updating contacts <br> Please add nearest contact if possible</h4>
+        <h4><div class="msg"><a herf='{{ msg }}'> {{msg}}</a></div></h4><br>
+
+        <label for="police">
+            <i class="fas fa-mobile"></i>
+        </label>
+        <input type="text" name="police" placeholder="Police Station" id="police">
+        <br><br>
+        
+        <label for="hospital">
+            <i class="fas fa-mobile"></i>
+        </label>
+        <input type="text" name="hospital" placeholder="Nearest Hospital" id="hospital">
+        <br><br>
+
+        <label for="fire">
+            <i class="fas fa-mobile"></i>
+        </label>
+        <input type="text" name="fire" placeholder="Fire" id="fire">
+        <br><br>
+
+        <label for="blood_bank">
+            <i class="fas fa-mobile"></i>
+        </label>
+        <input type="text" name="blood_bank" placeholder="Blood Bank" id="blood_bank">
+        <br><br>
+        
+        <label for="muncipal">
+            <i class="fas fa-mobile"></i>
+        </label>
+        <input type="text" name="muncipal" placeholder="Muncipal Corporation" id="muncipal">
+        <br><br>
+
+        <label for="ambulance">
+            <i class="fas fa-mobile"></i>
+        </label>
+        <input type="text" name="ambulance" placeholder="Ambulance" id="ambulance">
+        <br><br>
+        
+        <label for="railway">
+            <i class="fas fa-mobile"></i>
+        </label>
+        <input type="text" name="railway" placeholder="Railways" id="railway">
+        <br><br>
+
+        <label for="plumber">
+            <i class="fas fa-mobile"></i>
+        </label>
+        <input type="text" name="plumber" placeholder="Plumber" id="plumber">
+        <br><br>
+        
+        <label for="electrition">
+            <i class="fas fa-mobile"></i>
+        </label>
+        <input type="text" name="electrition" placeholder="Electrition" id="electrition">
+        <br><br>
+
+        <label for="gas">
+            <i class="fas fa-mobile"></i>
+        </label>
+        <input type="text" name="gas" placeholder="Gas" id="gas">
+        <br><br>
+        
+        <button type="submit" class="btn btn-primary" value="add">Add Contact</button>
+    
+        </div>
+    </div>
+</form>
+
+{% endblock %}

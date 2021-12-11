@@ -897,7 +897,39 @@ def createmeeting():
         return render_template('secretary/createmeeting.html', msg = msg, msg1 = msg1)
     else:
         return logout()
-
+  
+@app.route('/R-Portal/add_contact', methods=['GET', 'POST'] )
+def add_contact():
+    if 'secretary' in session:
+        msg = ''
+        if request.method == 'POST':
+            police = request.form['police']
+            hospital = request.form['hospital']
+            blood_bank = request.form['blood_bank']
+            muncipal = request.form['muncipal']
+            ambulance = request.form['ambulance']
+            railway = request.form['railway']
+            plumber = request.form['plumber']
+            electrition = request.form['electrition']
+            gas = request.form['gas']
+            fire = request.form['fire']
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT * FROM contact WHERE contact_code = %s', (session['code'],))
+            account = cursor.fetchone()
+            if account:
+                cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                cursor1.execute('UPDATE contact SET police = %s, hospital = %s, blood_bank = %s, muncipal = %s, ambulance = %s, railway = %s, plumber = %s, electrition = %s, gas = %s, fire = %s WHERE contact_code = %s', (police, hospital, blood_bank, muncipal, ambulance, railway, plumber, electrition, gas, fire, session['code'],))
+                mysql.connection.commit()    
+                msg="Contacts Updated!"
+            else:
+                cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                cursor2.execute('INSERT INTO contact values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', (session['code'] ,police, hospital, blood_bank, muncipal, ambulance, railway, plumber, electrition, gas, fire,))
+                mysql.connection.commit()    
+                msg="Contacts Inserted!"
+        return render_template('secretary/add_contact.html', msg=msg)
+    else:
+        return logout()
+   
 #
 #   Member Part
 #
@@ -945,6 +977,16 @@ def member_complaint():
     else:
         return logout()
 
+@app.route('/R-Portal/view_contact')
+def view_contact():
+    if 'member' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT *  from contact WHERE contact_code = %s', (session['code'],) ) 
+        account = cursor.fetchone() 
+        return render_template('member/view_contact.html', account=account)
+    else:
+        return logout()
+    
 #
 #   Admin Part
 #
