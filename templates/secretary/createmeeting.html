@@ -11,31 +11,42 @@
     <div class="member_complaint">
 
         <h3>Add Meeting Details Below: </h3>
-        <h4><div class="msg"><a herf='{{ msg }}'> {{msg}}</a></div></h4><br>
-        <h4><div class="msg">{{ msg1 }}</div></h4>
+        <prev><h4><div class="msg"><a href= '{{ msg }}'>{{msg}}</a></div></h4></prev><br>
+        <h4><div class="msg">{{ msg1 }}</div></h4><br>
 
         <label for="topic">
-            <i class="fas fa-sticky-note"></i>
+   
         </label>
         <input type="text" name="topic" placeholder="Topic of the Meeting" id="topic" required>
         <br><br>
+        <label for="complaint_message">
+          
+        </label>
+        <input type="date" name="date" placeholder="Enter Date" id="date" required>
+        <br><br>
         
         <label for="complaint_message">
-            <i class="fas fa-sticky-note"></i>
+          
         </label>
         <input type="time" name="starttime" placeholder="Enter Start Time" id="starttime" required>
         <br><br>
 
         <label for="complaint_subject">
-            <i class="fas fa-sticky-note"></i>
+           
         </label>
         <input type="text" name="duration" placeholder="Meeting Duration" id="duration" required>
         <br><br>
         
         <label for="complaint_message">
-            <i class="fas fa-sticky-note"></i>
+          
         </label>
-        <input type="text" name="agenda" placeholder="Enter Agenda of the meeting" id="agenda" required>
+        <textarea  type="text" name="agenda" placeholder="Enter Agenda of the meeting" id="agenda" required></textarea>
+        <br><br>
+
+        <label for="complaint_message">
+          
+        </label>
+        <input type="password" name="password" placeholder="Enter meeting password" id="password" required>
         <br><br>
 
         <button type="submit" class="btn btn-primary" value="add">Create Meeting</button>

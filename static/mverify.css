@@ -1,0 +1,60 @@
+:root {
+  --dark: #16191c;
+  --dark-x: #1e2126;
+  --grey: #c4c4c4;
+  --light: #ffffff;
+  --light-pink: #fff4f6;
+}
+
+body {
+  font-family: 'Spartan', sans-serif;
+  font-weight: 300;
+  color: var(--light);
+  background-color: var(--light-pink);
+}
+
+.shadow {
+  box-shadow: 0 3px 6px rgba(3, 0, 71, .1) !important
+}
+
+.fw-bold {
+  font-weight: 700 !important
+}
+
+.bg-light-pink {
+  background-color: var(--light-pink);
+}
+
+.bg-dark {
+  background-color: var(--dark);
+}
+
+.bg-dark-x {
+  background-color: var(--dark-x);
+}
+
+.bg-grey {
+  background-color: var(--grey);
+}
+
+.bg-light {
+  background-color: var(--light);
+}
+
+.shadow {
+  box-shadow: 0 3px 6px rgba(3, 0, 71, .1) !important
+}
+
+.button {
+  min-height: 2.125rem;
+  line-height: initial;
+  background: rgb(237, 40, 70);
+  border-radius: 5px;
+  padding: 10px 20px;
+  display: inline-block;
+  margin: 5px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0px 2px 5px rgb(0, 0, 0, 0.5);
+}

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -7,71 +7,62 @@
     <link rel="stylesheet" href="/static/mcode.css">
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
     <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+    <title>R-Portal - Member Registeration</title>
 </head>
 
+<!-- Page Content -->
+
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-primary py-3 fixed-top">
+    <nav class="navbar navbar-expand-lg py-3 fixed-top">
         <div class="container">
             <a href="{{ url_for('rportal') }}" class="navbar-brand">R-Portal</a>
         </div>
     </nav>
-    <div class="container-fluid ps-md-0">
-        <div class="row g-0 align-items-center">
-            <div class="d-none d-md-flex col-md-6 col-lg-6 bg-image">
-                <img src="/static/Icon/mcode3.svg" class="img-fluid" alt="Phone image">
-            </div>
-            <div class="col-md-8 col-lg-6">
-                <div class="login d-flex align-items-center py-5">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-9 col-lg-8 mx-auto">
-                                <h1 class="font-weight-bold mb-4">Member Registeration</h1>
-
-                                <form action="{{ url_for('mcode') }}" method="post" autocomplete="off">
-
-                                    <h5 class="font-weight-bold">Dear Member,<br> Pleasr enter the Society Code provided by your Secretary for verification: </h5>
-                                    <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" name="code" placeholder="Enter code" id="code">
-                                        <label for="floatingInput">Enter code</label> {% if msg=='' %}
-                                        <div></div>
-
-                                        {% else %}
-                                        <div class="alert alert-danger msg" role="alert">
-                                            {{ msg }}
-                                        </div>
-                                        {% endif %}
-                                    </div>
-
-                                    <div class="d-grid">
-                                        <button class="btn btn-lg btn-primary btn-login font-weight-bold mb-2" type="submit" value="Verify" href="/mverify">Verify</button>
-                                        <div class="text-center">
-                                            <a class="small font-weight-bold" href="{{ url_for('login') }}">Already have an account? Login</a>
-                                        </div>
-                                    </div>
-
-                                </form>
+    <div class="container d-flex flex-column">
+        <div class="row align-items-center justify-content-center g-0 min-vh-100">
+            <div class="col-lg-5 col-md-8 py-8 py-xl-0">
+                <!-- Card -->
+                <div class="card shadow">
+                    <!-- Card body -->
+                    <div class="card-body p-6">
+                        <h1 class="mb-1 fw-bold text-center">R-Code</h1>
+                        {% if msg=='' %}
+                        <h6 class="font-weight-bold">Dear Member,<br> Pleasr enter the resedential code provided by
+                            your Secretary for verification: </h6>
+                        <form action="{{ url_for('mcode') }}" method="post">    
+                            <div class="mb-4 mt-4">
+                                <input type="text" class="form-control bg-grey border-0"
+                                    placeholder="Enter your resedential code" id="code" name="code"
+                                    aria-describedby="emailHelp" required>
                             </div>
-                        </div>
+                            <button type="submit" class="btn btn-primary w-100 mb-3">Verify</button> {% else %}
+                            <div class="alert alert -danger msg" role="alert">
+                                {{ msg }}
+                                <span><br> Let's
+                                    <a href="{{ url_for('mcode') }}" class="d-inline-block mb-0"> try
+                                        again.</a></span>
+                            </div>
+                            {% endif %}
+
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- Footer -->
-    <footer class="pb-2 backgraund text-dark text-center position-relative">
-        <div class="container">
+    <footer class=" text-dark text-center position-relative bg-light-pink">
+        <div class="container justify-content-center">
             <p class="lead">Copyright &copy; 2021 R-Portal
-                <!-- <img src="../static/Icon/DenApp.svg" class="img-fluid w-25" alt="" />  -->
             </p>
-
-            <a href="#" class="position-absolute bottom-0 end-0 p-2">
-                <i class="bi bi-arrow-up-circle h1"></i>
-            </a>
         </div>
     </footer>
+
+
+
+
+
+
 
 
 </body>

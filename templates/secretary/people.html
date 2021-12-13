@@ -71,16 +71,23 @@
                       <div class="candidate-list-option">
                         <ul class="list-unstyled">
                           <li> <b>Flat No: </b>{{ data['Mwing'] }},{{ data['Mflatno'] }}</li>
-                          <li><i class="fas fa-mobile"></i> <b>Contact No.: </b>{{ data['Mmobile'] }}</li>
-                          <form action="/R-Portal/i_members/{{data.Mid}}" >
+                          <li><i class="fas fa-mobile"></i> <b>Contact No: </b>{{ data['Mmobile'] }}</li>
+                          <li><i class="fas fa-email"></i> <b>Email ID : </b>{{ data['Memail'] }}</li>
+                          <form action="/R-Portal/i_members/{{data.Mid}}" method="post">
                         <li><b> Status: </b>
+                          <input type="hidden"  name="Mname" value={{ data['Mname'] }}></input>
+                          <input type="hidden"  name="Memail" value={{ data['Memail'] }}></input>
                             <select onchange='if(this.value !=0 ) { this.form.submit(); }'>
                            <option value='0'>{{ data['member_status'] }}</option>
                            <option value='1'>inactive</option>
                           </select>
                         </form> 
-                       <li> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<a href="/R-Portal/d_members/{{data.Mid}}"><i class="fa fa-trash" aria-hidden="true" onclick="return confirm('Are You Sure For Delete ?')" style="color:black"></i></a>
-                       </li>
+                        <form action="/R-Portal/d_members/{{data.Mid}}" method="post">
+                       <li> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<button  aria-hidden="true"  style="border: none;outline: none;background: none;" type="submit"><i class="fa fa-trash" aria-hidden="true"  style="color:black"></i></button>
+                        <input type="hidden"  name="Mname" value={{ data['Mname'] }}></input>
+                        <input type="hidden"  name="Memail" value={{ data['Memail'] }}></input>
+                      </form>
+                      </li>
                         </li>
                       
                        {% else %}
@@ -230,7 +237,11 @@
 			</label>
 			<input type="text" name="staff_username" placeholder="Username" id="staff_username" required>
 			<br><br>
-				
+      <label for="staff_post">
+				<i class="fas fa-user"></i>
+			</label>
+			<input type="text" name="post" placeholder="Post" id="post" required>
+			<br><br>
 			<label for="staff_mobile">
 				<i class="fas fa-mobile"></i>
 			</label>

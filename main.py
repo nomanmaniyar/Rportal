@@ -1,6 +1,8 @@
 from email import message
 import email
+from json import decoder
 from flask import Flask, render_template, request, redirect, url_for, session
+from requests.sessions import Session
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
@@ -18,7 +20,10 @@ import sys
 import jwt
 import requests
 import json
+
+
 from time import time
+import datetime
 #sys.path.insert(0, 'Rportal/config')
 #from config import credentials as cred
 API_KEY = 'DVKW9UngTg2lI1FnqrQVWA'
@@ -164,6 +169,7 @@ def sregister():
     return render_template('secretary/sregister.html', msg=msg)
 
 #   Member Registration
+
 @app.route('/R-Portal/mcode', methods=['GET', 'POST'])
 def mcode():
     msg = ''
@@ -199,7 +205,8 @@ def mcode1(code):
 @app.route('/R-Portal/mregister', methods=['GET', 'POST'])
 def mregister():
     msg = ''
-    if request.method == 'POST' and 'Musername' in request.form and 'Mpassword' in request.form and 'Memail' in request.form and 'Mcode' in request.form and 'Mname' in request.form and 'Mflatno' in request.form and 'Mwing' in request.form and 'Mmobile' in request.form and 'Semail' in request.form:
+    if request.method == 'POST' and 'Musername' in request.form and 'Mpassword' in request.form and 'Memail' in request.form and 'Mcode' in request.form and 'Mname' in request.form and 'Mflatno' in request.form and 'Mwing' in request.form and 'Mmobile' in request.form:
+        # and 'Semail' in request.form:
         username = request.form['Musername']
         passtext = request.form['Mpassword']
         password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
@@ -209,7 +216,7 @@ def mregister():
         flatno = request.form['Mflatno']
         wing = request.form['Mwing']
         mobile = request.form['Mmobile']   
-        Semail = request.form['Semail']
+        #Semail = request.form['Semail']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM member WHERE Musername = %s', (username,))
         account = cursor.fetchone()
@@ -222,6 +229,10 @@ def mregister():
         cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor3.execute('SELECT * FROM secretary WHERE Semail = %s', (email,))
         account3 = cursor3.fetchone()
+        cursor4 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor4.execute('SELECT Semail FROM secretary WHERE Scode = %s', (code,))
+        Semail = cursor4.fetchone()
+        print(Semail['Semail']);
         if account:
             msg = 'Warning! Username already exists!!'
         elif account1:
@@ -239,14 +250,15 @@ def mregister():
         else:
             cursor.execute('INSERT INTO member VALUES (NULL, %s, %s, %s, %s, %s, %s, %s,%s,DEFAULT,DEFAULT )', (username , password , code ,  email , name , flatno , wing , mobile))
             mysql.connection.commit()
-            msg = Message('New Member Request' ,sender ='Rportal<me@Rportal.com', recipients = [Semail]) 
+            msg = Message('New Member Request' ,sender ='Rportal<me@Rportal.com', recipients = [Semail['Semail']]) 
             text = "Hello \nYou have received new member request with followinh member details. \n Member details are :\n"
             msg.body = text + "\n Flat No :" + wing + flatno + "\n Name : " + name + "\n phone No : " + mobile + "\n Email ID : " + email + part4
             mail.send(msg)  
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
         msg = 'Please fill out the form!'
-    return render_template('member/mcode.html', msg=msg)
+    return render_template('member/mregister.html', msg=msg)
+
 
 #   Security Guard Registeration
 @app.route('/R-Portal/add_security', methods=['GET','POST'])
@@ -279,13 +291,14 @@ def security():
 @app.route('/R-Portal/add_staff', methods=['GET','POST'])
 def staff():
     msg = ''
-    if request.method == 'POST' and 'staff_name' in request.form and 'staff_username' in request.form and 'staff_password' in request.form:
+    if request.method == 'POST' and 'staff_name' in request.form and 'staff_username' in request.form and 'staff_password' in request.form  and 'post' in request.form:
         
         staff_username = request.form['staff_username']
         staff_mobile = request.form['staff_mobile']
         passtext  = request.form['staff_password']
         staff_password  = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
         staff_name = request.form['staff_name']
+        post = request.form['post']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM staff WHERE staff_username = %s AND staff_mobile = %s', (staff_username, staff_mobile))
         account = cursor.fetchone()
@@ -296,7 +309,7 @@ def staff():
         elif not staff_username or not staff_password or not staff_mobile:
             msg = 'Please fill out the form!'
         else:
-            cursor.execute('INSERT INTO staff VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT)', (staff_username , staff_password , staff_name , staff_mobile, session['code']))
+            cursor.execute('INSERT INTO staff VALUES (NULL, %s, %s, %s, %s, %s , DEFAULT, %s )', (staff_username , staff_password , staff_name , staff_mobile, session['code'],post))
             mysql.connection.commit()
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
@@ -599,17 +612,17 @@ def logout():
 def people():
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT Mname, member_status, Mmobile ,Mid, Mflatno,Mwing from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s AND member_status=%s', (session['id'],'active'))
+        cursor.execute('SELECT Mname, member_status, Mmobile ,Mid, Mflatno,Mwing ,Memail from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s AND member_status=%s', (session['id'],'active'))
         account = cursor.fetchall()     
         cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor1.execute('SELECT Sname,secretarty_status, Smobile from secretary WHERE Sid = %s AND secretarty_status=%s', (session['id'],'active'))
+        cursor1.execute('SELECT Sname,secretarty_status, Smobile ,Semail from secretary WHERE Sid = %s AND secretarty_status=%s', (session['id'],'active'))
         account1 = cursor1.fetchone()  
         cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor2.execute('SELECT   security_id,security_name, security_status, security_mobile from secretary inner join security on secretary.Scode = security.security_code WHERE Sid = %s AND security_status=%s', (session['id'],'active'))
         account2 = cursor2.fetchall()     
         cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor3.execute('SELECT staff_name, staff_status, staff_mobile ,staff_id from secretary inner join staff on secretary.Scode = staff.staff_code WHERE Sid = %s AND staff_status=%s', (session['id'],'active'))
-        account3 = cursor3.fetchall()        
+        account3 = cursor3.fetchall()         
         return render_template('secretary/people.html', account=account, account1=account1, account2=account2, account3=account3)
     else:
         return logout()
@@ -618,7 +631,7 @@ def people():
 def inpeople():
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT Mname, member_status, Mmobile, Mid from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s AND member_status=%s', (session['id'],'inactive'))
+        cursor.execute('SELECT Mname, member_status, Mmobile, Mid ,Memail ,Mflatno,Mwing from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s AND member_status=%s', (session['id'],'inactive'))
         account = cursor.fetchall()     
         cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor1.execute('SELECT Sname,secretarty_status, Smobile from secretary WHERE Sid = %s AND secretarty_status=%s', (session['id'],'inactive'))
@@ -639,17 +652,24 @@ def allow_members():
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT Mid, Mname, member_status, Mmobile, Mwing, Mflatno, Memail, Sname, name from secretary inner join member inner join society on secretary.Scode = member.Mcode AND secretary.Scode = society.code WHERE Sid = %s AND member_status=%s', (session['id'],'Request'))
         account = cursor.fetchall() 
+
         return render_template('secretary/allow_members.html', account=account )
     else:
         return logout()
     
-@app.route('/R-Portal/a_members/<int:Mid>')
+@app.route('/R-Portal/a_members/<int:Mid>' , methods=['GET', 'POST'])
 def a_members(Mid):
     if 'secretary' in session:
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute("UPDATE member SET member_status = %s WHERE Mid = %s" ,('active',Mid,)) 
-        mysql.connection.commit()
-        msg = 'Member Allowed'
+        if request.method == 'POST' and 'Memail' in request.form and 'Mname':
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute("UPDATE member SET member_status = %s WHERE Mid = %s" ,('active',Mid,)) 
+            mysql.connection.commit()
+            email = request.form['Memail']
+            Mname = request.form['Mname']
+            msg = Message('Your Joining Request is accepted' ,sender ='Rportal<me@Rportal.com', recipients = [email])
+            msg.body ="Hello!" + Mname + " \n your account activate for login please login on rportal ." + part4
+            mail.send(msg) 
+
         return allow_members()
     else:
         return logout()
@@ -657,21 +677,32 @@ def a_members(Mid):
 @app.route('/R-Portal/i_members/<int:Mid>', methods=['GET', 'POST'])
 def i_members(Mid):
     if 'secretary' in session:
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute("UPDATE member SET member_status = %s WHERE Mid = %s" ,('inactive',Mid,)) 
-        mysql.connection.commit()
-        msg = 'Member Allowed'
-        return people()
+        if request.method == 'POST' and 'Memail' in request.form and 'Mname':
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute("UPDATE member SET member_status = %s WHERE Mid = %s" ,('inactive',Mid,)) 
+            mysql.connection.commit()
+            email = request.form['Memail']
+            Mname = request.form['Mname']
+            msg = Message('Account Inactive' ,sender ='Rportal<me@Rportal.com', recipients = [email])
+            msg.body ="Hello!" + Mname + " \n You have Temporary Inactive from secreatry please contact with your secretary." + part4
+            mail.send(msg)  
+            return people()
     else:
         return logout()
 
 @app.route('/R-Portal/ac_members/<int:Mid>', methods=['GET', 'POST'])
 def ac_members(Mid):
     if 'secretary' in session:
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute("UPDATE member SET member_status = %s WHERE Mid = %s" ,('active',Mid,)) 
-        mysql.connection.commit()
-        msg = 'Member Allowed'
+        if request.method == 'POST' and 'Memail' in request.form and 'Mname':
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute("UPDATE member SET member_status = %s WHERE Mid = %s" ,('active',Mid,)) 
+            mysql.connection.commit()
+            email = request.form['Memail']
+            Mname = request.form['Mname']
+            msg = Message('Account activated' ,sender ='Rportal<me@Rportal.com', recipients = [email])
+            msg.body ="Hello!" + Mname + " \n You have active from secreatry any query please contact with your secretary." + part4
+            mail.send(msg)  
+        
         return inpeople()
     else:
         return logout()
@@ -696,13 +727,18 @@ def r_members():
     else:
         return logout()
 
-@app.route('/R-Portal/d_members/<int:Mid>')
+@app.route('/R-Portal/d_members/<int:Mid>' , methods=['GET', 'POST'])
 def d_members(Mid):
     if 'secretary' in session:
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('DELETE FROM member WHERE Mid = %s',[Mid]) 
-        mysql.connection.commit()
-        msg = 'Member Delete'
+        if request.method == 'POST' and 'Memail' in request.form and 'Mname':
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('DELETE FROM member WHERE Mid = %s',[Mid]) 
+            mysql.connection.commit()
+            email = request.form['Memail']
+            Mname = request.form['Mname']
+            msg = Message('Account Delete' ,sender ='Rportal<me@Rportal.com', recipients = [email])
+            msg.body ="Hello!" + Mname + " \n Your account has deleted from secreatry please contact with your secretary.\n" + part4
+            mail.send(msg)  
         return people()
     else:
         return logout()
@@ -832,25 +868,20 @@ def createnotice():
 def complaint():
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)        
-        cursor.execute('SELECT * FROM complaint WHERE complaint_code = %s', (session['code'],))
+        cursor.execute('SELECT * FROM complaint WHERE complaint_code = %s ', (session['code'],))
         account = cursor.fetchall()
         return render_template('secretary/complaint.html', account=account)
     else:
         return logout()
 
-def generateToken():
-    token = jwt.encode( {'iss': API_KEY, 'exp': time() + 5000},
-        API_SEC,
-        algorithm = 'HS256'  
-    )
-    return token
+
 
 @app.route('/R-Portal/createmeeting', methods=['GET', 'POST'] )
 def createmeeting():
     if 'secretary' in session:
         msg = ''
         msg1 = ''
-        if request.method == 'POST' and 'topic' in request.form and 'starttime' in request.form and 'duration' in request.form and 'agenda' in request.form  :
+        if request.method == 'POST' and 'topic' in request.form and 'starttime' in request.form and 'duration' in request.form and 'agenda' in request.form and 'date' in request.form and 'password' in request.form :
             topic = request.form['topic']
             start_time = request.form['starttime']
             duration = request.form['duration']
@@ -964,16 +995,27 @@ def viewnotice():
 def member_complaint():
     if 'member' in session:
         msg = ''
-        if request.method == 'POST' and 'complaint_subject' in request.form and 'complaint_message' in request.form:
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('SELECT post from staff WHERE staff_code= %s AND staff_status=%s', (session['code'],'active',))
+        account = cursor1.fetchall() 
+        cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor2.execute('SELECT * from complaint WHERE complaint_username= %s ', (session['username'],))
+        account2 = cursor2.fetchall() 
+        if request.method == 'POST' and 'complaint_subject' in request.form and 'complaint_message' in request.form and 'complaint_against'in request.form :  
             compaint_subject = request.form['complaint_subject']
             complaint_message = request.form['complaint_message']
+            complaint_against = request.form['complaint_against']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('INSERT INTO complaint VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT)', (session['username'] , session['name'] , compaint_subject, complaint_message, session['code']))
+            cursor.execute('INSERT INTO complaint VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT,%s,NULL , NULL)', (session['username'] , session['name'] , compaint_subject, complaint_message, session['code'],complaint_against))
             mysql.connection.commit()
+           
             msg = 'Complaint Added Succsesfully!'
+            
         elif request.method == 'POST':
             msg = 'Please fill out the form!'
-        return render_template('member/member_complaint.html', msg=msg)
+          
+           
+        return render_template('member/member_complaint.html', msg=msg , account=account,account2= account2)
     else:
         return logout()
 

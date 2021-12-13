@@ -185,3 +185,22 @@ CREATE TABLE IF NOT EXISTS `contact` (
 INSERT INTO `contact` (`contact_id`,`contact_code`, `police`, `hospital`, `railway`) VALUES ('1', 'GOKU11', '100', '108', '139');
 alter table contact auto_increment = 2;
 select * from contact;
+ALTER TABLE staff add column `post` varchar(255) ;
+CREATE TABLE IF NOT EXISTS `document` (
+	`doc_id` int(11) NOT NULL AUTO_INCREMENT,
+	`doc_filename` varchar(255) NOT NULL,
+	`society_code` varchar(255) NOT NULL,
+  	PRIMARY KEY (`doc_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE complaint add column `complaint_against` varchar(255) ;
+ALTER TABLE complaint add column `complaint_status` varchar(255)  ;
+ALTER TABLE complaint add column `complaint_reply` varchar(255)  ;
+ALTER TABLE document add column `document` varchar(255) ;
+CREATE TABLE IF NOT EXISTS `message` (
+	`msg_id` int(11) NOT NULL AUTO_INCREMENT,
+	`msg_username` varchar(255) NOT NULL,
+	`message` varchar(255) NOT NULL,
+	`society_code` varchar(255) NOT NULL,
+	`msg_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  	PRIMARY KEY (`msg_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

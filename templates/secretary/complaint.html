@@ -13,27 +13,19 @@
     <h4>Active Complaints:</h4>
     <br>
     <table class="table" style="width:100%">
-        <tr>
-            <th>Name</th>
-            <th>Subject</th>
-            <th>Complaint Matter</th>
-            <th>Time</th>
-        </tr> 
+      
         {% for data in account %}
             <tr>
-                <td>{{ data['complaint_name'] }}<br><br>
-                    <b><a>Username: </a></b>{{ data['complaint_username'] }}<br>
-                </td>
-                <td>
-                    {{ data['complaint_subject'] }}
-                </td>
-                <td>
-                    {{ data['complaint_message'] }}
-                </td>
-                <td>
-                    {{ data['complaint_time'] }}
+                <td> 
+                    <label><b>Date :</b></label>{{ data['complaint_time']}}<br>
+                    <label><b>Name:</b></label>&nbsp;{{ data['complaint_name'] }}<br>
+                    <label><b>Subject:</b></label> {{ data['complaint_subject'] }}<br>
+                    <label><b>Message:</b></label> {{ data['complaint_message'] }}<br><br>
+            
+                   
                 </td>
             </tr>   
+            
         {% endfor %}
     </table>
     <br>    
