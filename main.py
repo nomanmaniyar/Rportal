@@ -874,14 +874,19 @@ def complaint():
     else:
         return logout()
 
-
+def generateToken():
+    token = jwt.encode( {'iss': API_KEY, 'exp': time() + 5000},
+        API_SEC,
+        algorithm = 'HS256'  
+    )
+    return token
 
 @app.route('/R-Portal/createmeeting', methods=['GET', 'POST'] )
 def createmeeting():
     if 'secretary' in session:
         msg = ''
         msg1 = ''
-        if request.method == 'POST' and 'topic' in request.form and 'starttime' in request.form and 'duration' in request.form and 'agenda' in request.form and 'date' in request.form and 'password' in request.form :
+        if request.method == 'POST' and 'topic' in request.form and 'starttime' in request.form and 'duration' in request.form and 'agenda' in request.form  :
             topic = request.form['topic']
             start_time = request.form['starttime']
             duration = request.form['duration']
@@ -928,7 +933,6 @@ def createmeeting():
         return render_template('secretary/createmeeting.html', msg = msg, msg1 = msg1)
     else:
         return logout()
-  
 @app.route('/R-Portal/add_contact', methods=['GET', 'POST'] )
 def add_contact():
     if 'secretary' in session:
