@@ -1,0 +1,66 @@
+{% extends 'secretary/slayout.html' %}
+
+{% block title %}R-Portal - View Contacts{% endblock %}
+
+{% block content %}	
+<style>
+    table, th, td {
+      border:1px solid black;
+    }
+</style>
+	
+<h3>View Important Contacts</h3>
+<div>
+   
+    <table  class="table" style="width:100%">
+        <tr>
+            <th>Department</th>
+            <th>Contact Number</th>
+        </tr> 
+        <tr>
+            <td>Police Station: </td>
+            <td><a href="tel:{{ account['police'] }}" target="_blank"><div class="link_btn"><i class="fa fa-phone"></i>{{ account['police'] }}</div></a></td>
+            
+        </tr>  
+        <tr>
+            <td>Nearest Hospital: </td>
+            <td><a href="tel:{{ account['hospital'] }}" target="_blank"><div class="link_btn"><i class="fa fa-phone"></i>{{ account['hospital'] }}</div></a></td>
+        </tr>  
+        <tr>
+            <td>Fire: </td>
+            <td><a href="tel:{{ account['fire'] }}" target="_blank"><div class="link_btn"><i class="fa fa-phone"></i>{{ account['fire'] }}</div></a></td>
+        </tr>  
+        <tr>
+            <td>Blood Bank: </td>
+            <td><a href="tel:{{ account['blood_bank'] }}" target="_blank"><div class="link_btn"><i class="fa fa-phone"></i>{{ account['blood_bank'] }}</div></a></td>
+        </tr>  
+        <tr>
+            <td>Muncipal Corporation: </td>
+            <td><a href="tel:{{ account['muncipal'] }}" target="_blank"><div class="link_btn"><i class="fa fa-phone"></i>{{ account['muncipal'] }}</div></a></td>
+        </tr>  
+        <tr>
+            <td>Ambulance: </td>
+            <td><a href="tel:{{ account['ambulance'] }}" target="_blank"><div class="link_btn"><i class="fa fa-phone"></i>{{ account['ambulance'] }}</div></a></td>
+        </tr>  
+        <tr>
+            <td>Railways: </td>
+            <td><a href="tel:{{ account['railway'] }}" target="_blank"><div class="link_btn"><i class="fa fa-phone"></i>{{ account['railway'] }}</div></a></td>
+        </tr>  
+        <tr>
+            <td>Plumber: </td>
+            <td><a href="tel:{{ account['plumber'] }}" target="_blank"><div class="link_btn"><i class="fa fa-phone"></i>{{ account['plumber'] }}</div></a></td>
+        </tr>  
+        <tr>
+            <td>Electrition: </td>
+            <td><a href="tel:{{ account['electrition'] }}" target="_blank"><div class="link_btn"><i class="fa fa-phone"></i>{{ account['electrition'] }}</div></a></td>
+        </tr>  
+        <tr>
+            <td>Gas: </td>
+            <td><a href="tel:{{ account['gas'] }}" target="_blank"><div class="link_btn"><i class="fa fa-phone"></i>{{ account['gas'] }}</div></a></td>
+        </tr>   
+    </table>
+    <br>    
+    <a href='javascript:self.history.back();'>Go Back</a>
+    <br>
+</div>
+{% endblock %}

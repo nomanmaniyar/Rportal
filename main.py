@@ -22,7 +22,6 @@ import requests
 import json
 import http.client
 import datetime
-from flask_jwt import JWT
 
 
 from time import time
@@ -960,11 +959,24 @@ def add_contact():
                 cursor1.execute('UPDATE contact SET police = %s, hospital = %s, blood_bank = %s, muncipal = %s, ambulance = %s, railway = %s, plumber = %s, electrition = %s, gas = %s, fire = %s WHERE contact_code = %s', (police, hospital, blood_bank, muncipal, ambulance, railway, plumber, electrition, gas, fire, session['code'],))
                 mysql.connection.commit()    
                 msg="Contacts Updated!"
+                return render_template('secretary/add_contact.html', msg=msg)
             else:
                 cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                 cursor2.execute('INSERT INTO contact values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', (session['code'] ,police, hospital, blood_bank, muncipal, ambulance, railway, plumber, electrition, gas, fire,))
                 mysql.connection.commit()    
                 msg="Contacts Inserted!"
+                return render_template('secretary/add_contact.html', msg=msg)
+        return render_template('secretary/add_contact.html')
+    else:
+        return logout()
+
+@app.route('/R-Portal/view_scontact')
+def view_scontact():
+    if 'secretary' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT *  from contact WHERE contact_code = %s', (session['code'],) ) 
+        account = cursor.fetchone() 
+        return render_template('secretary/view_scontact.html', account=account)
     else:
         return logout()
    
