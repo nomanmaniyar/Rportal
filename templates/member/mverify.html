@@ -12,6 +12,8 @@
 </head>
 
 <body>
+
+  <div id="Page1">
   <nav class="navbar navbar-expand-lg  py-3  fixed-top">
     <div class="container">
       <a href="{{ url_for('rportal') }}" class="navbar-brand">R-Portal</a>
@@ -50,9 +52,10 @@
                 </a>
               </div>
               <div class="button " id="next">
-                <a href="{{url_for('mregister')}}" style="color: white;  text-decoration: none;">
+               <!----- <a href="{{url_for('mregister')}}" style="color: white;  text-decoration: none;">
                   Next &rarr;
-                </a>
+                </a>--->
+                <a href="#" onclick="return show('Page2','Page1');" style="color: white;  text-decoration: none;">Next &rarr;</a>
               </div>
             </div>
           </form>
@@ -61,13 +64,149 @@
       </div>
     </div>
   </section>
-  <!-- Footer -->
-  <footer class=" text-dark text-center position-relative bg-light-pink">
-    <div class="container justify-content-center">
-      <p class="lead">Copyright &copy; 2021 R-Portal
-      </p>
+  
+
+  
+  </div>
+  <div id="Page2" style="display:none">
+    <nav class="navbar navbar-expand-lg  py-3  fixed-top">
+      <div class="container">
+        <a href="{{ url_for('rportal') }}" class="navbar-brand">R-Portal</a>
+      </div>
+    </nav>
+  
+    <div class="bg-light-pink text-dark p-lg-0 pt-lg-5 text-start text-sm-start">
+      <div class="container">
+        <div class="d-sm-flex align-items-center justify-content-between">
+          <img class=" w-50 h-100 d-none d-sm-block" src="../static/Icon/mRegistration.svg" alt="" />
+          <div class="card px-lg-5 py-lg-5 py-sm-5 p-4 w-100 align-self-center justify-content-center shadow">
+            <h1 class="font-weight-bold mb-4">Member Registration
+            </h1>
+  
+  
+            <form action="{{ url_for('mregister') }}" method="post" autocomplete="on">
+              {% if msg=='' %}
+              <div></div>
+              {% else %}
+              <div class="d-flex justify-content-center">
+                <div class="alert alert-primary" role="alert">
+                  {{ msg }}
+                </div>
+              </div>
+              {% endif %}
+              <section class="card-body" id="c1">
+                <div class="mb-3">
+                  <label for="Mname">Enter Name</label>
+                  <input type="text" class="form-control" name="Mname" placeholder="Enter Name" id="Mname"
+                    required>
+                  <span id="Mpname" style="color: crimson"></span>
+                </div>
+  
+                <div class="row justify-content-between">
+                  <div class=" mb-3">
+                    <label for="Musername">Username</label>
+                    <input type="text" class="form-control" name="Musername" placeholder="Username"
+                      id="Musername" required>
+                    <span id="Mpusername" style="color: crimson"></span>
+  
+                  </div>
+                 <!---- <div class=" col-lg-6 mb-3">
+                    <label for="Mcode">Socity Code</label>-->
+                    <input type="hidden" class="form-control" value={{ account['code'] }} name="Mcode" placeholder="Society Code" id="Mcode" required>
+                    <input type="hidden"  name="Semail" value={{ account['Semail'] }}>
+                    <span id="Mpcode" style="color: crimson"></span>
+                  </div>
+                  <div class="row justify-content-between">
+                    <div class="col-lg-6 mb-3">
+                      <label for="Mflatno">Flat Number</label>
+                      <input type="text" class="form-control" name="Mflatno" placeholder="Flat Number"
+                        id="Mflatno" required>
+                      <span id="Mpflatno" style="color: crimson"></span>
+  
+                    </div>
+                    <div class="col-lg-6 mb-3">
+                      <label for="Mwing">Wing Name</label>
+                      <input type="text" class="form-control" name="Mwing" placeholder="Wing Name"
+                        id="Mwing" required>
+                      <span id="Mpwing" style="color: crimson"></span>
+  
+                    </div>
+                  </div>
+              </section>
+              <section class="card-body" id="c2">
+                <div class="  mb-3">
+                  <label for="Memail">Email </label>
+                  <input type="email" class="form-control" name="Memail" placeholder="Email ID"
+                    id="Memail" required>
+                  <span id="Memail" style="color: crimson"></span>
+                </div>
+  
+                <div class="  mb-3">
+                  <label for="Mmobile">Mobile Number</label>
+                  <input type="text" class="form-control" name="Mmobile" placeholder="Mobile Number"
+                    id="Mmobile" required>
+                  <span style="font-size:x-small">PLZ Enter your Mobileno without +91 </span>
+                  <span id="Mpmobile" style="color: crimson"></span>
+                </div>
+                <div class="  mb-3">
+                  <label for="Mpassword">Password</label>
+                  <input type="password" class="form-control" name="Mpassword" placeholder="Password"
+                    id="Mpassword" required>
+                  <span id="Mppassword" style="color: crimson"></span>
+                </div>
+              </section>
+              <div class="d-flex justify-content-between px-lg-5">
+                <div class="button " id="prev">
+               
+                  <a href="#" style="color: white;  text-decoration: none;" onclick="return show('Page1','Page2');">&larr; Prev</a>
+                </div>
+               
+               <!---- <div class="button" id="next">
+                  Next &rarr;
+                </div>-->
+                <button class="button " type="submit" id="submit" value="Register">Submit</button>
+              </div>
+              <!-- <div class="button" id="submit" type="submit">							submit
+              </div> -->
+          </div>
+          </form>
+  
+          <!-- <div class="mb-3 align-items-center">
+              <h4>
+                <label class="font-weight-bold align-items-center">Already have an account?
+                </label>
+                <a href="{{ url_for('login') }}">Login</a>
+                </h>
+            </div> -->
+  
+        </div>
+      </div>
     </div>
-  </footer>
+    </div>
+  
+  
+    <!-- Footer -->
+    <footer class="pb-2 backgraund text-dark text-center position-relative">
+      <div class="container">
+        <p class="lead">Copyright &copy; 2021 R-Portal
+          <!-- <img src="../static/Icon/DenApp.svg" class="img-fluid w-25" alt="" />  -->
+        </p>
+  
+        <a href="#" class="position-absolute bottom-0 end-0 p-2">
+          <i class="bi bi-arrow-up-circle h1"></i>
+        </a>
+      </div>
+    </footer>
+  </div>
+    <script src="/static/mregister.js"></script>
+    
+  <script>
+    function show(shown, hidden) {
+      document.getElementById(shown).style.display='block';
+      document.getElementById(hidden).style.display='none';
+      return false;
+    }
+    </script>
 
 </body>
 

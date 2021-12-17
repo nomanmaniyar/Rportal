@@ -1,0 +1,42 @@
+{% extends 'staff/staff_layout.html' %}
+
+{% block title %}R-Portal - Staff Complaints{% endblock %}
+
+{% block content %}
+<style>
+    table, th, td {
+      border:1px solid black;
+    }
+</style>
+<h3>Manage Complaint</h3>
+<div>
+    <h4>Active Complaints:</h4>
+    <br>
+    
+    <table class="table" style="width:100%">
+      
+        {% for data in account %}
+            <tr>
+                <td> 
+                    <label><b>Date :</b></label>{{ data['complaint_time']}}<br>
+                    <label><b>Name:</b></label>&nbsp;{{ data['complaint_name'] }}<br>
+                    <label><b>Subject:</b></label> {{ data['complaint_subject'] }}<br>
+                    <label><b>Message:</b></label> {{ data['complaint_message'] }}<br>
+                    <label><b>Reply:</b></label> {{ data['complaint_reply'] }}<br><br>
+                    <form action="/R-Portal/staff_complaintup" methods="POST">
+                        <input type="hidden" name="cid" value={{ data['complaint_id']}} >
+                        <textarea type="text" name="reply" placeholder="Enter Your Reply"></textarea>
+                        <input  class="btn btn-sucess" type="submit" value="submit">               
+                     </form>
+                   
+                </td>
+            </tr>   
+
+            
+        {% endfor %}
+    </table>
+    <br>    
+    <br>
+    <a href='javascript:self.history.back();'>Go Back</a>
+</div>
+{% endblock %}
