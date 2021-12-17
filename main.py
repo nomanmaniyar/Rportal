@@ -874,65 +874,6 @@ def complaint():
     else:
         return logout()
 
-def generateToken():
-    token = jwt.encode( {'iss': API_KEY, 'exp': time() + 5000},
-        API_SEC,
-        algorithm = 'HS256'  
-    )
-    return token
-
-@app.route('/R-Portal/createmeeting', methods=['GET', 'POST'] )
-def createmeeting():
-    if 'secretary' in session:
-        msg = ''
-        msg1 = ''
-        if request.method == 'POST' and 'topic' in request.form and 'starttime' in request.form and 'duration' in request.form and 'agenda' in request.form  :
-            topic = request.form['topic']
-            start_time = request.form['starttime']
-            duration = request.form['duration']
-            agenda = request.form['agenda']
-            email=session['mail']
-            meetingdetails = {
-                "topic":  topic,
-                "type": 1,
-                "start_time":  start_time,
-                "duration":  duration,
-                "timezone": "India/Mumbai",
-                "agenda":  agenda,
-               
-                "recurrence": {"type": 1,
-                            "repeat_interval": 2
-                            },
-                "settings": {"host_video": "true",
-                            "participant_video": "true",
-                            "join_before_host": "true",
-                            "mute_upon_entry": "False",
-                            "watermark": "true",
-                            "audio": "voip",
-                            "auto_recording": "cloud",
-                            
-                            
-                            }
-                }
-            headers = {'authorization': 'Bearer %s' % generateToken(),
-               'content-type': 'application/json'}
-            userId= email
-            r = requests.post(
-            f'https://api.zoom.us/v2/users/me/meetings/', 
-            headers=headers, data=json.dumps(meetingdetails))
-    
-            print("\n creating zoom meeting ... \n")
-            y = json.loads(r.text)
-            join_URL = y["join_url"]
-            meetingPassword = y["password"]
-            print(
-                f'\n here is your zoom meeting link {join_URL} and your \
-                password: "{meetingPassword}"\n')
-            msg = join_URL
-            msg1 = "paasword :" + meetingPassword
-        return render_template('secretary/createmeeting.html', msg = msg, msg1 = msg1)
-    else:
-        return logout()
 @app.route('/R-Portal/add_contact', methods=['GET', 'POST'] )
 def add_contact():
     if 'secretary' in session:
