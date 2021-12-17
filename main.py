@@ -20,6 +20,9 @@ import sys
 import jwt
 import requests
 import json
+import http.client
+import datetime
+from flask_jwt import JWT
 
 
 from time import time
@@ -881,9 +884,9 @@ def createmeeting():
           
             payload ={"iss" : "DVKW9UngTg2lI1FnqrQVWA" ,"exp" : rounded_off_exp_time  }
             encode_jwt = jwt.encode(payload,"ZIN4AsaniiKYBBA0cQHLSupJOIZwMEdbcRm2" , algorithm="HS256")
-            email =  "aashutoshmali1460@gmail.com"
-            url= "https://api.zoom.us/v2/users/{}/meetings".format(email)
-           # date=datetime.datetime(2021,11,23,23,50).strfttime("%Y-%m-%dT%H:%M:%SZ")
+            
+            url= "https://api.zoom.us/v2/users/{}/meetings".format(session['mail'])
+            #date=datetime.datetime(2021,11,23,23,50).strfttime("%Y-%m-%dT%H:%M:%SZ")
             obj = {"topic" : "test" ,"start_time" :"2021,11,23,23,50"  , "duration" : 30 , "password" : "12345"  }
             header = {"authorization": "Bearer {}".format(encode_jwt) }
             create_meeting = requests.post(url,json=obj ,headers = header) 
