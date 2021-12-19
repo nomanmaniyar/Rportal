@@ -386,9 +386,9 @@ def login():
                         if account:
                             session['staff'] = True
                             session['staff_id'] = account['staff_id']
-                            session['post'] = account['post']
                             session['staff_username'] = account['staff_username']
                             session['staff_code'] = account['staff_code']
+                            session['staff_post'] = account['post']
                             return render_template("staff/staff_home.html") 
                         elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                             username = request.form['username']
@@ -578,14 +578,14 @@ def logout():
         session.pop('secretary', None)
         session.pop('id', None)
         session.pop('username', None)
-        session.pop('code', None)
+        session.pop('Scode', None)
         session.pop('mail', None)
         return redirect(url_for('rportal'))
     elif 'member' in session:
         session.pop('member', None)
         session.pop('id', None)
         session.pop('username', None)
-        session.pop('code', None)
+        session.pop('Mcode', None)
         session.pop('name',None)
         return redirect(url_for('rportal'))
     elif 'admin' in session:
@@ -597,13 +597,14 @@ def logout():
         session.pop('security', None)
         session.pop('id', None)
         session.pop('username', None)
-        session.pop('code', None)
+        session.pop('security_code', None)
         return redirect(url_for('rportal'))
     elif 'staff' in session:
         session.pop('staff', None)
         session.pop('id', None)
         session.pop('username', None)
-        session.pop('code', None)
+        session.pop('staff_code', None)
+        session.pop('staff_post', None)
         return redirect(url_for('rportal'))
 
 #
@@ -868,17 +869,26 @@ def createnotice():
 @app.route('/R-Portal/manage_complaint', methods=['GET','POST'])
 def complaint():
     if 'secretary' in session:
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)        
-        cursor.execute('SELECT * FROM complaint WHERE complaint_code = %s ', (session['Scode'],))
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM complaint WHERE complaint_status = %s AND complaint_code = %s', ('active', session['Scode']))
         account = cursor.fetchall()
-        return render_template('secretary/complaint.html', account=account)
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('SELECT * FROM complaint WHERE complaint_status = %s AND complaint_code = %s', ('review', session['Scode']))
+        account1 = cursor1.fetchall()
+        cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor2.execute('SELECT * FROM complaint WHERE complaint_status = %s AND complaint_code = %s', ('closed', session['Scode']))
+        account2 = cursor2.fetchall()
+        if request.method == 'POST' and 'cid' in request.form and 'reply' in request.form:
+            complaint_id = request.form['cid']
+            complaint_reply = request.form['reply']
+            cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor3.execute('UPDATE complaint SET complaint_reply_closing = %s, complaint_status = %s  WHERE complaint_id = %s', (complaint_reply, 'closed', complaint_id ))
+            mysql.connection.commit()
+        return render_template('secretary/complaint.html', account=account, account1=account1, account2=account2)
     else:
         return logout()
-#def generateToken():
-    
 
 @app.route('/R-Portal/createmeeting', methods=['GET', 'POST'] )
-
 def createmeeting():
     if 'secretary' in session:
         msg = ''
@@ -1111,25 +1121,26 @@ def member_complaint():
         cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor1.execute('SELECT post from staff WHERE staff_code= %s AND staff_status=%s', (session['Mcode'],'active',))
         account = cursor1.fetchall() 
+        cursor4 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor4.execute('SELECT * from complaint WHERE complaint_username= %s AND complaint_status = %s', (session['Musername'], 'active'))
+        account4 = cursor4.fetchall()
         cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor2.execute('SELECT * from complaint WHERE complaint_username= %s ', (session['Musername'],))
-        account2 = cursor2.fetchall() 
+        cursor2.execute('SELECT * from complaint WHERE complaint_username= %s AND complaint_status = %s', (session['Musername'], 'review'))
+        account2 = cursor2.fetchall()
+        cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor3.execute('SELECT * from complaint WHERE complaint_username= %s AND complaint_status = %s', (session['Musername'], 'closed'))
+        account3 = cursor3.fetchall() 
         if request.method == 'POST' and 'complaint_subject' in request.form and 'complaint_message' in request.form and 'complaint_against'in request.form:  
             compaint_subject = request.form['complaint_subject']
             complaint_message = request.form['complaint_message']
             complaint_against = request.form['complaint_against']
-            complaint_status = "active"
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('INSERT INTO complaint VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT,%s,%s , NULL)', (session['Musername'] , session['Mname'] , compaint_subject, complaint_message, session['Mcode'],complaint_against,complaint_status))
+            cursor.execute('INSERT INTO complaint VALUES (NULL, %s, %s, %s, %s, %s, %s, DEFAULT, NULL, NULL, DEFAULT)', (session['Musername'] , session['Mname'] , compaint_subject, complaint_message, session['Mcode'], complaint_against,))
             mysql.connection.commit()
-           
             msg = 'Complaint Added Succsesfully!'
-            
         elif request.method == 'POST':
             msg = 'Please fill out the form!'
-          
-           
-        return render_template('member/member_complaint.html', msg=msg , account=account,account2= account2)
+        return render_template('member/member_complaint.html', msg=msg , account=account,account2= account2, account3=account3, account4=account4)
     else:
         return logout()
 
@@ -1320,6 +1331,30 @@ def security_profile():
         return render_template('security/security_profile.html', account=account)
     else:
         return logout()
+
+@app.route('/R-Portal/security_complaint',methods=['GET','POST'])
+def security_complaint():
+    if 'security' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM complaint WHERE complaint_against = %s AND complaint_status = %s AND complaint_code = %s', ('Security', 'active', session['security_code']))
+        account = cursor.fetchall()
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('SELECT * FROM complaint WHERE complaint_against = %s AND complaint_status = %s AND complaint_code = %s', ('Security', 'review', session['security_code']))
+        account1 = cursor1.fetchall()
+        cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor2.execute('SELECT * FROM complaint WHERE complaint_against = %s AND complaint_status = %s AND complaint_code = %s', ('Security', 'closed', session['security_code']))
+        account2 = cursor2.fetchall()
+        if request.method == 'POST' and 'cid' in request.form and 'reply' in request.form:
+            complaint_id = request.form['cid']
+            complaint_reply = request.form['reply']
+            cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor3.execute('UPDATE complaint SET complaint_reply = %s, complaint_status = %s  WHERE complaint_id = %s', (complaint_reply, 'review', complaint_id ))
+            mysql.connection.commit()
+            security_complaint()
+        return render_template('security/security_complaint.html', account=account, account1=account1, account2=account2)
+    else:
+        return logout()
+
 @app.route('/R-Portal/view_contacts')
 def view_contacts():
     if 'security' in session:
@@ -1349,28 +1384,30 @@ def staff_profile():
         return render_template('staff/staff_profile.html', account=account)
     else:
         return logout()
+
 @app.route('/R-Portal/staff_complaint',methods=['GET','POST'])
 def staff_complaint():
     if 'staff' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM complaint WHERE complaint_against = %s AND complaint_status = %s', (session['post'], "active"))
+        cursor.execute('SELECT * FROM complaint WHERE complaint_against = %s AND complaint_status = %s AND complaint_code = %s', (session['staff_post'], 'active', session['staff_code']))
         account = cursor.fetchall()
-        return render_template('staff/staff_complaint.html', account=account)
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('SELECT * FROM complaint WHERE complaint_against = %s AND complaint_status = %s AND complaint_code = %s', (session['staff_post'], 'review', session['staff_code']))
+        account1 = cursor1.fetchall()
+        cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor2.execute('SELECT * FROM complaint WHERE complaint_against = %s AND complaint_status = %s AND complaint_code = %s', (session['staff_post'], 'closed', session['staff_code']))
+        account2 = cursor2.fetchall()
+        if request.method == 'POST' and 'cid' in request.form and 'reply' in request.form:
+            complaint_id = request.form['cid']
+            complaint_reply = request.form['reply']
+            cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor3.execute('UPDATE complaint SET complaint_reply = %s, complaint_status = %s  WHERE complaint_id = %s', (complaint_reply, 'review', complaint_id ))
+            mysql.connection.commit()
+            staff_complaint()
+        return render_template('staff/staff_complaint.html', account=account, account1=account1, account2=account2)
     else:
         return logout()
-@app.route('/R-Portal/staff_complaintup',methods=['GET','POST'])
-def staff_complaintup():
-    if 'staff' in session:
-            if request.method == 'POST' and 'cid' in request.form and 'reply' in request.form   :
-                complaint_id = request.form['cid']
-                complaint_reply = request.form['reply']
-                print( complaint_id)
-                cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-                cursor.execute('UPDATE complaint  SET complaint_reply = %s  WHERE complaint_id = %s ',(complaint_reply , complaint_id ))
-                mysql.connection.commit()
-            return render_template('staff/staff_complaint.html')
-    else:
-            return logout()
+
 @app.route('/R-Portal/view_contactst')
 def view_contactst():
     if 'staff' in session:

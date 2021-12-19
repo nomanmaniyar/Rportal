@@ -10,37 +10,92 @@
 </style>
 <h3>Manage Complaint</h3>
 <div>
-    <h4>Active Complaints:</h4>
-    <br>
-    
+<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo1"><i class="fa fa-warning" aria-hidden="true"></i> Active/New complaints</button>
+<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo2"><i class="fa fa-history" aria-hidden="true"></i> Replied complaints</button>
+<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo3"><i class="fa fa-history" aria-hidden="true"></i> View History</button>
+<br>
+<div id="demo1" class="collapse">
+<br>
+<h4>Active complaints against you:</h4>
     <table class="table" style="width:100%">
+<br>
       
         {% for data in account %}
+        <div class="content">
             <tr>
                 <td> 
                     <label><b>Date :</b></label>{{ data['complaint_time']}}<br>
                     <label><b>Name:</b></label>&nbsp;{{ data['complaint_name'] }}<br>
                     <label><b>Subject:</b></label> {{ data['complaint_subject'] }}<br>
                     <label><b>Message:</b></label> {{ data['complaint_message'] }}<br>
-                    <label><b>Reply:</b></label> {{ data['complaint_reply'] }}<br><br>
-                    <button class="btn btn-primary" onclick="openModal()" >Reply</button>  <br><br>
+                    <button class="btn btn-primary" onclick="openModal()" >Reply</button>  <br>
+                    <p>Note: You can give your reply only <b>once.</b></p>
+                    <br><br>
  
                     <dialog id="dialog">
-                    <button align="right" onclick="closeModal()"  class="btn-close" aria-label="Close" ></button><br>
-                    <form action="{{ url_for('staff_complaintup') }}"  methods="POST">
+                    <button onclick="closeModal()"  class="btn-close" aria-label="Close" ></button><br>
+                    <form action ="/R-Portal/staff_complaint" method="post">
                         <input type="hidden" name="cid" value="{{ data['complaint_id']}}" >
                         <input type="text" name="reply" placeholder="Enter Your Reply"><br><br>
-                        <button   type="submit" >Send </button><br>         
+                        <button type="submit" >Send </button><br>         
                      </form>
                     </dialog>
 
                 </td>
             </tr>   
-
-            
+        </div>            
         {% endfor %}
     </table>
+</div>
     <br>    
+    
+<div id="demo2" class="collapse">
+<br>
+    <h4>Replied complaints:</h4>
+    <table class="table" style="width:100%">
+<br>
+    
+        {% for data1 in account1 %}
+        <div class="content">
+            <tr>
+                <br>
+                <b>Complaint Subject:</b>&nbsp;{{ data1['complaint_subject'] }}<br><br>
+                <b>Complaint message:</b>&nbsp;{{ data1['complaint_message'] }}<br><br>
+                <b>Complaint Date Time: </b>&nbsp;{{ data1['complaint_time'] }}<br><br>
+                <b>Reply by {{data1['complaint_against']}}:</b>&nbsp;{{data1['complaint_reply']}}<br><br>
+                <b>Status: </b>&nbsp;{{data1['complaint_status']}}<br><br>
+            </tr> 
+            <hr>
+        </div>
+        {% endfor %}
+    
+    </table>
+    </div> 
+    <br>  
+    
+<div id="demo3" class="collapse">
+<br>
+    <h4>Complaint History:</h4>
+    <table class="table" style="width:100%">
+<br>
+    
+        {% for data2 in account2 %}
+        <div class="content">
+            <tr>
+                <br>
+                <b>Complaint Subject:</b>&nbsp;{{ data2['complaint_subject'] }}<br><br>
+                <b>Complaint message:</b>&nbsp;{{ data2['complaint_message'] }}<br><br>
+                <b>Complaint Date Time: </b>&nbsp;{{ data2['complaint_time'] }}<br><br>
+                <b>Reply by {{data2['complaint_against']}}:</b>&nbsp;{{data2['complaint_reply']}}<br><br>
+                <b>Reply by Secretary:</b>&nbsp;{{data2['complaint_reply_closing']}}<br><br>
+                <b>Status: </b>&nbsp;{{data2['complaint_status']}}<br><br>
+            </tr> 
+            <hr>
+        </div>
+        {% endfor %}
+    
+    </table>
+    </div> 
     <br>
     <a href='javascript:self.history.back();'>Go Back</a>
 </div>
@@ -61,6 +116,7 @@ function openModal() {
 function closeModal() { 
     dailog.close(); 
 } 
+
 </script>
 
 {% endblock %}

@@ -9,25 +9,72 @@
 
 <button id="myBtn" class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add New Complaint</button>
 <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo"><i class="fa fa-history" aria-hidden="true"></i> Previous Complaint</button>
+<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo1"><i class="fa fa-history" aria-hidden="true"></i> View History</button>
 <div id="demo" class="collapse">
+  <h4>Complaints under review:</h4>
 <table class="table" style="width:100%">
 
     {% for data1 in account2 %}
     <div class="content">
-        <tr><br>
-  
-           
+        <tr>
+            <br>
             <b>Complaint Subject:</b>&nbsp;{{ data1['complaint_subject'] }}<br><br>
             <b>Complaint Against</b>&nbsp;{{data1['complaint_against']}}<br><br>
             <b>Complaint message:</b>&nbsp;{{ data1['complaint_message'] }}<br><br>
             <b>Complaint Date Time: </b>&nbsp;{{ data1['complaint_time'] }}<br><br>
-           
+            <b>Reply by {{data1['complaint_against']}}:</b>&nbsp;{{data1['complaint_reply']}}<br><br>
+            <b>Status: </b>&nbsp;{{data1['complaint_status']}}<br><br>
         </tr> 
+        <hr>
     </div>
     {% endfor %}
 
 </table>
 </div> 
+
+<div id="demo" class="collapse">
+  <h4>Active complaints:</h4>
+  <table class="table" style="width:100%">
+    
+      {% for data3 in account4 %}
+      <div class="content">
+          <tr>
+              <br>
+              <b>Complaint Subject:</b>&nbsp;{{ data3['complaint_subject'] }}<br><br>
+              <b>Complaint Against</b>&nbsp;{{data3['complaint_against']}}<br><br>
+              <b>Complaint message:</b>&nbsp;{{ data3['complaint_message'] }}<br><br>
+              <b>Complaint Date Time: </b>&nbsp;{{ data3['complaint_time'] }}<br><br>
+              <b>Status: </b>&nbsp;{{data3['complaint_status']}}<br><br>
+          </tr> 
+          <hr>
+      </div>
+      {% endfor %}
+  
+  </table>
+  </div> 
+
+<div id="demo1" class="collapse">
+  <h4>Complaint History:</h4>
+  <table class="table" style="width:100%">
+  
+      {% for data2 in account3 %}
+      <div class="content">
+          <tr>
+              <br>
+              <b>Complaint Subject:</b>&nbsp;{{ data2['complaint_subject'] }}<br><br>
+              <b>Complaint Against</b>&nbsp;{{data2['complaint_against']}}<br><br>
+              <b>Complaint message:</b>&nbsp;{{ data2['complaint_message'] }}<br><br>
+              <b>Complaint Date Time: </b>&nbsp;{{ data2['complaint_time'] }}<br><br>
+              <b>Reply by {{data2['complaint_against']}}:</b>&nbsp;{{data2['complaint_reply']}}<br><br>
+              <b>Reply by Secretary:</b>&nbsp;{{data2['complaint_reply_closing']}}<br><br>
+              <b>Status: </b>&nbsp;{{data2['complaint_status']}}<br><br>
+          </tr> 
+          <hr>
+      </div>
+      {% endfor %}
+  
+  </table>
+  </div> 
 
 <div id="myModal" class="modal">
 
@@ -71,8 +118,6 @@
     </div>
   
   </div>
-
-
 
 
 <script>

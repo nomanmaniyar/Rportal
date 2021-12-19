@@ -108,12 +108,13 @@ CREATE TABLE IF NOT EXISTS `staff` (
   	`staff_password` varchar(255) NOT NULL,
 	`staff_name` varchar(255) NOT NULL,
 	`staff_mobile` varchar(255) NOT NULL,
+    `post` varchar(255),
 	`staff_code` varchar(30) NOT NULL,
     `staff_status` varchar(255) default 'active',
   	PRIMARY KEY (`staff_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-INSERT INTO `staff` (`staff_id`, `staff_username`, `staff_password`,`staff_name`, `staff_mobile`, `staff_code`) VALUES ('1', 'samadhan', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'Samadhan', '9515645454', 'GOKU11');
-INSERT INTO `staff` (`staff_id`, `staff_username`, `staff_password`,`staff_name`, `staff_mobile`, `staff_code`) VALUES ('2', 'sitaram', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'Sitaram Narayan Kapadnis', '945121415', 'SAIR11');
+INSERT INTO `staff` (`staff_id`, `staff_username`, `staff_password`,`staff_name`, `staff_mobile`, `post`, `staff_code`) VALUES ('1', 'samadhan', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'Samadhan', '9515645454', 'gardener', 'GOKU11');
+INSERT INTO `staff` (`staff_id`, `staff_username`, `staff_password`,`staff_name`, `staff_mobile`, `post`, `staff_code`) VALUES ('2', 'sitaram', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'Sitaram Narayan Kapadnis', '945121415', 'cleaner', 'SAIR11');
 alter table staff auto_increment = 3;
 select * from staff;
 
@@ -146,11 +147,15 @@ CREATE TABLE IF NOT EXISTS `complaint` (
 	`complaint_subject` varchar(500) NOT NULL,
 	`complaint_message` varchar(500) NOT NULL,
 	`complaint_code` varchar(30) NOT NULL,
+	`complaint_against` varchar(255),
+    `complaint_status` varchar(255) DEFAULT 'active',
+    `complaint_reply` varchar(255),
+    `complaint_reply_closing` varchar(255),
     `complaint_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   	PRIMARY KEY (`complaint_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-INSERT INTO `complaint` (`complaint_id`, `complaint_username`, `complaint_name`, `complaint_subject`, `complaint_message`, `complaint_code`) VALUES ('1', 'aashutosh', 'Aashutosh Mali', 'Cleaning', 'Test Complaint Message', 'GOKU11');
-INSERT INTO `complaint` (`complaint_id`, `complaint_username`, `complaint_name`, `complaint_subject`, `complaint_message`, `complaint_code`) VALUES ('2', 'dyaneshwar', 'dyaneshwar Rangnath Vadnere', 'Maintainance', 'Test complaint Message', 'SAIR11');
+INSERT INTO `complaint` (`complaint_id`, `complaint_username`, `complaint_name`, `complaint_subject`, `complaint_message`, `complaint_code`, `complaint_against`) VALUES ('1', 'aashutosh', 'Aashutosh Mali', 'Cleaning', 'Test Complaint Message', 'GOKU11', 'gardener');
+INSERT INTO `complaint` (`complaint_id`, `complaint_username`, `complaint_name`, `complaint_subject`, `complaint_message`, `complaint_code`, `complaint_against`) VALUES ('2', 'dyaneshwar', 'dyaneshwar Rangnath Vadnere', 'Maintainance', 'Test complaint Message', 'SAIR11', 'cleaner');
 alter table complaint auto_increment = 3;
 select * from complaint;
 
@@ -166,6 +171,7 @@ INSERT INTO `notice` (`notice_id`,`notice_subject`, `notice_message`, `notice_co
 INSERT INTO `notice` (`notice_id`,`notice_subject`, `notice_message`, `notice_code`) VALUES ('2', 'Test Subject', 'Test Notice Message', 'SAIR11');
 alter table notice auto_increment = 3;
 select * from notice;
+
 CREATE TABLE IF NOT EXISTS `contact` (
 	`contact_id` int(11) NOT NULL AUTO_INCREMENT,
 	`contact_label` VARCHAR(255) NOT NULL,
@@ -174,17 +180,14 @@ CREATE TABLE IF NOT EXISTS `contact` (
   	PRIMARY KEY (`contact_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-ALTER TABLE staff add column `post` varchar(255) ;
 CREATE TABLE IF NOT EXISTS `document` (
 	`doc_id` int(11) NOT NULL AUTO_INCREMENT,
 	`doc_filename` varchar(255) NOT NULL,
 	`society_code` varchar(255) NOT NULL,
+    `document` varchar(255)
   	PRIMARY KEY (`doc_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-ALTER TABLE complaint add column `complaint_against` varchar(255) ;
-ALTER TABLE complaint add column `complaint_status` varchar(255)  ;
-ALTER TABLE complaint add column `complaint_reply` varchar(255)  ;
-ALTER TABLE document add column `document` varchar(255) ;
+
 CREATE TABLE IF NOT EXISTS `chat` (
 	`msg_id` int(11) NOT NULL AUTO_INCREMENT,
 	`msg_username` varchar(255) NOT NULL,
@@ -193,3 +196,4 @@ CREATE TABLE IF NOT EXISTS `chat` (
 	`msg_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   	PRIMARY KEY (`msg_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
