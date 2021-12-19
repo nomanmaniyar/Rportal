@@ -1046,6 +1046,9 @@ def invite():
 @app.route('/R-Portal/chats')
 def chats():
     if 'secretary' in session:
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('DELETE FROM chat WHERE society_code = %s AND msg_time < now() - interval 3 day', (session['Scode'],))
+        mysql.connection.commit()
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT *  from chat WHERE society_code = %s', (session['code'],) ) 
         account = cursor.fetchall() 
@@ -1062,15 +1065,14 @@ def add_chats():
             msg_username = session['username']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('INSERT INTO chat values (NULL , %s, %s, %s,  DEFAULT )', ( msg_username , message,session['code']))
-            mysql.connection.commit()    
-          
-            
+            mysql.connection.commit()   
+            cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor1.execute('DELETE FROM chat WHERE society_code = %s AND msg_time < now() - interval 3 day', (session['Scode'],))
+            mysql.connection.commit()
         return chats()
     else:
         return logout()
              
-
-   
 #
 #   Member Part
 #
@@ -1153,6 +1155,9 @@ def docsm():
 @app.route('/R-Portal/chat')
 def chat():
     if 'member' in session:
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('DELETE FROM chat WHERE society_code = %s AND msg_time < now() - interval 3 day', (session['Mcode'],))
+        mysql.connection.commit()
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT *  from chat WHERE society_code = %s', (session['code'],) ) 
         account = cursor.fetchall() 
@@ -1170,7 +1175,9 @@ def add_chat():
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('INSERT INTO chat values (NULL , %s, %s, %s,  DEFAULT )', ( msg_username , message,session['code']))
             mysql.connection.commit() 
-                
+            cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor1.execute('DELETE FROM chat WHERE society_code = %s AND msg_time < now() - interval 3 day', (session['Mcode'],))
+            mysql.connection.commit()
         return chat()
     else:
         return logout()
