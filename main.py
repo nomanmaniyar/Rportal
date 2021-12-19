@@ -331,10 +331,10 @@ def login():
         account = cursor.fetchone()
         if account:
             session['secretary'] = True
-            session['id'] = account['Sid']
-            session['username'] = account['Susername']
-            session['code'] = account['Scode']
-            session['mail'] = account['Semail']
+            session['Sid'] = account['Sid']
+            session['Susername'] = account['Susername']
+            session['Scode'] = account['Scode']
+            session['Smail'] = account['Semail']
             return sotp() 
         elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
             username = request.form['username']
@@ -345,10 +345,10 @@ def login():
             account = cursor.fetchone()
             if account:
                 session['member'] = True
-                session['id'] = account['Mid']
-                session['username'] = account['Musername']
-                session['code'] = account['Mcode']
-                session['name'] = account['Mname']
+                session['Mid'] = account['Mid']
+                session['Musername'] = account['Musername']
+                session['Mcode'] = account['Mcode']
+                session['Mname'] = account['Mname']
                 return motp()       
             elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                 username = request.form['username']
@@ -359,8 +359,8 @@ def login():
                 account = cursor.fetchone()
                 if account:
                     session['admin'] = True
-                    session['id'] = account['Aid']
-                    session['username'] = account['Ausername']
+                    session['Aid'] = account['Aid']
+                    session['Ausername'] = account['Ausername']
                     return render_template("admin/admin.html")       
                 elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                     username = request.form['username']
@@ -371,9 +371,9 @@ def login():
                     account = cursor.fetchone()
                     if account:
                         session['security'] = True
-                        session['id'] = account['security_id']
-                        session['username'] = account['security_username']
-                        session['code'] = account['security_code']
+                        session['security_id'] = account['security_id']
+                        session['security_username'] = account['security_username']
+                        session['security_code'] = account['security_code']
                         return render_template("security/security_home.html")       
                     elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                         username = request.form['username']
@@ -384,10 +384,10 @@ def login():
                         account = cursor.fetchone()
                         if account:
                             session['staff'] = True
-                            session['id'] = account['staff_id']
+                            session['staff_id'] = account['staff_id']
                             session['post'] = account['post']
-                            session['username'] = account['staff_username']
-                            session['code'] = account['staff_code']
+                            session['staff_username'] = account['staff_username']
+                            session['staff_code'] = account['staff_code']
                             return render_template("staff/staff_home.html") 
                         elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                             username = request.form['username']
@@ -478,7 +478,7 @@ def svalidate():
 def sotp(): 
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM secretary WHERE Sid = %s', (session['id'],))
+        cursor.execute('SELECT * FROM secretary WHERE Sid = %s', (session['Sid'],))
         account = cursor.fetchone()
         if account:
             email = account['Semail']
@@ -505,7 +505,7 @@ def mvalidate():
 def motp():
     if 'member' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM member WHERE Mid = %s ', (session['id'],))
+        cursor.execute('SELECT * FROM member WHERE Mid = %s ', (session['Mid'],))
         account = cursor.fetchone()
         if account:
             email = account['Memail']
@@ -612,16 +612,16 @@ def logout():
 def people():
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT Mname, member_status, Mmobile ,Mid, Mflatno,Mwing ,Memail from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s AND member_status=%s', (session['id'],'active'))
+        cursor.execute('SELECT Mname, member_status, Mmobile ,Mid, Mflatno,Mwing ,Memail from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s AND member_status=%s', (session['Sid'],'active'))
         account = cursor.fetchall()     
         cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor1.execute('SELECT Sname,secretarty_status, Smobile ,Semail from secretary WHERE Sid = %s AND secretarty_status=%s', (session['id'],'active'))
+        cursor1.execute('SELECT Sname,secretarty_status, Smobile ,Semail from secretary WHERE Sid = %s AND secretarty_status=%s', (session['Sid'],'active'))
         account1 = cursor1.fetchone()  
         cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor2.execute('SELECT   security_id,security_name, security_status, security_mobile from secretary inner join security on secretary.Scode = security.security_code WHERE Sid = %s AND security_status=%s', (session['id'],'active'))
+        cursor2.execute('SELECT   security_id,security_name, security_status, security_mobile from secretary inner join security on secretary.Scode = security.security_code WHERE Sid = %s AND security_status=%s', (session['Sid'],'active'))
         account2 = cursor2.fetchall()     
         cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor3.execute('SELECT staff_name, staff_status, staff_mobile ,staff_id from secretary inner join staff on secretary.Scode = staff.staff_code WHERE Sid = %s AND staff_status=%s', (session['id'],'active'))
+        cursor3.execute('SELECT staff_name, staff_status, staff_mobile ,staff_id from secretary inner join staff on secretary.Scode = staff.staff_code WHERE Sid = %s AND staff_status=%s', (session['Sid'],'active'))
         account3 = cursor3.fetchall()         
         return render_template('secretary/people.html', account=account, account1=account1, account2=account2, account3=account3)
     else:
@@ -631,16 +631,16 @@ def people():
 def inpeople():
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT Mname, member_status, Mmobile, Mid ,Memail ,Mflatno,Mwing from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s AND member_status=%s', (session['id'],'inactive'))
+        cursor.execute('SELECT Mname, member_status, Mmobile, Mid ,Memail ,Mflatno,Mwing from secretary inner join member on secretary.Scode = member.Mcode WHERE Sid = %s AND member_status=%s', (session['Sid'],'inactive'))
         account = cursor.fetchall()     
         cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor1.execute('SELECT Sname,secretarty_status, Smobile from secretary WHERE Sid = %s AND secretarty_status=%s', (session['id'],'inactive'))
+        cursor1.execute('SELECT Sname,secretarty_status, Smobile from secretary WHERE Sid = %s AND secretarty_status=%s', (session['Sid'],'inactive'))
         account1 = cursor1.fetchone()  
         cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor2.execute('SELECT security_name, security_status, security_mobile,security_id from secretary inner join security on secretary.Scode = security.security_code WHERE Sid = %s AND security_status=%s', (session['id'],'inactive'))
+        cursor2.execute('SELECT security_name, security_status, security_mobile,security_id from secretary inner join security on secretary.Scode = security.security_code WHERE Sid = %s AND security_status=%s', (session['Sid'],'inactive'))
         account2 = cursor2.fetchall()     
         cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor3.execute('SELECT staff_name, staff_status, staff_mobile ,staff_id from secretary inner join staff on secretary.Scode = staff.staff_code WHERE Sid = %s AND staff_status=%s', (session['id'],'inactive'))
+        cursor3.execute('SELECT staff_name, staff_status, staff_mobile ,staff_id from secretary inner join staff on secretary.Scode = staff.staff_code WHERE Sid = %s AND staff_status=%s', (session['Sid'],'inactive'))
         account3 = cursor3.fetchall()        
         return render_template('secretary/inactive_people.html', account=account, account1=account1, account2=account2, account3=account3)
     else:
@@ -650,7 +650,7 @@ def inpeople():
 def allow_members():
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT Mid, Mname, member_status, Mmobile, Mwing, Mflatno, Memail, Sname, name from secretary inner join member inner join society on secretary.Scode = member.Mcode AND secretary.Scode = society.code WHERE Sid = %s AND member_status=%s', (session['id'],'Request'))
+        cursor.execute('SELECT Mid, Mname, member_status, Mmobile, Mwing, Mflatno, Memail, Sname, name from secretary inner join member inner join society on secretary.Scode = member.Mcode AND secretary.Scode = society.code WHERE Sid = %s AND member_status=%s', (session['Sid'],'Request'))
         account = cursor.fetchall() 
 
         return render_template('secretary/allow_members.html', account=account )
@@ -845,7 +845,7 @@ def shome():
 def sprofile():
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM secretary INNER JOIN society ON secretary.Scode = society.code WHERE Sid = %s', (session['id'],))
+        cursor.execute('SELECT * FROM secretary INNER JOIN society ON secretary.Scode = society.code WHERE Sid = %s', (session['Sid'],))
         account = cursor.fetchone()
         return render_template('secretary/sprofile.html', account=account)
     else:
@@ -858,7 +858,7 @@ def createnotice():
             notice_subject = request.form['subject']
             notice_message = request.form['editor']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('INSERT INTO notice VALUES (NULL, %s , %s, %s, DEFAULT )', (notice_subject ,notice_message , session['code'] ))
+            cursor.execute('INSERT INTO notice VALUES (NULL, %s , %s, %s, DEFAULT )', (notice_subject ,notice_message , session['Scode'] ))
             mysql.connection.commit()
         return render_template('secretary/createnotice.html')
     else:
@@ -868,7 +868,7 @@ def createnotice():
 def complaint():
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)        
-        cursor.execute('SELECT * FROM complaint WHERE complaint_code = %s ', (session['code'],))
+        cursor.execute('SELECT * FROM complaint WHERE complaint_code = %s ', (session['Scode'],))
         account = cursor.fetchall()
         return render_template('secretary/complaint.html', account=account)
     else:
@@ -955,7 +955,7 @@ def createmeeting():
 def contact():
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT *  from contact WHERE society_code = %s', (session['code'],) ) 
+        cursor.execute('SELECT *  from contact WHERE society_code = %s', (session['Scode'],) ) 
         account = cursor.fetchall() 
         return render_template('secretary/contact.html', account=account)
     else:
@@ -969,7 +969,7 @@ def add_contact():
             contact_label = request.form['contact_label']
             contact_no = request.form['contact_no']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('INSERT INTO contact values (NULL , %s, %s, %s)', (contact_label, contact_no,session['code']))
+            cursor.execute('INSERT INTO contact values (NULL , %s, %s, %s)', (contact_label, contact_no,session['Scode']))
             mysql.connection.commit()    
             msg="Contacts Inserted!"
             
@@ -1005,7 +1005,7 @@ def add_docs():
         ... 
       
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('INSERT INTO document values (NULL , %s, %s, %s)', (doc_filename,session['code'], document))
+        cursor.execute('INSERT INTO document values (NULL , %s, %s, %s)', (doc_filename,session['Scode'], document))
         mysql.connection.commit()    
         msg="File upload suceesfully"
             
@@ -1017,7 +1017,7 @@ def add_docs():
 def docs():
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT *  from document WHERE society_code = %s', (session['code'],) ) 
+        cursor.execute('SELECT *  from document WHERE society_code = %s', (session['Scode'],) ) 
         account = cursor.fetchall() 
         return render_template('secretary/docs.html', account=account)
     else:
@@ -1038,7 +1038,7 @@ def d_docs(doc_id):
 def invite():
     if 'secretary' in session:
         
-        account = session['code'];
+        account = session['Scode'];
         return render_template('secretary/invite.html', account=account)
     else:
         return logout() 
@@ -1047,7 +1047,7 @@ def invite():
 def chats():
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT *  from chat WHERE society_code = %s', (session['code'],) ) 
+        cursor.execute('SELECT *  from chat WHERE society_code = %s', (session['Scode'],) ) 
         account = cursor.fetchall() 
         return render_template('secretary/chats.html', account=account)
     else:
@@ -1059,9 +1059,9 @@ def add_chats():
         msg = ''
         if request.method == 'POST'and 'message' in request.form :
             message = request.form['message']
-            msg_username = session['username']
+            msg_username = session['Susername']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('INSERT INTO chat values (NULL , %s, %s, %s,  DEFAULT )', ( msg_username , message,session['code']))
+            cursor.execute('INSERT INTO chat values (NULL , %s, %s, %s,  DEFAULT )', ( msg_username , message,session['Scode']))
             mysql.connection.commit()    
           
             
@@ -1077,7 +1077,7 @@ def add_chats():
 @app.route('/R-Portal/mhome')
 def mhome():
     if 'member' in session:
-        return render_template('member/mhome.html', Mname=session['name'])
+        return render_template('member/mhome.html', Mname=session['Mname'])
     else:
         return logout()
 
@@ -1085,7 +1085,7 @@ def mhome():
 def mprofile():
     if 'member' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT Musername, Mpassword, Memail, Mname, Mflatno, Mwing, Mmobile, code, name, city, road, area, state, pin FROM member INNER JOIN society ON member.Mcode = society.code WHERE Mid = %s;', (session['id'],))
+        cursor.execute('SELECT Musername, Mpassword, Memail, Mname, Mflatno, Mwing, Mmobile, code, name, city, road, area, state, pin FROM member INNER JOIN society ON member.Mcode = society.code WHERE Mid = %s;', (session['Mid'],))
         account = cursor.fetchone()
         return render_template('member/mprofile.html', account=account)
     else:
@@ -1095,7 +1095,7 @@ def mprofile():
 def viewnotice():
     if 'member' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT *  from notice WHERE notice_code = %s', (session['code'],) ) 
+        cursor.execute('SELECT *  from notice WHERE notice_code = %s', (session['Mcode'],) ) 
         account = cursor.fetchall() 
         return render_template('member/viewnotice.html', account=account)
     else:
@@ -1106,10 +1106,10 @@ def member_complaint():
     if 'member' in session:
         msg = ''
         cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor1.execute('SELECT post from staff WHERE staff_code= %s AND staff_status=%s', (session['code'],'active',))
+        cursor1.execute('SELECT post from staff WHERE staff_code= %s AND staff_status=%s', (session['Mcode'],'active',))
         account = cursor1.fetchall() 
         cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor2.execute('SELECT * from complaint WHERE complaint_username= %s ', (session['username'],))
+        cursor2.execute('SELECT * from complaint WHERE complaint_username= %s ', (session['Musername'],))
         account2 = cursor2.fetchall() 
         if request.method == 'POST' and 'complaint_subject' in request.form and 'complaint_message' in request.form and 'complaint_against'in request.form:  
             compaint_subject = request.form['complaint_subject']
@@ -1117,7 +1117,7 @@ def member_complaint():
             complaint_against = request.form['complaint_against']
             complaint_status = "active"
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('INSERT INTO complaint VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT,%s,%s , NULL)', (session['username'] , session['name'] , compaint_subject, complaint_message, session['code'],complaint_against,complaint_status))
+            cursor.execute('INSERT INTO complaint VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT,%s,%s , NULL)', (session['Musername'] , session['Mname'] , compaint_subject, complaint_message, session['Mcode'],complaint_against,complaint_status))
             mysql.connection.commit()
            
             msg = 'Complaint Added Succsesfully!'
@@ -1134,7 +1134,7 @@ def member_complaint():
 def view_contact():
     if 'member' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT *  from contact WHERE  society_code = %s', (session['code'],) ) 
+        cursor.execute('SELECT *  from contact WHERE  society_code = %s', (session['Mcode'],) ) 
         account = cursor.fetchall() 
         return render_template('member/view_contact.html', account=account)
     else:
@@ -1144,7 +1144,7 @@ def view_contact():
 def docsm():
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT *  from document WHERE society_code = %s', (session['code'],) ) 
+        cursor.execute('SELECT *  from document WHERE society_code = %s', (session['Mcode'],) ) 
         account = cursor.fetchall() 
         return render_template('member/docsm.html', account=account)
     else:
@@ -1154,7 +1154,7 @@ def docsm():
 def chat():
     if 'member' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT *  from chat WHERE society_code = %s', (session['code'],) ) 
+        cursor.execute('SELECT *  from chat WHERE society_code = %s', (session['Mcode'],) ) 
         account = cursor.fetchall() 
         return render_template('member/chat.html', account=account)
     else:
@@ -1166,9 +1166,9 @@ def add_chat():
         msg = ''
         if request.method == 'POST'and 'message' in request.form :
             message = request.form['message']
-            msg_username = session['username']
+            msg_username = session['Musername']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('INSERT INTO chat values (NULL , %s, %s, %s,  DEFAULT )', ( msg_username , message,session['code']))
+            cursor.execute('INSERT INTO chat values (NULL , %s, %s, %s,  DEFAULT )', ( msg_username , message,session['Mcode']))
             mysql.connection.commit() 
                 
         return chat()
@@ -1181,7 +1181,7 @@ def add_chat():
 @app.route('/R-Portal/admin_home')
 def admin_home():
     if 'admin' in session:
-        return render_template('admin/admin_home.html', Ausername=session['username'])
+        return render_template('admin/admin_home.html', Ausername=session['Ausername'])
     else:
         return logout()
 
@@ -1299,7 +1299,7 @@ def contactdata():
 @app.route('/R-Portal/security_home')
 def security_home():
     if 'security' in session:
-        return render_template('security/security_home.html', security_username=session['username'])
+        return render_template('security/security_home.html', security_username=session['security_username'])
     else:
         return logout()
 
@@ -1307,7 +1307,7 @@ def security_home():
 def security_profile():
     if 'security' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT security_username, security_name, security_mobile, security_code FROM security WHERE security_id = %s;', (session['id'],))
+        cursor.execute('SELECT security_username, security_name, security_mobile, security_code FROM security WHERE security_id = %s;', (session['security_id'],))
         account = cursor.fetchone()
         return render_template('security/security_profile.html', account=account)
     else:
@@ -1316,7 +1316,7 @@ def security_profile():
 def view_contacts():
     if 'security' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT *  from contact WHERE  society_code = %s', (session['code'],) ) 
+        cursor.execute('SELECT *  from contact WHERE  society_code = %s', (session['security_code'],) ) 
         account = cursor.fetchall() 
         return render_template('security/view_contact.html', account=account)
     else:
@@ -1328,7 +1328,7 @@ def view_contacts():
 @app.route('/R-Portal/staff_home')
 def staff_home():
     if 'staff' in session:
-        return render_template('staff/staff_home.html', staff_username=session['username'])
+        return render_template('staff/staff_home.html', staff_username=session['staff_username'])
     else:
         return logout()
 
@@ -1336,7 +1336,7 @@ def staff_home():
 def staff_profile():
     if 'staff' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT staff_username, staff_name, staff_mobile, staff_code FROM staff WHERE staff_id = %s;', (session['id'],))
+        cursor.execute('SELECT staff_username, staff_name, staff_mobile, staff_code FROM staff WHERE staff_id = %s;', (session['staff_id'],))
         account = cursor.fetchone()
         return render_template('staff/staff_profile.html', account=account)
     else:
@@ -1367,7 +1367,7 @@ def staff_complaintup():
 def view_contactst():
     if 'staff' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT *  from contact WHERE  society_code = %s', (session['code'],) ) 
+        cursor.execute('SELECT *  from contact WHERE  society_code = %s', (session['staff_code'],) ) 
         account = cursor.fetchall() 
         return render_template('staff/view_contact.html', account=account)
     else:
