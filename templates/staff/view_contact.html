@@ -1,8 +1,8 @@
-{% extends 'member/mlayout.html' %}
+{% extends 'staff/staff_layout.html' %}
 
-{% block title %}R-Portal - View Contacts{% endblock %}
+{% block title %}R-Portal - Staff Profile{% endblock %}
 
-{% block content %}	
+{% block content %}
 <style>
     table, th, td {
       border:1px solid black;
@@ -22,18 +22,18 @@
      
     </table>
     {% else %}
-    <b><h5>Emergency Helpline Numbers</h5>
-    </b>
-    <label>National Emergency Number:</label><a  href="tel:+112" >112</a><br>
-    <label>Police:</label><a  href="tel:+100" >100</a><br>
-    <label>Fire:</label> <a  href="tel:+101" >101</a>
-    <br> 
-    <label>Ambulance:</label><a  href="tel:+102" >102</a>
-    <br>
-    
-    {% endfor %} 
-    {% endif %} 
-    
+<b><h5>Emergency Helpline Numbers</h5>
+</b>
+<label>National Emergency Number:</label><a  href="tel:+112" >112</a><br>
+<label>Police:</label><a  href="tel:+100" >100</a><br>
+<label>Fire:</label> <a  href="tel:+101" >101</a>
+<br> 
+<label>Ambulance:</label><a  href="tel:+102" >102</a>
+<br>
+
+{% endfor %} 
+{% endif %} 
+    <br>    
     <a href='javascript:self.history.back();'>Go Back</a>
 </div>
 

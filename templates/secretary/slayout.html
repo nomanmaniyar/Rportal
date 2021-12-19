@@ -56,7 +56,10 @@
             <br>
             <a href="{{ url_for('createmeeting') }}">Create Meeting</a>
             <br>
-            <a href="{{ url_for('add_contact') }}"><i class="fas fa-mobile"></i>Add Important Contacts</a>
+            <a href="{{ url_for('contact') }}"><i class="fas fa-mobile"></i>Contacts</a><br>
+            <a href="{{ url_for('docs') }}"><i class="fa fa-folder-open" aria-hidden="true"></i>Document</a>
+            <br>
+            <a href="{{ url_for('invite') }}"><i class="fa fa-share-alt" aria-hidden="true"></i>Invite</a>
             <br>
             <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
             <br>
@@ -66,5 +69,6 @@
         {% block content %}{% endblock %}
     </div>
 </body>
+
 
 </html> 

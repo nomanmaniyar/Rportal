@@ -1,0 +1,42 @@
+{% extends 'security/security_layout.html' %}
+
+{% block title %}R-Portal - Security Profile{% endblock %}
+
+{% block content %}
+<style>
+    table, th, td {
+      border:1px solid black;
+    }
+</style>
+	
+
+<div>
+    <h3>Important Contacts</h3> <br>
+    {% if account !=0 %}
+    {% for contact in account %}
+    <table  class="table" style="width:100%">
+      <td>
+          <label>{{contact['contact_label']}} :</label>
+          <a  href="tel:+{{account['contact_no']}}" >{{contact['contact_no']}}</a>
+      </td>
+     
+    </table>
+      
+{% else %}
+<b><h5>Emergency Helpline Numbers</h5>
+</b>
+<label>National Emergency Number:</label><a  href="tel:+112" >112</a><br>
+<label>Police:</label><a  href="tel:+100" >100</a><br>
+<label>Fire:</label> <a  href="tel:+101" >101</a>
+<br> 
+<label>Ambulance:</label><a  href="tel:+102" >102</a>
+<br>
+
+{% endfor %} 
+{% endif %} 
+
+    <br>    
+    <a href='javascript:self.history.back();'>Go Back</a>
+</div>
+
+{% endblock %}

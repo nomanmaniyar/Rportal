@@ -1,0 +1,51 @@
+{% extends 'secretary/slayout.html' %}
+
+{% block title %}R-Portal - Docs{% endblock %}
+
+{% block content %}
+<button class="share-btn">
+    <i class="fas fa-share-alt"></i>
+</button>
+<div class="share-options">
+    <p class="title">share</p>
+    <canvas id="qr-code"></canvas>
+    <div class="social-media">
+        <a class="social-media-btn" href="" id="qr"  onClick="downloadQR()" ><i class="far fa-save"></i></a >
+        <a class="social-media-btn"  href="whatsapp://send?text=http://127.0.0.1:5000/R-Portal/mcode/{{account}}"  data-action="share/whatsapp/share"  
+        target="_blank"><i class="fab fa-whatsapp"></i></a>
+        <button class="social-media-btn"><i class="fab fa-instagram"></i></button>
+        <button class="social-media-btn"><i class="fab fa-twitter"></i></button>
+        <button class="social-media-btn"><i class="fab fa-facebook-f"></i></button>
+        <button class="social-media-btn"><i class="fab fa-linkedin-in"></i></button>
+    </div>
+    
+    <div class="link-container">
+        <p class="link">http://127.0.0.1:5000/R-Portal/mcode1/{{account}}</p>
+        <button class="copy-btn">copy</button>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+<script>
+    var qr;
+    (function() {
+            qr = new QRious({
+            element: document.getElementById('qr-code'),
+            size: 150,
+            value: "http://127.0.0.1:5000/R-Portal/mcode1/{{account['Scode']}}"
+            
+        });
+        downloadQR(); 
+
+    })();
+    
+    function downloadQR() {
+        var link = document.createElement('a');
+        link.download = 'Rportal.png';
+        link.href = document.getElementById('qr').toDataURL()
+        
+        link.click();
+    } 
+  
+</script>
+
+{% endblock %}

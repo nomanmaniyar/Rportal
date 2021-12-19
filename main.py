@@ -20,19 +20,14 @@ import sys
 import jwt
 import requests
 import json
-import http.client
-import datetime
-
-
 from time import time
-import datetime
 #sys.path.insert(0, 'Rportal/config')
 #from config import credentials as cred
 API_KEY = 'DVKW9UngTg2lI1FnqrQVWA'
 API_SEC = 'ZIN4AsaniiKYBBA0cQHLSupJOIZwMEdbcRm2'
 UPLOAD_FOLDER = '/path/to/the/uploads'
+UPLOAD_DOCS = '/path/to/the/uploads/docs'
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
-
 app = Flask(__name__)
 app.secret_key = '65142'
 app.config['MYSQL_HOST'] = '127.0.0.1'
@@ -41,6 +36,7 @@ app.config['MYSQL_PASSWORD'] = '1234'
 app.config['MYSQL_DB'] = 'rportal'
 app.config['charset'] ='utf8'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_DOCS'] = UPLOAD_DOCS
 mysql = MySQL(app)
  
 mail = Mail(app)
@@ -136,6 +132,8 @@ def sregister():
         cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor1.execute('SELECT * FROM secretary WHERE Semail = %s', (email,))
         account1 = cursor1.fetchone()
+
+
         cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor3.execute('SELECT * FROM member WHERE Memail = %s', (email,))
         account3 = cursor3.fetchone()
@@ -875,64 +873,91 @@ def complaint():
         return render_template('secretary/complaint.html', account=account)
     else:
         return logout()
-
-def generateToken():
-    token = jwt.encode( {'iss': API_KEY, 'exp': time() + 5000},
-        API_SEC,
-        algorithm = 'HS256'  
-    )
-    return token
+#def generateToken():
+    
 
 @app.route('/R-Portal/createmeeting', methods=['GET', 'POST'] )
+
 def createmeeting():
     if 'secretary' in session:
         msg = ''
         msg1 = ''
-        if request.method == 'POST' and 'topic' in request.form and 'starttime' in request.form and 'duration' in request.form and 'agenda' in request.form  :
+        if request.method == 'POST' and 'topic' in request.form and 'starttime' in request.form  and 'date' in request.form and 'duration' in request.form and 'agenda' in request.form  :
             topic = request.form['topic']
+            date  = request.form['date']
             start_time = request.form['starttime']
             duration = request.form['duration']
             agenda = request.form['agenda']
             email=session['mail']
-            meetingdetails = {
-                "topic":  topic,
-                "type": 1,
-                "start_time":  start_time,
-                "duration":  duration,
-                "timezone": "India/Mumbai",
-                "agenda":  agenda,
-               
-                "recurrence": {"type": 1,
-                            "repeat_interval": 2
-                            },
-                "settings": {"host_video": "true",
-                            "participant_video": "true",
-                            "join_before_host": "true",
-                            "mute_upon_entry": "False",
-                            "watermark": "true",
-                            "audio": "voip",
-                            "auto_recording": "cloud",
-                            
-                            
-                            }
-                }
-            headers = {'authorization': 'Bearer %s' % generateToken(),
+            #def getUsers():
+            #headers = {'authorization': 'Bearer %s' % generateToken(),
+               #'content-type': 'application/json'}
+
+            #r = requests.get('https://api.zoom.us/v2/users/', headers = headers)
+           # print("\n fetching zoom meeting info now of the user ... \n")
+           # print(r.text)
+            token = jwt.encode(
+            # Create a payload of the token containing API Key & expiration time
+            {'iss': API_KEY, 'exp': time() + 5000},
+            # Secret used to generate token signature
+            API_SEC,
+            # Specify the hashing alg
+            algorithm='HS256'
+            # Convert token to utf-8
+            )
+            #return token
+
+            
+            meetingId = '437 068 2107';
+            
+            Bearer = token
+            headers = {'authorization': Bearer,
                'content-type': 'application/json'}
-            userId= email
+            r = requests.get(
+            f'https://api.zoom.us/v2/metrics/meetings/{meetingId}/participants', headers=headers)
+            print("\n fetching zoom meeting participants of the live meeting ... \n")
+            print(r.text)
+            meetingdetails = {"topic": topic,
+                  "type": 2,
+                  "start_time": date +start_time ,
+                  "duration": duration ,
+                  "timezone": "Europe/Madrid",
+                  "agenda": agenda ,
+
+                  "recurrence": {"type": 1,
+                                 "repeat_interval": 1
+                                 },
+                  "settings": {"host_video": "true",
+                               "participant_video": "true",
+                               "join_before_host": "true",
+                               "mute_upon_entry": "False",
+                               "watermark": "true",
+                               "audio": "voip",
+                               "auto_recording": "cloud"
+                               }
+                  }
+
+            headers = {'authorization': Bearer,
+               'content-type': 'application/json'}
             r = requests.post(
-            f'https://api.zoom.us/v2/users/me/meetings/', 
-            headers=headers, data=json.dumps(meetingdetails))
-    
+             f'https://api.zoom.us/v2/users/me/meetings', headers=headers, data=json.dumps(meetingdetails))
+
             print("\n creating zoom meeting ... \n")
-            y = json.loads(r.text)
-            join_URL = y["join_url"]
-            meetingPassword = y["password"]
-            print(
-                f'\n here is your zoom meeting link {join_URL} and your \
-                password: "{meetingPassword}"\n')
-            msg = join_URL
-            msg1 = "paasword :" + meetingPassword
+            print(r.text)
+            msg = r.text
+
+           
         return render_template('secretary/createmeeting.html', msg = msg, msg1 = msg1)
+    else:
+        return logout()
+
+@app.route('/R-Portal/contact')
+def contact():
+    if 'secretary' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT *  from contact WHERE society_code = %s', (session['code'],) ) 
+        account = cursor.fetchall() 
+        return render_template('secretary/contact.html', account=account)
     else:
         return logout()
 
@@ -940,45 +965,83 @@ def createmeeting():
 def add_contact():
     if 'secretary' in session:
         msg = ''
-        if request.method == 'POST':
-            police = request.form['police']
-            hospital = request.form['hospital']
-            blood_bank = request.form['blood_bank']
-            muncipal = request.form['muncipal']
-            ambulance = request.form['ambulance']
-            railway = request.form['railway']
-            plumber = request.form['plumber']
-            electrition = request.form['electrition']
-            gas = request.form['gas']
-            fire = request.form['fire']
+        if request.method == 'POST'and 'contact_label' in request.form and 'contact_no'  in request.form and 'Scode' :
+            contact_label = request.form['contact_label']
+            contact_no = request.form['contact_no']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('SELECT * FROM contact WHERE contact_code = %s', (session['code'],))
-            account = cursor.fetchone()
-            if account:
-                cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-                cursor1.execute('UPDATE contact SET police = %s, hospital = %s, blood_bank = %s, muncipal = %s, ambulance = %s, railway = %s, plumber = %s, electrition = %s, gas = %s, fire = %s WHERE contact_code = %s', (police, hospital, blood_bank, muncipal, ambulance, railway, plumber, electrition, gas, fire, session['code'],))
-                mysql.connection.commit()    
-                msg="Contacts Updated!"
-                return render_template('secretary/add_contact.html', msg=msg)
-            else:
-                cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-                cursor2.execute('INSERT INTO contact values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', (session['code'] ,police, hospital, blood_bank, muncipal, ambulance, railway, plumber, electrition, gas, fire,))
-                mysql.connection.commit()    
-                msg="Contacts Inserted!"
-                return render_template('secretary/add_contact.html', msg=msg)
-        return render_template('secretary/add_contact.html')
+            cursor.execute('INSERT INTO contact values (NULL , %s, %s, %s)', (contact_label, contact_no,session['code']))
+            mysql.connection.commit()    
+            msg="Contacts Inserted!"
+            
+        return contact()
+    else:
+        return logout()
+        
+@app.route('/R-Portal/d_contact/<int:contact_id>' , methods=['GET', 'POST'])
+def d_contact(contact_id):
+    if 'secretary' in session:
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('DELETE FROM contact WHERE contact_id = %s',[contact_id]) 
+            mysql.connection.commit()
+            return contact()
     else:
         return logout()
 
-@app.route('/R-Portal/view_scontact')
-def view_scontact():
+@app.route('/R-Portal/add_docs', methods=['GET', 'POST'] )
+def add_docs():
     if 'secretary' in session:
+        msg = ''
+        target1 = os.path.join( '/Rportal/static/upload/docs/')
+        if not os.path.isdir(target1):
+            os.makedirs(target1)
+        if request.method == 'POST'and 'document'  :
+             ...
+        file = request.files['document']
+        file_name = file.filename or ''
+        destination = ''.join([target1, file_name])
+        file.save(destination)
+        doc_filename = file_name;
+        document = destination  ;
+        ... 
+      
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT *  from contact WHERE contact_code = %s', (session['code'],) ) 
-        account = cursor.fetchone() 
-        return render_template('secretary/view_scontact.html', account=account)
+        cursor.execute('INSERT INTO document values (NULL , %s, %s, %s)', (doc_filename,session['code'], document))
+        mysql.connection.commit()    
+        msg="File upload suceesfully"
+            
+        return docs()
     else:
         return logout()
+
+@app.route('/R-Portal/docs')
+def docs():
+    if 'secretary' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT *  from document WHERE society_code = %s', (session['code'],) ) 
+        account = cursor.fetchall() 
+        return render_template('secretary/docs.html', account=account)
+    else:
+        return logout()
+        
+@app.route('/R-Portal/d_docs/<int:doc_id>' , methods=['GET', 'POST'])
+def d_docs(doc_id):
+    if 'secretary' in session:
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('DELETE FROM document  WHERE doc_id = %s',[doc_id]) 
+            mysql.connection.commit()
+            return docs()
+    else:
+        return logout()
+
+@app.route('/R-Portal/invite')
+def invite():
+    if 'secretary' in session:
+        
+        account = session['code'];
+        return render_template('secretary/invite.html', account=account)
+    else:
+        return logout()        
+
    
 #
 #   Member Part
@@ -1043,12 +1106,22 @@ def member_complaint():
 def view_contact():
     if 'member' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT *  from contact WHERE contact_code = %s', (session['code'],) ) 
-        account = cursor.fetchone() 
+        cursor.execute('SELECT *  from contact WHERE  society_code = %s', (session['code'],) ) 
+        account = cursor.fetchall() 
         return render_template('member/view_contact.html', account=account)
     else:
         return logout()
-    
+
+@app.route('/R-Portal/docsm')
+def docsm():
+    if 'secretary' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT *  from document WHERE society_code = %s', (session['code'],) ) 
+        account = cursor.fetchall() 
+        return render_template('member/docsm.html', account=account)
+    else:
+        return logout()
+        
 #
 #   Admin Part
 #
@@ -1181,12 +1254,21 @@ def security_home():
 def security_profile():
     if 'security' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT security_username, security_password, security_name, security_mobile, security_code FROM security WHERE security_id = %s;', (session['id'],))
+        cursor.execute('SELECT security_username, security_name, security_mobile, security_code FROM security WHERE security_id = %s;', (session['id'],))
         account = cursor.fetchone()
         return render_template('security/security_profile.html', account=account)
     else:
         return logout()
-
+@app.route('/R-Portal/view_contacts')
+def view_contacts():
+    if 'security' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT *  from contact WHERE  society_code = %s', (session['code'],) ) 
+        account = cursor.fetchall() 
+        return render_template('security/view_contact.html', account=account)
+    else:
+        return logout()
+    
 #
 #   Staff Part
 
@@ -1201,7 +1283,7 @@ def staff_home():
 def staff_profile():
     if 'staff' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT staff_username, staff_password, staff_name, staff_mobile, staff_code FROM staff WHERE staff_id = %s;', (session['id'],))
+        cursor.execute('SELECT staff_username, staff_name, staff_mobile, staff_code FROM staff WHERE staff_id = %s;', (session['id'],))
         account = cursor.fetchone()
         return render_template('staff/staff_profile.html', account=account)
     else:
@@ -1218,15 +1300,25 @@ def staff_complaint():
 @app.route('/R-Portal/staff_complaintup',methods=['GET','POST'])
 def staff_complaintup():
     if 'staff' in session:
-            if request.method == 'POST' and 'cid' in request.form and 'reply'  in request.form and 'Scode' :
+            if request.method == 'POST' and 'cid' in request.form and 'reply' in request.form   :
                 complaint_id = request.form['cid']
                 complaint_reply = request.form['reply']
+                print( complaint_id)
                 cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-                cursor.execute('UPDATE complaint  SET complaint_reply= %s WHERE complaint_id=%s',(complaint_reply,complaint_id ))
+                cursor.execute('UPDATE complaint  SET complaint_reply = %s  WHERE complaint_id = %s ',(complaint_reply , complaint_id ))
                 mysql.connection.commit()
             return render_template('staff/staff_complaint.html')
     else:
             return logout()
+@app.route('/R-Portal/view_contactst')
+def view_contactst():
+    if 'staff' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT *  from contact WHERE  society_code = %s', (session['code'],) ) 
+        account = cursor.fetchall() 
+        return render_template('staff/view_contact.html', account=account)
+    else:
+        return logout()
 
 #   Contact Us
 @app.route('/R-Portal/contactus', methods=['GET', 'POST'] )

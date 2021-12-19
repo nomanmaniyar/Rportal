@@ -23,12 +23,17 @@
                     <label><b>Subject:</b></label> {{ data['complaint_subject'] }}<br>
                     <label><b>Message:</b></label> {{ data['complaint_message'] }}<br>
                     <label><b>Reply:</b></label> {{ data['complaint_reply'] }}<br><br>
-                    <form action="/R-Portal/staff_complaintup" methods="POST">
-                        <input type="hidden" name="cid" value={{ data['complaint_id']}} >
-                        <textarea type="text" name="reply" placeholder="Enter Your Reply"></textarea>
-                        <input  class="btn btn-sucess" type="submit" value="submit">               
+                    <button class="btn btn-primary" onclick="openModal()" >Reply</button>  <br><br>
+ 
+                    <dialog id="dialog">
+                    <button align="right" onclick="closeModal()"  class="btn-close" aria-label="Close" ></button><br>
+                    <form action="{{ url_for('staff_complaintup') }}"  methods="POST">
+                        <input type="hidden" name="cid" value="{{ data['complaint_id']}}" >
+                        <input type="text" name="reply" placeholder="Enter Your Reply"><br><br>
+                        <button   type="submit" >Send </button><br>         
                      </form>
-                   
+                    </dialog>
+
                 </td>
             </tr>   
 
@@ -39,4 +44,23 @@
     <br>
     <a href='javascript:self.history.back();'>Go Back</a>
 </div>
+
+<style>
+    #dialog{width:500px;}
+.right{float:right}
+</style>
+
+<script>
+    var dailog = document.getElementById("dialog"); 
+
+function openModal() { 
+   // dailog.show(); 
+      dailog.showModal();
+} 
+
+function closeModal() { 
+    dailog.close(); 
+} 
+</script>
+
 {% endblock %}

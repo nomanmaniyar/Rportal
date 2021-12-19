@@ -1,0 +1,77 @@
+{% extends 'secretary/slayout.html' %}
+
+{% block title %}R-Portal - Contacts{% endblock %}
+
+{% block content %}
+
+<style>
+    table, th, td {
+      border:1px solid black;
+    }
+</style>
+
+<div>
+<h3>Important Contacts</h3>
+<br>
+<button class="btn btn-primary" onclick="openModal()" >Add New Contact</button>  <br><br>
+ 
+ <dialog id="dialog">
+    <button align="right" onclick="closeModal()"  class="btn-close" aria-label="Close" ></button>
+     <form action="/R-Portal/add_contact" method="POST">
+         <br><br>
+        <input type="txt" name="contact_label" placeholder="Enter Contact Name"><br><br>
+        <input type="tel" name="contact_no" placeholder="Enter Contact Number +91"><br><br>
+        <button class="btn btn-primary" type="submit">Save</button><br>
+        <br>
+     </form>
+    
+    </dialog>
+
+
+<style>
+    #dialog{width:300px;}
+.right{float:right}
+</style>
+
+<script>
+    var dailog = document.getElementById("dialog"); 
+
+function openModal() { 
+   // dailog.show(); 
+      dailog.showModal();
+} 
+
+function closeModal() { 
+    dailog.close(); 
+} 
+</script>
+
+{% if account !=0 %}
+    {% for contact in account %}
+    <table  class="table" style="width:100%">
+      <td>
+          <label>{{contact['contact_label']}} :</label>
+          <a  href="tel:+{{account['contact_no']}}" >{{contact['contact_no']}}</a>&nbsp;&nbsp;<a href="/R-Portal/d_contact/{{contact['contact_id']}}"  aria-hidden="true"  style="border: none;outline: none;background: none;" onclick="return confirm('Are you sure you want to delete this contact?');"><i class="fa fa-trash" aria-hidden="true"  style="color:black"></i></a>
+      </td>
+     
+    </table>
+  
+{% else %}
+    <b><h5>Emergency Helpline Numbers</h5>
+    </b>
+    <label>National Emergency Number:</label><a  href="tel:+112" >112</a><br>
+    <label>Police:</label><a  href="tel:+100" >100</a><br>
+   <label>Fire:</label> <a  href="tel:+101" >101</a>
+    <br> 
+    <label>Ambulance:</label><a  href="tel:+102" >102</a>
+    <br>
+    <b><h4>Note: please add your valid contact number.</h4> </b><br>
+    {% endfor %} 
+{% endif %} 
+    <a href='javascript:self.history.back();'>Go Back</a>
+</div>
+
+</div>
+
+ 
+{% endblock %}
