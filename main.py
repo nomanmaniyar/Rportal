@@ -335,6 +335,7 @@ def login():
             session['Susername'] = account['Susername']
             session['Scode'] = account['Scode']
             session['Smail'] = account['Semail']
+            session['Sname'] = account['Sname']
             return sotp() 
         elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
             username = request.form['username']
@@ -1059,7 +1060,7 @@ def add_chats():
         msg = ''
         if request.method == 'POST'and 'message' in request.form :
             message = request.form['message']
-            msg_username = session['Susername']
+            msg_username = session['Sname'] 
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('INSERT INTO chat values (NULL , %s, %s, %s,  DEFAULT )', ( msg_username , message,session['Scode']))
             mysql.connection.commit()    
@@ -1166,7 +1167,7 @@ def add_chat():
         msg = ''
         if request.method == 'POST'and 'message' in request.form :
             message = request.form['message']
-            msg_username = session['Musername']
+            msg_username = session['Mname'] 
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('INSERT INTO chat values (NULL , %s, %s, %s,  DEFAULT )', ( msg_username , message,session['Mcode']))
             mysql.connection.commit() 
