@@ -185,7 +185,7 @@ ALTER TABLE complaint add column `complaint_against` varchar(255) ;
 ALTER TABLE complaint add column `complaint_status` varchar(255)  ;
 ALTER TABLE complaint add column `complaint_reply` varchar(255)  ;
 ALTER TABLE document add column `document` varchar(255) ;
-CREATE TABLE IF NOT EXISTS `message` (
+CREATE TABLE IF NOT EXISTS `chat` (
 	`msg_id` int(11) NOT NULL AUTO_INCREMENT,
 	`msg_username` varchar(255) NOT NULL,
 	`message` varchar(255) NOT NULL,

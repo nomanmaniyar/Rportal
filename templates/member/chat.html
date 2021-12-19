@@ -1,0 +1,48 @@
+{% extends 'member/mlayout.html' %}
+{% block title %}R-Portal - chat{% endblock %}
+
+{% block content %}
+
+<style>
+    table, th, td {
+      border:1px solid black;
+    }
+</style>
+
+<div>
+    <div id="" style="overflow:scroll; height:400px;">
+
+{% if account !=0 %}
+    {% for chat in account %}
+    <table  class="table" style="width:100%">
+      <td>
+          <h5>{{chat['msg_username']}} </h5>
+          <h6>{{chat['message']}}</h6>
+                <small>{{chat['msg_time']}}</small>
+      </td>
+     
+    </table>
+  
+{% else %}
+   
+   
+    <b><h4>No chat data</h4> </b><br>
+    {% endfor %} 
+{% endif %} 
+</div>
+<form action="{{ url_for('add_chat') }}" method="post">
+    <input type="text" style=" width: 95%; height: 50px;" name="message" placeholder="Message" >
+    <button type="submit" aria-hidden="true" style="background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;  "><i class="fa fa-paper-plane" aria-hidden="true"></i> </button>
+
+</form>
+    <a href='javascript:self.history.back();'>Go Back</a>
+</div>
+
+</div>
+
+ 
+{% endblock %}

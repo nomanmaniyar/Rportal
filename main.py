@@ -1028,6 +1028,7 @@ def d_docs(doc_id):
     if 'secretary' in session:
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('DELETE FROM document  WHERE doc_id = %s',[doc_id]) 
+
             mysql.connection.commit()
             return docs()
     else:
@@ -1040,7 +1041,34 @@ def invite():
         account = session['code'];
         return render_template('secretary/invite.html', account=account)
     else:
-        return logout()        
+        return logout() 
+
+@app.route('/R-Portal/chats')
+def chats():
+    if 'secretary' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT *  from chat WHERE society_code = %s', (session['code'],) ) 
+        account = cursor.fetchall() 
+        return render_template('secretary/chats.html', account=account)
+    else:
+        return logout() 
+
+@app.route('/R-Portal/add_chats', methods=['GET', 'POST'] )
+def add_chats():
+    if 'secretary' in session:
+        msg = ''
+        if request.method == 'POST'and 'message' in request.form :
+            message = request.form['message']
+            msg_username = session['username']
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('INSERT INTO chat values (NULL , %s, %s, %s,  DEFAULT )', ( msg_username , message,session['code']))
+            mysql.connection.commit()    
+          
+            
+        return chats()
+    else:
+        return logout()
+             
 
    
 #
@@ -1121,7 +1149,32 @@ def docsm():
         return render_template('member/docsm.html', account=account)
     else:
         return logout()
-        
+
+@app.route('/R-Portal/chat')
+def chat():
+    if 'member' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT *  from chat WHERE society_code = %s', (session['code'],) ) 
+        account = cursor.fetchall() 
+        return render_template('member/chat.html', account=account)
+    else:
+        return logout() 
+
+@app.route('/R-Portal/add_chat', methods=['GET', 'POST'] )
+def add_chat():
+    if 'member' in session:
+        msg = ''
+        if request.method == 'POST'and 'message' in request.form :
+            message = request.form['message']
+            msg_username = session['username']
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('INSERT INTO chat values (NULL , %s, %s, %s,  DEFAULT )', ( msg_username , message,session['code']))
+            mysql.connection.commit() 
+                
+        return chat()
+    else:
+        return logout()
+              
 #
 #   Admin Part
 #
