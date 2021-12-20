@@ -888,77 +888,63 @@ def complaint():
     else:
         return logout()
 
+def generateToken():
+    token = jwt.encode( {'iss': API_KEY, 'exp': time() + 5000},
+        API_SEC,
+        algorithm = 'HS256'  
+    )
+    return token
+
 @app.route('/R-Portal/createmeeting', methods=['GET', 'POST'] )
 def createmeeting():
     if 'secretary' in session:
         msg = ''
         msg1 = ''
-        if request.method == 'POST' and 'topic' in request.form and 'starttime' in request.form  and 'date' in request.form and 'duration' in request.form and 'agenda' in request.form  :
+        if request.method == 'POST' and 'topic' in request.form and 'starttime' in request.form and 'duration' in request.form and 'agenda' in request.form  :
             topic = request.form['topic']
-            date  = request.form['date']
             start_time = request.form['starttime']
             duration = request.form['duration']
             agenda = request.form['agenda']
-            email=session['mail']
-            #def getUsers():
-            #headers = {'authorization': 'Bearer %s' % generateToken(),
-               #'content-type': 'application/json'}
-
-            #r = requests.get('https://api.zoom.us/v2/users/', headers = headers)
-           # print("\n fetching zoom meeting info now of the user ... \n")
-           # print(r.text)
-            token = jwt.encode(
-            # Create a payload of the token containing API Key & expiration time
-            {'iss': API_KEY, 'exp': time() + 5000},
-            # Secret used to generate token signature
-            API_SEC,
-            # Specify the hashing alg
-            algorithm='HS256'
-            # Convert token to utf-8
-            )
-            #return token
-
-            
-            meetingId = '437 068 2107';
-            
-            Bearer = token
-            headers = {'authorization': Bearer,
+            email=session['Smail']
+            meetingdetails = {
+                "topic":  topic,
+                "type": 1,
+                "start_time":  start_time,
+                "duration":  duration,
+                "timezone": "India/Mumbai",
+                "agenda":  agenda,
+               
+                "recurrence": {"type": 1,
+                            "repeat_interval": 2
+                            },
+                "settings": {"host_video": "true",
+                            "participant_video": "true",
+                            "join_before_host": "true",
+                            "mute_upon_entry": "False",
+                            "watermark": "true",
+                            "audio": "voip",
+                            "auto_recording": "cloud",
+                            "private_meeting":"true",
+                            "pre_schedule":"true",
+                            }
+                }
+            headers = {'authorization': 'Bearer %s' % generateToken(),
                'content-type': 'application/json'}
-            r = requests.get(
-            f'https://api.zoom.us/v2/metrics/meetings/{meetingId}/participants', headers=headers)
-            print("\n fetching zoom meeting participants of the live meeting ... \n")
-            print(r.text)
-            meetingdetails = {"topic": topic,
-                  "type": 2,
-                  "start_time": date +start_time ,
-                  "duration": duration ,
-                  "timezone": "Europe/Madrid",
-                  "agenda": agenda ,
-
-                  "recurrence": {"type": 1,
-                                 "repeat_interval": 1
-                                 },
-                  "settings": {"host_video": "true",
-                               "participant_video": "true",
-                               "join_before_host": "true",
-                               "mute_upon_entry": "False",
-                               "watermark": "true",
-                               "audio": "voip",
-                               "auto_recording": "cloud"
-                               }
-                  }
-
-            headers = {'authorization': Bearer,
-               'content-type': 'application/json'}
+            userId= email
             r = requests.post(
-             f'https://api.zoom.us/v2/users/me/meetings', headers=headers, data=json.dumps(meetingdetails))
-
+            f'https://api.zoom.us/v2/users/me/meetings/', 
+            headers=headers, data=json.dumps(meetingdetails))
             print("\n creating zoom meeting ... \n")
             print(r.text)
-            msg = r.text
-
-           
-        return render_template('secretary/createmeeting.html', msg = msg, msg1 = msg1)
+            print("\n creating zoom meeting ... \n")
+            join_URL = [json.loads(r.text)]
+            #meetingPassword = ["password"]
+            print(
+                f'\n here is your zoom meeting link {join_URL} and your \
+                password: ""\n')
+            msg = join_URL
+            #msg1 = "paasword :" + meetingPassword
+        return render_template('secretary/createmeeting.html', msg = msg)
     else:
         return logout()
 
