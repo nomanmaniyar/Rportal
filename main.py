@@ -905,7 +905,6 @@ def createmeeting():
             start_time = request.form['starttime']
             duration = request.form['duration']
             agenda = request.form['agenda']
-            email=session['Smail']
             meetingdetails = {
                 "topic":  topic,
                 "type": 1,
@@ -930,18 +929,16 @@ def createmeeting():
                 }
             headers = {'authorization': 'Bearer %s' % generateToken(),
                'content-type': 'application/json'}
-            userId= email
             r = requests.post(
             f'https://api.zoom.us/v2/users/me/meetings/', 
             headers=headers, data=json.dumps(meetingdetails))
             print("\n creating zoom meeting ... \n")
-            print(r.text)
+            print(r.text,sep='\n')
             print("\n creating zoom meeting ... \n")
             join_URL = [json.loads(r.text)]
             #meetingPassword = ["password"]
             print(
-                f'\n here is your zoom meeting link {join_URL} and your \
-                password: ""\n')
+                f'\n here is your zoom meeting link {join_URL} and your \ password: \n')
             msg = join_URL
             #msg1 = "paasword :" + meetingPassword
         return render_template('secretary/createmeeting.html', msg = msg)
