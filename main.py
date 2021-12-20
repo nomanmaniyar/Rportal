@@ -490,6 +490,8 @@ def sotp():
             return render_template('secretary/sotp.html', msg1=msg1)
         else:
             msg = 'Something went wrong:( Please try again!'
+    elif session.get('secretary') is None:
+        return login()
     else: 
         return logout()
 
@@ -517,6 +519,8 @@ def motp():
             return render_template('member/Motp.html', msg1=msg1)
         else:
             msg = 'Something went wrong:( Please try again!'
+    elif session.get('member') is None:
+        return login()
     else:
         return logout()
  
@@ -626,6 +630,8 @@ def people():
         cursor3.execute('SELECT staff_name, staff_status, staff_mobile ,staff_id from secretary inner join staff on secretary.Scode = staff.staff_code WHERE Sid = %s AND staff_status=%s', (session['Sid'],'active'))
         account3 = cursor3.fetchall()         
         return render_template('secretary/people.html', account=account, account1=account1, account2=account2, account3=account3)
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
 
@@ -645,6 +651,8 @@ def inpeople():
         cursor3.execute('SELECT staff_name, staff_status, staff_mobile ,staff_id from secretary inner join staff on secretary.Scode = staff.staff_code WHERE Sid = %s AND staff_status=%s', (session['Sid'],'inactive'))
         account3 = cursor3.fetchall()        
         return render_template('secretary/inactive_people.html', account=account, account1=account1, account2=account2, account3=account3)
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
 
@@ -654,8 +662,9 @@ def allow_members():
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT Mid, Mname, member_status, Mmobile, Mwing, Mflatno, Memail, Sname, name from secretary inner join member inner join society on secretary.Scode = member.Mcode AND secretary.Scode = society.code WHERE Sid = %s AND member_status=%s', (session['Sid'],'Request'))
         account = cursor.fetchall() 
-
         return render_template('secretary/allow_members.html', account=account )
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
     
@@ -671,8 +680,9 @@ def a_members(Mid):
             msg = Message('Your Joining Request is accepted' ,sender ='Rportal<me@Rportal.com', recipients = [email])
             msg.body ="Hello!" + Mname + " \n your account activate for login please login on rportal ." + part4
             mail.send(msg) 
-
         return allow_members()
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
 
@@ -689,6 +699,8 @@ def i_members(Mid):
             msg.body ="Hello!" + Mname + " \n You have Temporary Inactive from secreatry please contact with your secretary." + part4
             mail.send(msg)  
             return people()
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
 
@@ -704,8 +716,9 @@ def ac_members(Mid):
             msg = Message('Account activated' ,sender ='Rportal<me@Rportal.com', recipients = [email])
             msg.body ="Hello!" + Mname + " \n You have active from secreatry any query please contact with your secretary." + part4
             mail.send(msg)  
-        
         return inpeople()
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
 
@@ -726,6 +739,8 @@ def r_members():
             mail.send(msg)  
             msg = 'Member Rejected/Deleted'
         return allow_members()
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
 
@@ -742,6 +757,8 @@ def d_members(Mid):
             msg.body ="Hello!" + Mname + " \n Your account has deleted from secreatry please contact with your secretary.\n" + part4
             mail.send(msg)  
         return people()
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
 
@@ -753,6 +770,8 @@ def din_members(Mid):
         mysql.connection.commit()
         msg = 'Member Delete'
         return inpeople()
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
 
@@ -763,6 +782,8 @@ def i_security(security_id):
         cursor.execute("UPDATE security SET security_status = %s WHERE security_id= %s" ,('inactive',security_id,)) 
         mysql.connection.commit()
         return people()
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
         
@@ -773,6 +794,8 @@ def a_security(security_id):
         cursor.execute("UPDATE security SET security_status = %s WHERE security_id= %s" ,('active',security_id,)) 
         mysql.connection.commit()
         return inpeople()
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
 
@@ -783,6 +806,8 @@ def d_security(security_id):
         cursor.execute('DELETE FROM security WHERE security_id = %s',[security_id]) 
         mysql.connection.commit()
         return people()
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
 
@@ -793,6 +818,8 @@ def din_security(security_id):
         cursor.execute('DELETE FROM security WHERE security_id = %s',[security_id]) 
         mysql.connection.commit()
         return inpeople()
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
 
@@ -803,6 +830,8 @@ def i_staff(staff_id):
         cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_id= %s" ,('inactive',staff_id,)) 
         mysql.connection.commit()
         return people()
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
         
@@ -813,6 +842,8 @@ def a_staff(staff_id):
         cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_id= %s" ,('active',staff_id,)) 
         mysql.connection.commit()
         return inpeople()
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
 
@@ -823,6 +854,8 @@ def d_staff(staff_id):
         cursor.execute('DELETE FROM staff WHERE staff_id = %s',[staff_id]) 
         mysql.connection.commit()
         return people()
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
 
@@ -833,6 +866,8 @@ def din_staff(staff_id):
         cursor.execute('DELETE FROM staff WHERE staff_id = %s',[staff_id]) 
         mysql.connection.commit()
         return inpeople()
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
 
@@ -840,6 +875,8 @@ def din_staff(staff_id):
 def shome():
     if 'secretary' in session:
         return render_template('secretary/shome.html')
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
 
@@ -850,6 +887,8 @@ def sprofile():
         cursor.execute('SELECT * FROM secretary INNER JOIN society ON secretary.Scode = society.code WHERE Sid = %s', (session['Sid'],))
         account = cursor.fetchone()
         return render_template('secretary/sprofile.html', account=account)
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
 
@@ -863,6 +902,8 @@ def createnotice():
             cursor.execute('INSERT INTO notice VALUES (NULL, %s , %s, %s, DEFAULT )', (notice_subject ,notice_message , session['Scode'] ))
             mysql.connection.commit()
         return render_template('secretary/createnotice.html')
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
     
@@ -885,6 +926,8 @@ def complaint():
             cursor3.execute('UPDATE complaint SET complaint_reply_closing = %s, complaint_status = %s  WHERE complaint_id = %s', (complaint_reply, 'closed', complaint_id ))
             mysql.connection.commit()
         return render_template('secretary/complaint.html', account=account, account1=account1, account2=account2)
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
 
@@ -942,6 +985,8 @@ def createmeeting():
             msg = join_URL
             #msg1 = "paasword :" + meetingPassword
         return render_template('secretary/createmeeting.html', msg = msg)
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
 
@@ -952,6 +997,8 @@ def contact():
         cursor.execute('SELECT *  from contact WHERE society_code = %s', (session['Scode'],) ) 
         account = cursor.fetchall() 
         return render_template('secretary/contact.html', account=account)
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
 
@@ -965,9 +1012,10 @@ def add_contact():
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('INSERT INTO contact values (NULL , %s, %s, %s)', (contact_label, contact_no,session['Scode']))
             mysql.connection.commit()    
-            msg="Contacts Inserted!"
-            
+            msg="Contacts Inserted!"  
         return contact()
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
         
@@ -978,6 +1026,8 @@ def d_contact(contact_id):
             cursor.execute('DELETE FROM contact WHERE contact_id = %s',[contact_id]) 
             mysql.connection.commit()
             return contact()
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
 
@@ -997,13 +1047,13 @@ def add_docs():
         doc_filename = file_name;
         document = destination  ;
         ... 
-      
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('INSERT INTO document values (NULL , %s, %s, %s)', (doc_filename,session['Scode'], document))
         mysql.connection.commit()    
-        msg="File upload suceesfully"
-            
+        msg="File upload suceesfully"   
         return docs()
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
 
@@ -1014,26 +1064,30 @@ def docs():
         cursor.execute('SELECT *  from document WHERE society_code = %s', (session['Scode'],) ) 
         account = cursor.fetchall() 
         return render_template('secretary/docs.html', account=account)
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
         
 @app.route('/R-Portal/d_docs/<int:doc_id>' , methods=['GET', 'POST'])
 def d_docs(doc_id):
     if 'secretary' in session:
-            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('DELETE FROM document  WHERE doc_id = %s',[doc_id]) 
-
-            mysql.connection.commit()
-            return docs()
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('DELETE FROM document  WHERE doc_id = %s',[doc_id]) 
+        mysql.connection.commit()
+        return docs()
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
 
 @app.route('/R-Portal/invite')
 def invite():
     if 'secretary' in session:
-        
         account = session['Scode'];
         return render_template('secretary/invite.html', account=account)
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout() 
 
@@ -1047,8 +1101,22 @@ def chats():
         cursor.execute('SELECT *  from chat WHERE society_code = %s', (session['Scode'],) ) 
         account = cursor.fetchall() 
         return render_template('secretary/chats.html', account=account)
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout() 
+
+@app.route('/R-Portal/docsm')
+def docsm():
+    if 'secretary' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT *  from document WHERE society_code = %s', (session['Mcode'],) ) 
+        account = cursor.fetchall() 
+        return render_template('member/docsm.html', account=account)
+    elif session.get('secretary') is None:
+        return login()
+    else:
+        return logout()
 
 @app.route('/R-Portal/add_chats', methods=['GET', 'POST'] )
 def add_chats():
@@ -1064,6 +1132,8 @@ def add_chats():
             cursor1.execute('DELETE FROM chat WHERE society_code = %s AND msg_time < now() - interval 3 day', (session['Scode'],))
             mysql.connection.commit()
         return chats()
+    elif session.get('secretary') is None:
+        return login()
     else:
         return logout()
              
@@ -1084,6 +1154,8 @@ def mprofile():
         cursor.execute('SELECT Musername, Mpassword, Memail, Mname, Mflatno, Mwing, Mmobile, code, name, city, road, area, state, pin FROM member INNER JOIN society ON member.Mcode = society.code WHERE Mid = %s;', (session['Mid'],))
         account = cursor.fetchone()
         return render_template('member/mprofile.html', account=account)
+    elif session.get('member') is None:
+        return login()
     else:
         return logout()
 
@@ -1094,6 +1166,8 @@ def viewnotice():
         cursor.execute('SELECT *  from notice WHERE notice_code = %s', (session['Mcode'],) ) 
         account = cursor.fetchall() 
         return render_template('member/viewnotice.html', account=account)
+    elif session.get('member') is None:
+        return login()
     else:
         return logout()
     
@@ -1124,6 +1198,8 @@ def member_complaint():
         elif request.method == 'POST':
             msg = 'Please fill out the form!'
         return render_template('member/member_complaint.html', msg=msg , account=account,account2= account2, account3=account3, account4=account4)
+    elif session.get('member') is None:
+        return login()
     else:
         return logout()
 
@@ -1134,16 +1210,8 @@ def view_contact():
         cursor.execute('SELECT *  from contact WHERE  society_code = %s', (session['Mcode'],) ) 
         account = cursor.fetchall() 
         return render_template('member/view_contact.html', account=account)
-    else:
-        return logout()
-
-@app.route('/R-Portal/docsm')
-def docsm():
-    if 'secretary' in session:
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT *  from document WHERE society_code = %s', (session['Mcode'],) ) 
-        account = cursor.fetchall() 
-        return render_template('member/docsm.html', account=account)
+    elif session.get('member') is None:
+        return login()
     else:
         return logout()
 
@@ -1157,6 +1225,8 @@ def chat():
         cursor.execute('SELECT *  from chat WHERE society_code = %s', (session['Mcode'],) ) 
         account = cursor.fetchall() 
         return render_template('member/chat.html', account=account)
+    elif session.get('member') is None:
+        return login()
     else:
         return logout() 
 
@@ -1174,6 +1244,8 @@ def add_chat():
             cursor1.execute('DELETE FROM chat WHERE society_code = %s AND msg_time < now() - interval 3 day', (session['Mcode'],))
             mysql.connection.commit()
         return chat()
+    elif session.get('member') is None:
+        return login()
     else:
         return logout()
               
@@ -1184,6 +1256,8 @@ def add_chat():
 def admin_home():
     if 'admin' in session:
         return render_template('admin/admin_home.html', Ausername=session['Ausername'])
+    elif session.get('admin') is None:
+        return login()
     else:
         return logout()
 
@@ -1194,6 +1268,8 @@ def asoc():
         cursor.execute('SELECT  name, road, area, city, state, pin, Sname, Sflatno, Swing, Smobile, Semail, Scode, acname, acno, mmid, bankname, branch, ifsc, secretarty_status FROM secretary INNER JOIN society on secretary.Scode=society.code WHERE secretarty_status = %s;', ('active',))
         account = cursor.fetchall() 
         return render_template('admin/asoc.html', account=account)
+    elif session.get('admin') is None:
+        return login()
     else:
         return logout()
   
@@ -1204,6 +1280,8 @@ def isoc():
         cursor.execute('SELECT  name, road, area, city, state, pin, Sname, Sflatno, Swing, Smobile, Semail, Scode, acname, acno, mmid, bankname, branch, ifsc, secretarty_status FROM secretary INNER JOIN society on secretary.Scode=society.code WHERE secretarty_status = %s;', ('inactive',))
         account = cursor.fetchall() 
         return render_template('admin/isoc.html', account=account)
+    elif session.get('admin') is None:
+        return login()
     else:
         return logout()
     
@@ -1214,6 +1292,8 @@ def admin_req():
         cursor.execute('SELECT Sname, secretarty_status, Smobile, Semail, Scode, secretary_time, area, road, city, state, pin, name, kyc_file from secretary inner join society on secretary.Scode = society.code WHERE  secretarty_status = %s', ('request',))
         account = cursor.fetchall()           
         return render_template('admin/admin_req.html', account=account)
+    elif session.get('admin') is None:
+        return login()
     else:
         return logout()
 
@@ -1229,6 +1309,8 @@ def a_sec(Scode):
         mysql.connection.commit()
         msg = 'Society Allowed'
         return admin_req()
+    elif session.get('admin') is None:
+        return login()
     else:
         return logout()
 
@@ -1244,6 +1326,8 @@ def al_sec(Scode):
         mysql.connection.commit()
         msg = 'Society Allowed'
         return isoc()
+    elif session.get('admin') is None:
+        return login()
     else:
         return logout()
 
@@ -1259,6 +1343,8 @@ def c_sec(Scode):
         mysql.connection.commit()
         msg = 'Society Disbanded'
         return asoc()
+    elif session.get('admin') is None:
+        return login()
     else:
         return logout()
 
@@ -1276,12 +1362,13 @@ def r_sec():
             cursor.execute('DELETE FROM security WHERE security_code = %s',[Scode]) 
             cursor.execute('DELETE FROM staff WHERE staff_code = %s',[Scode]) 
             mysql.connection.commit()
-           
             msg = Message('Society Rejected' ,sender ='Rportal<me@Rportal.com', recipients = [email])
             msg.body ="Hi \n"+ message
             mail.send(msg)  
             msg = 'Society Rejected/Deleted'
         return render_template('admin/admin_req.html', msg=msg)
+    elif session.get('admin') is None:
+        return login()
     else:
         return logout()
 
@@ -1292,6 +1379,8 @@ def contactdata():
         cursor.execute('SELECT  * from contactus') 
         account = cursor.fetchall() 
         return render_template('admin/contactdata.html', account=account)
+    elif session.get('admin') is None:
+        return login()
     else:
         return logout()
    
@@ -1302,6 +1391,8 @@ def contactdata():
 def security_home():
     if 'security' in session:
         return render_template('security/security_home.html', security_username=session['security_username'])
+    elif session.get('security') is None:
+        return login()
     else:
         return logout()
 
@@ -1312,6 +1403,8 @@ def security_profile():
         cursor.execute('SELECT security_username, security_name, security_mobile, security_code FROM security WHERE security_id = %s;', (session['security_id'],))
         account = cursor.fetchone()
         return render_template('security/security_profile.html', account=account)
+    elif session.get('security') is None:
+        return login()
     else:
         return logout()
 
@@ -1335,6 +1428,8 @@ def security_complaint():
             mysql.connection.commit()
             security_complaint()
         return render_template('security/security_complaint.html', account=account, account1=account1, account2=account2)
+    elif session.get('security') is None:
+        return login()
     else:
         return logout()
 
@@ -1345,6 +1440,8 @@ def view_contacts():
         cursor.execute('SELECT *  from contact WHERE  society_code = %s', (session['security_code'],) ) 
         account = cursor.fetchall() 
         return render_template('security/view_contact.html', account=account)
+    elif session.get('security') is None:
+        return login()
     else:
         return logout()
     
@@ -1355,6 +1452,8 @@ def view_contacts():
 def staff_home():
     if 'staff' in session:
         return render_template('staff/staff_home.html', staff_username=session['staff_username'])
+    elif session.get('staff') is None:
+        return login()
     else:
         return logout()
 
@@ -1365,6 +1464,8 @@ def staff_profile():
         cursor.execute('SELECT staff_username, staff_name, staff_mobile, staff_code FROM staff WHERE staff_id = %s;', (session['staff_id'],))
         account = cursor.fetchone()
         return render_template('staff/staff_profile.html', account=account)
+    elif session.get('staff') is None:
+        return login()
     else:
         return logout()
 
@@ -1388,6 +1489,8 @@ def staff_complaint():
             mysql.connection.commit()
             staff_complaint()
         return render_template('staff/staff_complaint.html', account=account, account1=account1, account2=account2)
+    elif session.get('staff') is None:
+        return login()
     else:
         return logout()
 
@@ -1398,6 +1501,8 @@ def view_contactst():
         cursor.execute('SELECT *  from contact WHERE  society_code = %s', (session['staff_code'],) ) 
         account = cursor.fetchall() 
         return render_template('staff/view_contact.html', account=account)
+    elif session.get('staff') is None:
+        return login()
     else:
         return logout()
 
