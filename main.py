@@ -327,16 +327,16 @@ def login():
         passtext = request.form['password']
         password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM secretary WHERE Susername = %s AND Spassword = %s AND secretarty_status=%s', (username, password,'active'))
+        cursor.execute('SELECT * FROM userdetails WHERE username = %s AND password = %s ', (username, password))
         account = cursor.fetchone()
         if account:
-            session['secretary'] = True
-            session['Sid'] = account['Sid']
-            session['Susername'] = account['Susername']
-            session['Scode'] = account['Scode']
-            session['Smail'] = account['Semail']
-            session['Sname'] = account['Sname']
-            return sotp() 
+            session['user'] = True
+            session['uid'] = account['uid']
+            session['username'] = account['username']
+            #session['Scode'] = account['Scode']
+            session['email'] = account['email']
+            #session['Sname'] = account['Sname']
+            return uotp() 
         elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
             username = request.form['username']
             passtext = request.form['password']
@@ -471,7 +471,7 @@ def login():
 def svalidate():  
     user_otp = request.form['otp']  
     if otp == int(user_otp):  
-        return redirect(url_for('shome')) 
+          return redirect(url_for('mainhome')) 
     else: 
         msg = 'OTP Does not match! Try Again!!'
         return render_template('secretary/sotp.html', msg=msg)
@@ -494,7 +494,22 @@ def sotp():
         return login()
     else: 
         return logout()
-
+def uotp(): 
+    if 'user' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM  userdetails WHERE uid = %s', (session['uid'],))
+        account = cursor.fetchone()
+        if account:
+            email = account['email']
+            msg = Message('OTP confirmation for RPortal' ,sender ='Rportal<me@Rportal.com', recipients = [email])
+            msg.body = part2 + str(otp)+ part3 
+            mail.send(msg) 
+            msg1 = 'OTP: ',otp
+            return render_template('secretary/sotp.html', msg1=msg1)
+        else:
+            msg = 'Something went wrong:( Please try again!'
+    else: 
+        return logout()
 #   Member OTP Validators
 @app.route('/mvalidate',methods=["POST"])
 def mvalidate():  
@@ -871,12 +886,42 @@ def din_staff(staff_id):
     else:
         return logout()
 
-@app.route('/R-Portal/shome')
+@app.route('/R-Portal/shome', methods=['GET','POST'])
 def shome():
-    if 'secretary' in session:
+    session.pop('member', None)
+    if 'user' in session:
+        if request.method == 'POST' and 'Sname' in request.form and 'Scode' in request.form and 'Semail'  in request.form and 'Susername'  in request.form and 'Sid':
+            Sname= request.form['Sname']
+            Scode = request.form['Scode']
+            Semail = request.form['Semail']
+            Susername = request.form['Susername']
+            Sid = request.form['Sid']
+            session['secretary'] = True
+            session['Sid'] = Sid
+            session['Susername'] = Susername
+            session['Scode'] = Scode
+            session['Semail'] = Semail
+            session['Sname'] = Sname
+
         return render_template('secretary/shome.html')
     elif session.get('secretary') is None:
         return login()
+    else:
+        return logout()
+
+@app.route('/R-Portal/mainhome')
+def mainhome():
+    if 'user' in session:
+        username = session['username'];
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('SELECT *  FROM society inner join secretary WHERE Susername = %s AND secretarty_status = %s ', (username,"active"))
+        account1 = cursor1.fetchmany()
+        cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor2.execute('SELECT * FROM  society inner join member WHERE Musername = %s AND member_status = %s', (username,"active"))
+        account2 = cursor2.fetchmany()
+       
+
+        return render_template('mainhome.html',account1 = account1,account2 =account2) 
     else:
         return logout()
 
@@ -1140,12 +1185,25 @@ def add_chats():
 #
 #   Member Part
 #
-@app.route('/R-Portal/mhome')
+@app.route('/R-Portal/mhome' , methods=['GET','POST'])
 def mhome():
-    if 'member' in session:
-        return render_template('member/mhome.html', Mname=session['Mname'])
-    else:
-        return logout()
+        session.pop('secretary', None)
+        if 'user' in session:
+            if request.method == 'POST' and 'Mname' in request.form and 'Mcode' in request.form and 'Memail'  in request.form and 'Musername'  in request.form and 'Mid':
+                Mname= request.form['Mname']
+                Mcode = request.form['Mcode']
+                Memail = request.form['Memail']
+                Musername = request.form['Musername']
+                Mid = request.form['Mid']
+                session['member'] = True
+                session['Mid'] = Mid
+                session['Musername'] = Musername
+                session['Mcode'] = Mcode
+                session['Memail'] = Memail
+                session['Mname'] = Mname
+            return render_template('member/mhome.html', Mname=session['Mname'])
+        else:
+            return logout()
 
 @app.route('/R-Portal/mprofile')
 def mprofile():
