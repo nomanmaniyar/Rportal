@@ -3,11 +3,35 @@ USE `rportal`;
 SET GLOBAL sql_mode = '';
 SET SQL_SAFE_UPDATES = 0;
 
+CREATE TABLE IF NOT EXISTS `userdetails` (
+	`uid` int(11) NOT NULL AUTO_INCREMENT,
+  	`username` varchar(50) NOT NULL,
+    `name` varchar(50) NOT NULL,
+	`password` varchar(255) NOT NULL,
+    `mobile` varchar(255) NOT NULL,
+    `email` varchar(255) NOT NULL UNIQUE,
+    `time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+    PRIMARY KEY (`uid`, `username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO `userdetails` (`uid`, `username`, `name`, `password`, `mobile`, `email`) VALUES(1, 'jay', 'Jay Sharma', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4','9420829593', 'jais65142@gmail.com');
+INSERT INTO `userdetails` (`uid`, `username`, `name`, `password`, `mobile`, `email`) VALUES(2, 'shinde','Shivnath Sahebrao Shinde', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', '9420829593','jay.sharma@matoshri.edu.in');
+INSERT INTO `userdetails` (`uid`, `username`, `name`, `password`, `mobile`, `email`) VALUES(3, 'aashutosh','Aashutosh Mali', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4','9922338265','aashutoshmali1460@gmail.com');
+INSERT INTO `userdetails` (`uid`, `username`, `name`, `password`, `mobile`, `email`) VALUES(4, 'jay','Dyaneshwar Rangnath Vadnere', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4','9922338265','aashutosh.mali@matoshri.edu.in');
+INSERT INTO `userdetails` (`uid`, `username`, `name`, `password`, `mobile`, `email`) VALUES(5, 'ashvini', 'Ashvini Sagar Dighe','03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4','9922338265','mem3@gmail.com');
+INSERT INTO `userdetails` (`uid`, `username`, `name`, `password`, `mobile`, `email`) VALUES(6, 'chandrashekhar','Chandrashekhar Bhikchand Joshi', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4','9922338265','mem4@gmail.com');
+INSERT INTO `userdetails` (`uid`, `username`, `name`, `password`, `mobile`, `email`) VALUES(7, 'ashok','Ashok Subhash Kolhe', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4','9922338265','mem5@gmail.com');
+INSERT INTO `userdetails` (`uid`, `username`, `name`, `password`, `mobile`, `email`) VALUES(8, 'kalpana','Kalpana Shibaji Mali', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4','9922338265','mem6@gmail.com');
+INSERT INTO `userdetails` (`uid`, `username`, `name`, `password`, `mobile`, `email`) VALUES(9, 'sachin', 'Sachin Yashwant Shiral','03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4','9922338265','mem7@gmail.com');
+INSERT INTO `userdetails` (`uid`, `username`, `name`, `password`, `mobile`, `email`) VALUES(10, 'sangita', 'Sangita Vinay Virari','03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4','9922338265','mem8@gmail.com');
+INSERT INTO `userdetails` (`uid`, `username`, `name`, `password`, `mobile`, `email`) VALUES(11, 'nishant','Nishant Dhiren Loyada', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4','9922338265','mem9@gmail.com');
+INSERT INTO `userdetails` (`uid`, `username`, `name`, `password`, `mobile`, `email`) VALUES(12, 'vishvanath','Vishwanath Baburao Tayde', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4','9922338265','mem10@gmail.com');
+INSERT INTO `userdetails` (`uid`, `username`, `name`, `password`, `mobile`, `email`) VALUES(13, 'sharad', 'Sharad Damu Borase','03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4','9922338265','mem11@gmail.com');
+alter table userdetails auto_increment = 14;
+select * from userdetails;
+
 CREATE TABLE IF NOT EXISTS `secretary` (
 	`Sid` int(11) NOT NULL AUTO_INCREMENT,
-  	`Susername` varchar(50) NOT NULL,
     `username` varchar(50) NOT NULL,
-  	`Spassword` varchar(255) NOT NULL,
   	`Scode` varchar(30) NOT NULL,
 	`Semail` varchar(100) NOT NULL UNIQUE,
   	`Sname` varchar(255) NOT NULL,
@@ -16,17 +40,16 @@ CREATE TABLE IF NOT EXISTS `secretary` (
   	`Smobile` varchar(255) NOT NULL,
     `secretary_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
 	`secretarty_status` varchar(255) default 'request',
-    PRIMARY KEY (`Sid`, `Susername`)
+    PRIMARY KEY (`Sid`, `username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-INSERT INTO `secretary` (`Sid`, `Susername`, `username`, `Spassword`,`Scode`, `Semail`,`Sname`,`Sflatno`,`Swing`,`Smobile`) VALUES (1, 'jay', 'jay', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'GOKU11', 'jais65142@gmail.com','Jay Sharma','1001','A','9420829593');
-INSERT INTO `secretary` (`Sid`, `Susername`, `username`, `Spassword`,`Scode`, `Semail`,`Sname`,`Sflatno`,`Swing`,`Smobile`) VALUES (2, 'shinde','shinde',  '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'SAIR11', 'jay.sharma@matoshri.edu.in','Shivnath Sahebrao Shinde','1','B','9420829593');
+INSERT INTO `secretary` (`Sid`,  `username`,`Scode`, `Semail`,`Sname`,`Sflatno`,`Swing`,`Smobile`) VALUES (1, 'jay', 'GOKU11', 'jais65142@gmail.com','Jay Sharma','1001','A','9420829593');
+INSERT INTO `secretary` (`Sid`,  `username`, `Scode`, `Semail`,`Sname`,`Sflatno`,`Swing`,`Smobile`) VALUES (2, 'shinde','SAIR11', 'jay.sharma@matoshri.edu.in','Shivnath Sahebrao Shinde','1','B','9420829593');
 alter table secretary auto_increment = 3;
+SELECT * FROM secretary;
 
 CREATE TABLE IF NOT EXISTS `member` (
 	`Mid` int(11) NOT NULL AUTO_INCREMENT,
-  	`Musername` varchar(50) NOT NULL,
 	`username` varchar(50) NOT NULL,
-  	`Mpassword` varchar(255) NOT NULL,
   	`Mcode` varchar(30) NOT NULL,
 	`Memail` varchar(100) NOT NULL UNIQUE,
   	`Mname` varchar(255) NOT NULL,
@@ -35,19 +58,19 @@ CREATE TABLE IF NOT EXISTS `member` (
   	`Mmobile` varchar(255) NOT NULL,
     `member_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
 	`member_status` varchar(255) default 'request',
-    PRIMARY KEY (`Mid`, `Musername`)
+    PRIMARY KEY (`Mid`, `username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-INSERT INTO `member` (`Mid`, `Musername`, `username`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('1', 'aashutosh', 'aashutosh', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'GOKU11', 'aashutoshmali1460@gmail.com','Aashutosh Mali','1002','A','9922338265');
-INSERT INTO `member` (`Mid`, `Musername`, `username`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('2', 'dyaneshwar', 'dyaneshwar', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'SAIR11', 'aashutosh.mali@matoshri.edu.in','dyaneshwar Rangnath Vadnere','2','B','9922338265');
-INSERT INTO `member` (`Mid`, `Musername`, `username`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('3', 'ashvini', 'ashvini', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'SAIR11', 'mem3@gmail.com','Ashvini Sagar Dighe','3','B','9922338265');
-INSERT INTO `member` (`Mid`, `Musername`, `username`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('4', 'chandrashekhar', 'chandrashekhar', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'SAIR11', 'mem4@gmail.com','Chandrashekhar Bhikchand Joshi','4','B','9922338265');
-INSERT INTO `member` (`Mid`, `Musername`, `username`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('5', 'ashok', 'ashok', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'SAIR11', 'mem5@gmail.com','Ashok Subhash Kolhe','5','B','9922338265');
-INSERT INTO `member` (`Mid`, `Musername`, `username`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('6', 'kalpana', 'kalpana', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'SAIR11', 'mem6@gmail.com','Kalpana Shibaji Mali','6','B','9922338265');
-INSERT INTO `member` (`Mid`, `Musername`, `username`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('7', 'sachin', 'sachin', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'SAIR11', 'mem7@gmail.com','Sachin Yashwant Shiral','7','B','9922338265');
-INSERT INTO `member` (`Mid`, `Musername`, `username`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('8', 'sangita', 'sangita', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'SAIR11', 'mem8@gmail.com','Sangita Vinay Virari','8','B','9922338265');
-INSERT INTO `member` (`Mid`, `Musername`, `username`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('9', 'nishant', 'nishant', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'SAIR11', 'mem9@gmail.com','Nishant Dhiren Loyada','9','B','9922338265');
-INSERT INTO `member` (`Mid`, `Musername`, `username`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('10', 'vishvanath', 'vishvanath', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'SAIR11', 'mem19@gmail.com','Vishwanath Baburao Tayde','10','B','9922338265');
-INSERT INTO `member` (`Mid`, `Musername`, `username`, `Mpassword`,`Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('11', 'sharad', 'sharad', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'SAIR11', 'mem11@gmail.com','Sharad Damu Borase','11','B','9922338265');
+INSERT INTO `member` (`Mid`, `username`, `Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('1', 'aashutosh',  'GOKU11', 'aashutoshmali1460@gmail.com','Aashutosh Mali','1002','A','9922338265');
+INSERT INTO `member` (`Mid`, `username`, `Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('2', 'jay', 'SAIR11', 'aashutosh.mali@matoshri.edu.in','Dyaneshwar Rangnath Vadnere','2','B','9922338265');
+INSERT INTO `member` (`Mid`, `username`, `Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('3', 'ashvini',  'SAIR11', 'mem3@gmail.com','Ashvini Sagar Dighe','3','B','9922338265');
+INSERT INTO `member` (`Mid`, `username`, `Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('4', 'chandrashekhar',  'SAIR11', 'mem4@gmail.com','Chandrashekhar Bhikchand Joshi','4','B','9922338265');
+INSERT INTO `member` (`Mid`, `username`, `Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('5', 'ashok', 'SAIR11', 'mem5@gmail.com','Ashok Subhash Kolhe','5','B','9922338265');
+INSERT INTO `member` (`Mid`, `username`, `Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('6', 'kalpana',  'SAIR11', 'mem6@gmail.com','Kalpana Shibaji Mali','6','B','9922338265');
+INSERT INTO `member` (`Mid`, `username`, `Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('7', 'sachin',  'SAIR11', 'mem7@gmail.com','Sachin Yashwant Shiral','7','B','9922338265');
+INSERT INTO `member` (`Mid`, `username`, `Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('8', 'sangita',  'SAIR11', 'mem8@gmail.com','Sangita Vinay Virari','8','B','9922338265');
+INSERT INTO `member` (`Mid`, `username`, `Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('9', 'nishant',  'SAIR11', 'mem9@gmail.com','Nishant Dhiren Loyada','9','B','9922338265');
+INSERT INTO `member` (`Mid`, `username`, `Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('10', 'vishvanath', 'SAIR11', 'mem10@gmail.com','Vishwanath Baburao Tayde','10','B','9922338265');
+INSERT INTO `member` (`Mid`, `username`, `Mcode`, `Memail`,`Mname`,`Mflatno`,`Mwing`,`Mmobile`) VALUES ('11', 'sharad',  'SAIR11', 'mem11@gmail.com','Sharad Damu Borase','11','B','9922338265');
 alter table member auto_increment = 12;
 select * from member;
 
@@ -197,27 +220,4 @@ CREATE TABLE IF NOT EXISTS `chat` (
 	`msg_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   	PRIMARY KEY (`msg_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `userdetails` (
-	`uid` int(11) NOT NULL AUTO_INCREMENT,
-  	`username` varchar(50) NOT NULL,
-	`password` varchar(255) NOT NULL,
-    `email` varchar(255) NOT NULL,
-    PRIMARY KEY (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-INSERT INTO `userdetails` (`uid`, `username`, `password`, `email`) VALUES(1, 'jay', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'jais65142@gmail.com');
-INSERT INTO `userdetails` (`uid`, `username`, `password`, `email`) VALUES(2, 'shinde', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4','jay.sharma@matoshri.edu.in');
-INSERT INTO `userdetails` (`uid`, `username`, `password`, `email`) VALUES(3, 'aashutosh', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4','aashutoshmali1460@gmail.com');
-INSERT INTO `userdetails` (`uid`, `username`, `password`, `email`) VALUES(4, 'dyaneshwar', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4');
-INSERT INTO `userdetails` (`uid`, `username`, `password`, `email`) VALUES(5, 'shvini', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4');
-INSERT INTO `userdetails` (`uid`, `username`, `password`, `email`) VALUES(6, 'chandrashekhar', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4');
-INSERT INTO `userdetails` (`uid`, `username`, `password`, `email`) VALUES(7, 'ashok', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4');
-INSERT INTO `userdetails` (`uid`, `username`, `password`, `email`) VALUES(8, 'kalpana', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4');
-INSERT INTO `userdetails` (`uid`, `username`, `password`, `email`) VALUES(9, 'sachin', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4');
-INSERT INTO `userdetails` (`uid`, `username`, `password`, `email`) VALUES(10, 'sangita', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4');
-INSERT INTO `userdetails` (`uid`, `username`, `password`, `email`) VALUES(11, 'nishant', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4');
-INSERT INTO `userdetails` (`uid`, `username`, `password`, `email`) VALUES(12, 'vishvanath', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4');
-INSERT INTO `userdetails` (`uid`, `username`, `password`, `email`) VALUES(13, 'sharad', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4');
-alter table secretary auto_increment = 14;
-select * from secretary inner join member where username = 'jay';
 

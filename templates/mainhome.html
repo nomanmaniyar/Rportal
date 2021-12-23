@@ -15,7 +15,10 @@
     <title>mainhome</title>
 </head>
 <body>
+
+    <h3> Welcome to R-Portal!</h3>
     <div class="dropdown">
+      <h5>Join/Add new society</h5>
         <button onclick="myFunction()" class="dropbtn"><i  class="fa fa-plus" aria-hidden="true"></i></button>
         <div id="myDropdown" class="dropdown-content">
             <a  class="dropdown-item" type="button" href="{{ url_for('mcode') }}">Member</a>
@@ -27,58 +30,61 @@
      
    
 
-    <h1>select your society</Select></h1>
+    <h4>Select society you want to visit</Select></h4>
     <div>
   
-{% for data  in account1 %}
+{% for data1  in account1 %}
     <div  style=" background-color: #0ddaad; border-radius: 20px;  padding: 15px;
     width: 200px;
     height: 150px;" >
     <br> 
-    Secretary 
+    Secretary account
     <p>
-    {{data['name']}} <br>   {{data['Scode']}} </p>
+    {{data1['name']}}, {{ data1['city'] }} <br>   {{data1['Scode']}} </p>
     <form action="{{ url_for('shome') }}" method="post">
-    <input type="hidden"  name="Sname" value="{{data['Sname']}} ">
-    <input type="hidden" name="Scode" value =" {{data['Scode']}} ">
-    <input type="hidden" name="Semail" value="{{data['Semail']}} ">
-    <input  type="hidden" name="Susername" value=" {{data['Susername']}}">
-    <input  type="hidden" name="Sid" value=" {{data['Sid']}}">
-    <button type="submit" class="btn btn-primary">Enter</button>
+    <input type="hidden"  name="Sname" value="{{data1['Sname']}} ">
+    <input type="hidden" name="Scode" value =" {{data1['Scode']}} ">
+    <input type="hidden" name="Semail" value="{{data1['Semail']}} ">
+    <input  type="hidden" name="username" value=" {{data1['username']}}">
+    <input  type="hidden" name="Sid" value=" {{data1['Sid']}}">
+    <button type="submit" class="btn btn-primary">Launch</button>
 </form>
 
 
     </div>
 {% endfor %} 
 </div>
-
+<br>
 <div>
-    {% for data1  in account2 %}
+    {% for data2  in account2 %}
     <div  style="	background-color: #38cdfa; border-radius: 20px;  padding: 15px;
     width: 200px;
     height: 150px;" >
 <br>
- Member
+ Member account
     <p>
-    {{data1['name']}}  <br>
+    {{data2['name']}}, {{ data2['city'] }}  <br>
     
-    {{data1['Mcode']}} <br>
+    {{data2['Mcode']}} <br>
 
 </p>    
 
     <form action="{{url_for('mhome')}}" method="post">
-        <input type="hidden"  name="Mname" value="{{data1['Mname']}} ">
-        <input type="hidden" name="Mcode" value =" {{data1['Mcode']}} ">
-        <input type="hidden" name="Memail" value="{{data1['Memail']}} ">
-        <input  type="hidden" name="Musername" value=" {{data1['Musername']}}">
-        <input  type="hidden" name="Mid" value=" {{data1['Mid']}}">
-        <button type="submit" class="btn btn-primary">Enter</button>
+        <input type="hidden"  name="Mname" value="{{data2['Mname']}} ">
+        <input type="hidden" name="Mcode" value =" {{data2['Mcode']}} ">
+        <input type="hidden" name="Memail" value="{{data2['Memail']}} ">
+        <input  type="hidden" name="username" value=" {{data2['username']}}">
+        <input  type="hidden" name="Mid" value=" {{data2['Mid']}}">
+        <button type="submit" class="btn btn-primary">Launch</button>
     </form>
     
    </div>
         {% endfor %} 
  
 </div>
+<br>
+<a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            <br>
 <script>
     /* When the user clicks on the button, 
     toggle between hiding and showing the dropdown content */
