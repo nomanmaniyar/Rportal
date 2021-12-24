@@ -1090,7 +1090,8 @@ def add_chats():
             cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor1.execute('DELETE FROM chat WHERE society_code = %s AND msg_time < now() - interval 3 day', (session['Scode'],))
             mysql.connection.commit()
-        return chats()
+        return redirect(url_for('chats'))
+        
     elif session.get('secretary') is None:
         return login()
     else:
@@ -1233,7 +1234,7 @@ def add_chat():
             cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor1.execute('DELETE FROM chat WHERE society_code = %s AND msg_time < now() - interval 3 day', (session['Mcode'],))
             mysql.connection.commit()
-        return chat()
+        return redirect(url_for('chat'))
     elif session.get('member') is None:
         return login()
     else:
