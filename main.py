@@ -535,6 +535,19 @@ def logout():
 #
 @app.route('/R-Portal/mainhome')
 def mainhome():
+    session.pop('member', None)
+    session.pop('Mid', None)
+    session.pop('Mname', None)
+    session.pop('Musername', None)
+    session.pop('Mcode', None)
+    session.pop('Memail', None)
+    session.pop('secretary', None)
+    session.pop('Sid', None)
+    session.pop('Sname', None)
+    session.pop('Susername', None)
+    session.pop('Scode', None)
+    session.pop('Semail', None)
+
     if 'user' in session:
         username = session['username']
         cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -544,56 +557,11 @@ def mainhome():
         cursor2.execute('select * from member inner join society where society.code = member.Mcode AND username =  %s AND member_status = %s', (username,"active"))
         account2 = cursor2.fetchmany()
         return render_template('mainhome.html',account1 = account1,account2 =account2) 
-    elif 'secretary' in session:
-        session['user'] = True
-        session['uid'] = session['Sid']
-        session['username'] = session['Susername']
-        session['user_email'] = session['Semail']
-
-        session.pop('secretary', None)
-        session.pop('Sid', None)
-        session.pop('Sname', None)
-        session.pop('Susername', None)
-        session.pop('Scode', None)
-        session.pop('Semail', None)
-
-        username = session['username']
-        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor1.execute('select * from secretary inner join society where society.code = secretary.Scode AND username = %s AND secretarty_status = %s ', (username,"active"))
-        account1 = cursor1.fetchmany()
-        cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor2.execute('select * from member inner join society where society.code = member.Mcode AND username =  %s AND member_status = %s', (username,"active"))
-        account2 = cursor2.fetchmany()
-        return render_template('mainhome.html',account1 = account1,account2 =account2)
-    elif 'member' in session:
-        session['user'] = True
-        session['uid'] = session['Mid']
-        session['username'] = session['Musername']
-        session['user_email'] = session['Memail']
-
-        session.pop('member', None)
-        session.pop('Mid', None)
-        session.pop('Mname', None)
-        session.pop('Musername', None)
-        session.pop('Mcode', None)
-        session.pop('Memail', None)
-
-        username = session['username']
-        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor1.execute('select * from secretary inner join society where society.code = secretary.Scode AND username = %s AND secretarty_status = %s ', (username,"active"))
-        account1 = cursor1.fetchmany()
-        cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor2.execute('select * from member inner join society where society.code = member.Mcode AND username =  %s AND member_status = %s', (username,"active"))
-        account2 = cursor2.fetchmany()
-        return render_template('mainhome.html',account1 = account1,account2 =account2)
     elif session.get('user') is None:
-        return login()
-    elif session.get('secretary') is None:
-        return login()
-    elif session.get('member') is None:
-        return login()
+            return login()
     else:
         return logout()
+   
 
 #
 #   Secretary Part
@@ -870,18 +838,16 @@ def shome():
             session['Scode'] = Scode
             session['Semail'] = Semail
             session['Sname'] = Sname
-
-            session.pop('user', None)
-            session.pop('uid', None)
-            session.pop('username', None)
-            session.pop('user_email', None)
-        return render_template('secretary/shome.html')
-    elif 'secretary' in session:
-        return render_template('secretary/shome.html')
+        if 'secretary' in session:
+                return render_template('secretary/shome.html')
+        elif 'secretary' in session:
+            return render_template('secretary/shome.html')
+        elif session.get('secretary') is None:
+            return login()
+   
     elif session.get('user') is None:
-        return login()
-    elif session.get('secretary') is None:
-        return login()
+            return login()
+
     else:
         return logout()
 
@@ -1148,18 +1114,14 @@ def mhome():
             session['Mcode'] = Mcode
             session['Memail'] = Memail
             session['Mname'] = Mname
-
-            session.pop('user', None)
-            session.pop('uid', None)
-            session.pop('username', None)
-            session.pop('user_email', None)
-        return render_template('member/mhome.html', Mname=session['Mname'])
-    elif 'member' in session:
-        return render_template('member/mhome.html', Mname=session['Mname'])
+        if 'member' in session:
+                return render_template('member/mhome.html', Mname=session['Mname'])
+        elif 'member' in session:
+                return render_template('member/mhome.html', Mname=session['Mname'])
+        elif session.get('member') is None:
+                return login()
     elif session.get('user') is None:
-        return login()
-    elif session.get('member') is None:
-        return login()
+            return login()
     else:
         return logout()
 
