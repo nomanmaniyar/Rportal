@@ -127,15 +127,13 @@ def sregister():
         target = os.path.join( '/Rportal/static/upload/')
         if not os.path.isdir(target):
             os.makedirs(target)
-        if request.method == 'POST' and 'Sname' in request.form and 'Susername' in request.form and 'Semail' in request.form:
-            username = request.form['Susername']
-            email = request.form['Semail']
-            passtext = request.form['Spassword']
-            password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
-            Aname = request.form['Sname']
+        if request.method == 'POST' and 'Sflatno' in request.form and 'Swing' in request.form:
+            username = session['username']
+            email = session['user_email']
+            Aname = session['user_name']
             flatno = request.form['Sflatno']
             wing = request.form['Swing']
-            mobile = request.form['Smobile'] 
+            mobile = session['user_mobile']
             acname = request.form['acname']  
             acno = request.form['acno']
             mmid = request.form['mmid']
@@ -176,16 +174,14 @@ def sregister():
                 msg = 'Invalid email address!'
             elif not re.match(r'[A-Za-z0-9]+', username):
                 msg = 'Username must contain only characters and numbers!'
-            elif not username or not password or not email:
-                msg = 'Please fill out the form!'
             else:
-                cursor1.execute('INSERT INTO secretary VALUES (NULL, %s, %s, %s, %s, %s, %s, %s,%s , DEFAULT , DEFAULT)', (username , password , code ,  email , Aname , flatno , wing , mobile ,))
+                cursor1.execute('INSERT INTO secretary VALUES (NULL, %s, %s, %s, %s, %s, %s,%s , DEFAULT , DEFAULT)', (username , code ,  email , Aname , flatno , wing , mobile ,))
                 cursor2.execute('INSERT INTO society VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, NULL, NULL,%s, DEFAULT , DEFAULT)', (code , name , city , road , area , state , pin , acname, acno, mmid, bankname, branch, ifsc, kyc_file))
                 mysql.connection.commit()
                 msg = 'You have successfully registered!'
         elif request.method == 'POST':
             msg = 'elif code!' 
-        return render_template('secretary/sregister.html', msg=msg)
+        return render_template('secretary/sregister.html', msg=msg, name=session['user_name'],username=session['username'], email=session['user_email'], mobile=session['user_mobile'])
     elif session.get('user') is None:
             return login()
     else:
@@ -204,7 +200,7 @@ def mcode():
             if account:
                 cursor.execute('select name, city, road, area, state, pin, code , Semail from society inner join secretary WHERE code = %s', (code ,))
                 account = cursor.fetchone()
-                return render_template('member/mverify.html', account=account, msg=msg)
+                return render_template('member/mverify.html', account=account, msg=msg,  name=session['user_name'],username=session['username'], email=session['user_email'], mobile=session['user_mobile'])
             else:
                 mysql.connection.commit()
                 msg='Invalid Society Code!'
@@ -226,7 +222,7 @@ def mcode1(code):
             if account:
                 cursor.execute('select name, city, road, area, state, pin, code , Semail from society inner join secretary WHERE code = %s', (code ,))
                 account = cursor.fetchone()
-                return render_template('member/mverify.html', account=account, msg=msg)
+                return render_template('member/mverify.html', account=account, msg=msg,  name=session['user_name'],username=session['username'], email=session['user_email'], mobile=session['user_mobile'])
             else:
                 mysql.connection.commit()
                 msg='Invalid Society Code!'
@@ -240,16 +236,14 @@ def mcode1(code):
 def mregister():
     if 'user' in session:
         msg = ''
-        if request.method == 'POST' and 'Musername' in request.form and 'Mpassword' in request.form and 'Memail' in request.form and 'Mcode' in request.form and 'Mname' in request.form and 'Mflatno' in request.form and 'Mwing' in request.form and 'Mmobile' in request.form and 'Semail' in request.form:
-            username = request.form['Musername']
-            passtext = request.form['Mpassword']
-            password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
+        if request.method == 'POST' and 'Mcode' in request.form and 'Mflatno' in request.form and 'Mwing' in request.form and 'Semail' in request.form:
+            username = session['username']
             code = request.form['Mcode']
-            email = request.form['Memail']
-            name = request.form['Mname']
+            email = session['user_email']
+            name = session['user_name']
             flatno = request.form['Mflatno']
             wing = request.form['Mwing']
-            mobile = request.form['Mmobile']   
+            mobile = session['user_mobile']   
             Semail = request.form['Semail']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('SELECT * FROM member WHERE username = %s AND Mcode = %s AND Mflatno = %s AND Mwing = %s', (username, code, flatno, wing,))
@@ -265,17 +259,14 @@ def mregister():
                 msg = 'Invalid email address!'
             elif not re.match(r'[A-Za-z0-9]+', username):
                 msg = 'Username must contain only characters and numbers!'
-            elif not username or not password or not email:
-                msg = 'Please fill out the form!'
             else:
-                cursor.execute('INSERT INTO member VALUES (NULL, %s, %s, %s, %s, %s, %s, %s,%s,DEFAULT,DEFAULT )', (username , password , code ,  email , name , flatno , wing , mobile))
+                cursor.execute('INSERT INTO member VALUES (NULL, %s, %s, %s, %s, %s, %s,%s,DEFAULT,DEFAULT )', (username , code ,  email , name , flatno , wing , mobile))
                 mysql.connection.commit()
                 msg = Message('New Member Request' ,sender ='Rportal<me@Rportal.com', recipients = [Semail]) 
                 text = "Hello \nYou have received new member request with followinh member details. \n Member details are :\n"
                 msg.body = text + "\n Flat No :" + wing + flatno + "\n Name : " + name + "\n phone No : " + mobile + "\n Email ID : " + email + part4
                 mail.send(msg)  
                 msg = 'You have successfully registered!'
-                return render_template('mainhome.html', msg=msg)
         elif request.method == 'POST':
             msg = 'Please fill out the form!'
         return render_template('login.html', msg=msg)
@@ -359,7 +350,9 @@ def login():
             session['user'] = True
             session['uid'] = account['uid']
             session['username'] = account['username']
+            session['user_name'] = account['name']
             session['user_email'] = account['email']
+            session['user_mobile'] = account['mobile']
             return uotp() 
         elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
             username = request.form['username']
@@ -526,7 +519,15 @@ def logout():
         session.pop('user', None)
         session.pop('uid', None)
         session.pop('username', None)
+        session.pop('user_name', None)
         session.pop('user_email', None)
+        session.pop('user_mobile', None)
+        session.pop('member', None)
+        session.pop('Mid', None)
+        session.pop('Mname', None)
+        session.pop('Musername', None)
+        session.pop('Mcode', None)
+        session.pop('Memail',None)
         return redirect(url_for('rportal'))
     elif 'member' in session:
         session.pop('member', None)
@@ -535,10 +536,18 @@ def logout():
         session.pop('Musername', None)
         session.pop('Mcode', None)
         session.pop('Memail',None)
+        session.pop('secretary', None)
+        session.pop('Sid', None)
+        session.pop('Sname', None)
+        session.pop('Susername', None)
+        session.pop('Scode', None)
+        session.pop('Semail', None)
         session.pop('user', None)
         session.pop('uid', None)
         session.pop('username', None)
+        session.pop('user_name', None)
         session.pop('user_email', None)
+        session.pop('user_mobile', None)
         return redirect(url_for('rportal'))
     elif 'admin' in session:
         session.pop('admin', None)
@@ -562,7 +571,9 @@ def logout():
         session.pop('user', None)
         session.pop('uid', None)
         session.pop('username', None)
+        session.pop('user_name', None)
         session.pop('user_email', None)
+        session.pop('user_mobile', None)
         session.pop('secretary', None)
         session.pop('Sid', None)
         session.pop('Sname', None)

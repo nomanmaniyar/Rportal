@@ -15,7 +15,7 @@
 	<!-- Header -->
 	<nav class="navbar navbar-expand-lg navbar-light py-lg-3 p-2 fixed-top">
 		<div class="container">
-			<a href="{{url_for('rportal')}}" class="navbar-brand" id="title"><span
+			<a href="{{url_for('mainhome')}}" class="navbar-brand" id="title"><span
 					style="color: blue;">R</span>-Portal</a>
 		</div>
 	</nav>
@@ -41,17 +41,15 @@
 				<section class=" bg-light text-dark p-lg-5 text-start">
 					<h2 class=" title pb-5 text-center">Secretary Registetion</h2>
 					<label for="Sname" class="form-label font-weight-bold">Full Name</label>
-					<input type="text" name="Sname" placeholder="Enter Name" id="Sname" class="form-control" required>
+					<input type="text" name="Sname" value={{ name }}  class="form-control" readonly>
 					<span id="Spname" style="color: crimson"></span><br>
 
 					<label for="Susername" class="form-label font-weight-bold">Username</label>
-					<input type="text" name="Susername" placeholder="Username" id="Susername" class="form-control  "
-						required>
+					<input type="text" name="Susername" placeholder={{ username }} id="Susername" class="form-control " readonly>
 					<span id="Spusername" style="color: crimson"></span><br>
 
 					<label for="Semail" class="form-label font-weight-bold">Email</label>
-					<input type="email" name="Semail" placeholder="Email ID" id="Semail" class="form-control  "
-						required>
+					<input type="email" name="Semail" placeholder={{ email }} id="Semail" class="form-control  " readonly>
 					<span id="Spemail" style="color: crimson"></span><br>
 
 					<label for="Sflatno" class="form-label font-weight-bold">FlatNo</label>
@@ -66,15 +64,12 @@
 					<span id="Spwing" style="color: crimson"></span><br>
 
 					<label for="Smobile" class="form-label font-weight-bold">Mobile No</label>
-					<input type="tel" name="Smobile" placeholder="Mobile Number without +91" id="Smobile"
-						class="form-control  " required>
+					<input type="tel" name="Smobile" placeholder={{ mobile }} id="Smobile"
+						class="form-control  " readonly>
 					<span style="font-size:x-small">PLZ Enter your Mobileno without +91 </span>
 					<span id="Spmobile" style="color: crimson"></span><br>
 
-					<label for="Spassword" class="form-label font-weight-bold">Password</label>
-					<input type="password" name="Spassword" placeholder="Password" id="Spassword" class="form-control  "
-						required>
-					<span id="Sppassword" style="color: crimson"></span><br>
+					
 
 				</section>
 				<section class=" bg-light text-dark p-lg-5 text-start">
