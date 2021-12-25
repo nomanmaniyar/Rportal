@@ -66,7 +66,6 @@ otp = random.randint(000000,999999)
 @app.route('/')
 def index():
     return rportal()
-
 @app.route('/R-Portal/')
 def rportal():
     return render_template('rportal.html')
@@ -76,9 +75,35 @@ def rportal():
 #
 
 #   User Registration
-@app.route('/R-Portal/signup')
-def signup():
-    return render_template('signup.html')
+@app.route('/R-Portal/register', methods=['GET','POST'])
+def register():
+    msg = ''
+    if request.method == 'POST'and 'name' in request.form and 'username' in request.form and 'mobile' in request.form and 'email' in request.form and 'password' in request.form :
+        name = request.form['name']
+        username = request.form['username']
+        mobile = request.form['mobile']
+        email = request.form['email']
+        passtext = request.form['password']
+        password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
+
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM userdetails WHERE username = %s', (username,))
+        account = cursor.fetchone()
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('SELECT * FROM userdetails WHERE email = %s', (email,))
+        account1 = cursor1.fetchone()
+
+        if account:
+                msg = 'Warning! Username already exists!!'
+        elif account1:
+            msg = 'Warning! Account already exists!!'
+        else:
+            cursor1.execute('INSERT INTO userdetails VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT)', (username , name ,  password , mobile ,  email ,))
+            mysql.connection.commit()
+            msg = 'You have successfully registered!'
+    elif request.method == 'POST':
+            msg = 'elif code!'
+    return render_template('register.html',msg=msg)
 
 #   Secretary Registration 
 def invitation():
