@@ -9,7 +9,9 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 	<script src="https://kit.fontawesome.com/00eb1e6813.js" crossorigin="anonymous"></script>
+	
 </head>
+
 
 <body>
 	<!-- Header -->
@@ -41,15 +43,15 @@
 				<section class=" bg-light text-dark p-lg-5 text-start">
 					<h2 class=" title pb-5 text-center">Secretary Registetion</h2>
 					<label for="Sname" class="form-label font-weight-bold">Full Name</label>
-					<input type="text" name="Sname" value={{ name }}  class="form-control" readonly>
+					<input type="text" name="Sname" value = "{{ name }}"  class="form-control" readonly>
 					<span id="Spname" style="color: crimson"></span><br>
 
 					<label for="Susername" class="form-label font-weight-bold">Username</label>
-					<input type="text" name="Susername" placeholder={{ username }} id="Susername" class="form-control " readonly>
+					<input type="text" name="Susername" value ={{ username }} id="Susername" class="form-control " readonly>
 					<span id="Spusername" style="color: crimson"></span><br>
 
 					<label for="Semail" class="form-label font-weight-bold">Email</label>
-					<input type="email" name="Semail" placeholder={{ email }} id="Semail" class="form-control  " readonly>
+					<input type="email" name="Semail" value ={{ email }} id="Semail" class="form-control  " readonly>
 					<span id="Spemail" style="color: crimson"></span><br>
 
 					<label for="Sflatno" class="form-label font-weight-bold">FlatNo</label>
@@ -64,7 +66,7 @@
 					<span id="Spwing" style="color: crimson"></span><br>
 
 					<label for="Smobile" class="form-label font-weight-bold">Mobile No</label>
-					<input type="tel" name="Smobile" placeholder={{ mobile }} id="Smobile"
+					<input type="tel" name="Smobile" value ={{ mobile }} id="Smobile"
 						class="form-control  " readonly>
 					<span style="font-size:x-small">PLZ Enter your Mobileno without +91 </span>
 					<span id="Spmobile" style="color: crimson"></span><br>
@@ -162,6 +164,7 @@
 		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
 		crossorigin="anonymous"></script>
 	<script src="{{ url_for('static', filename='sregister.js') }}"></script>
+	
 
 
 </body>

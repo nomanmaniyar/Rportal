@@ -15,10 +15,8 @@
     <title>mainhome</title>
 </head>
 <body>
-
-    <h3> Welcome to R-Portal!</h3>
+  <header  style="float: right;">
     <div class="dropdown">
-      <h5>Join/Add new society</h5>
         <button onclick="myFunction()" class="dropbtn"><i  class="fa fa-plus" aria-hidden="true"></i></button>
         <div id="myDropdown" class="dropdown-content">
             <a  class="dropdown-item" type="button" href="{{ url_for('mcode') }}">Member</a>
@@ -26,6 +24,12 @@
           
         </div>
       </div>
+       &nbsp; &nbsp; &nbsp; &nbsp;
+    <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+  </header>
+
+    <h3> Welcome to R-Portal!</h3>
+   
    
      
    
@@ -41,7 +45,7 @@
     <br> 
     Secretary account
     <p>
-    {{data1['name']}}, {{ data1['city'] }} <br>   {{data1['Scode']}} </p>
+    {{data1['name']}}, {{ data1['city'] }} <br>   {{data1['Scode']}} <br> <label>Status: {{data1['secretarty_status']}}</label></p>
     <form action="{{ url_for('shome') }}" method="post">
     <input type="hidden"  name="Sname" value="{{data1['Sname']}} ">
     <input type="hidden" name="Scode" value =" {{data1['Scode']}} ">
@@ -66,7 +70,8 @@
     <p>
     {{data2['name']}}, {{ data2['city'] }}  <br>
     
-    {{data2['Mcode']}} <br>
+    {{data2['Mcode']}}
+    <br> <label>Status: {{data1['secretarty_status']}}</label>
 
 </p>    
 
@@ -81,11 +86,78 @@
     
    </div>
         {% endfor %} 
- 
+        
+  
+        {% for data3  in account3 %}
+        <div  style=" background-color: #0ddaad; border-radius: 20px;  padding: 15px;
+        width: 200px;
+        height: 150px;" >
+        <br> 
+        Secretary account
+        <p>
+        {{data3['name']}}, {{ data3['city'] }} <br>   {{data3['Scode']}} <br> <label>Status: {{data3['secretarty_status']}}</label></p>
+        
+    </form>
+    
+    
+        </div>
+    {% endfor %} 
+    </div>
+    <br>
+    <div>
+        {% for data4  in account4 %}
+        <div  style="	background-color: #38cdfa; border-radius: 20px;  padding: 15px;
+        width: 200px;
+        height: 150px;" >
+    <br>
+     Member account
+        <p>
+        {{data4['name']}}, {{ data4['city'] }}  <br>
+        
+        {{data4['Mcode']}}
+        <br> <label>Status: {{data4['member_status']}}</label>
+    
+    </p>    
+        
+       </div>
+            {% endfor %} 
+
+
+            {% for data3  in account5 %}
+            <div  style=" background-color: #0ddaad; border-radius: 20px;  padding: 15px;
+            width: 200px;
+            height: 150px;" >
+            <br> 
+            Secretary account
+            <p>
+            {{data3['name']}}, {{ data3['city'] }} <br>   {{data3['Scode']}} <br> <label>Status: {{data3['secretarty_status']}}</label></p>
+            
+        </form>
+        
+        
+            </div>
+        {% endfor %} 
+        </div>
+        <br>
+        <div>
+            {% for data4  in account6 %}
+            <div  style="	background-color: #38cdfa; border-radius: 20px;  padding: 15px;
+            width: 200px;
+            height: 150px;" >
+        <br>
+         Member account
+            <p>
+            {{data4['name']}}, {{ data4['city'] }}  <br>
+            
+            {{data4['Mcode']}}
+            <br> <label>Status: {{data4['member_status']}}</label>
+        
+        </p>    
+            
+           </div>
+                {% endfor %} 
 </div>
 <br>
-<a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
-            <br>
 <script>
     /* When the user clicks on the button, 
     toggle between hiding and showing the dropdown content */
@@ -109,16 +181,16 @@
     </script>
 <style>
     .dropbtn {
-      background-color: #3498DB;
+      background-color:  #b6b7b8;
       color: white;
-      padding: 16px;
-      font-size: 16px;
+      padding: 10px;
+      font-size: 10px;
       border: none;
       cursor: pointer;
     }
     
     .dropbtn:hover, .dropbtn:focus {
-      background-color: #2980B9;
+      background-color: #b6b7b8;
     }
     
     .dropdown {
@@ -130,15 +202,15 @@
       display: none;
       position: absolute;
       background-color: #f1f1f1;
-      min-width: 160px;
+      min-width: 100px;
       overflow: auto;
-      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      box-shadow: 0px 8px 10px 0px rgba(0,0,0,0.2);
       z-index: 1;
     }
     
     .dropdown-content a {
       color: black;
-      padding: 12px 16px;
+      padding: 6px 10px;
       text-decoration: none;
       display: block;
     }

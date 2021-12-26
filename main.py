@@ -222,7 +222,8 @@ def mcode1(code):
             if account:
                 cursor.execute('select name, city, road, area, state, pin, code , Semail from society inner join secretary WHERE code = %s', (code ,))
                 account = cursor.fetchone()
-                return render_template('member/mverify.html', account=account, msg=msg,  name=session['user_name'],username=session['username'], email=session['user_email'], mobile=session['user_mobile'])
+                name =session['user_name']
+                return render_template('member/mverify.html', account=account, msg=msg, name = name ,username=session['username'], email=session['user_email'], mobile=session['user_mobile'])
             else:
                 mysql.connection.commit()
                 msg='Invalid Society Code!'
@@ -614,7 +615,19 @@ def mainhome():
         cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor2.execute('select * from member inner join society where society.code = member.Mcode AND username =  %s AND member_status = %s', (username,"active"))
         account2 = cursor2.fetchmany()
-        return render_template('mainhome.html',account1 = account1,account2 =account2) 
+        cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor3.execute('select * from secretary inner join society where society.code = secretary.Scode AND username = %s AND secretarty_status = %s ', (username,"inactive"))
+        account3 = cursor3.fetchmany()
+        cursor4 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor4.execute('select * from member inner join society where society.code = member.Mcode AND username =  %s AND member_status = %s', (username,"inactive"))
+        account4 = cursor4.fetchmany()
+        cursor5 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor5.execute('select * from secretary inner join society where society.code = secretary.Scode AND username = %s AND secretarty_status = %s ', (username,"request"))
+        account5 = cursor5.fetchmany()
+        cursor6 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor6.execute('select * from member inner join society where society.code = member.Mcode AND username =  %s AND member_status = %s', (username,"request"))
+        account6 = cursor6.fetchmany()
+        return render_template('mainhome.html',account1 = account1,account2 =account2,account3 =account3 ,account4 =account4,account5 =account5,account6 =account6) 
     elif session.get('user') is None:
             return login()
     else:
