@@ -250,7 +250,7 @@ def mregister():
             cursor.execute('SELECT * FROM member WHERE username = %s AND Mcode = %s AND Mflatno = %s AND Mwing = %s', (username, code, flatno, wing,))
             account = cursor.fetchone()
             cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('SELECT * FROM secretary WHERE username = %s AND Scode = %s AND Sflatno = %s AND Swing = %s', (username, code, flatno, wing,))
+            cursor1.execute('SELECT * FROM secretary WHERE username = %s AND Scode = %s AND Sflatno = %s AND Swing = %s', (username, code, flatno, wing,))
             account1 = cursor1.fetchone()
             if account:
                 msg = 'Warning! User already exists!!'
@@ -270,7 +270,7 @@ def mregister():
                 msg = 'You have successfully registered!'
         elif request.method == 'POST':
             msg = 'Please fill out the form!'
-        return render_template('login.html', msg=msg)
+        return render_template('mainhome.html', msg=msg)
     elif session.get('user') is None:
             return login()
     else:

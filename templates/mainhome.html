@@ -28,14 +28,16 @@
     <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
   </header>
 
-    <h3> Welcome to R-Portal!</h3>
+    <h2> Welcome to R-Portal!</h2>
    
    
      
    
 
-    <h4>Select society you want to visit</Select></h4>
-    <h4><div class="msg">{{ msg }}</div></h4>
+    <h3>Select society you want to visit</Select></h3>
+    <h3><div class="msg">{{ msg }}</div></h3>
+    <p><b>Active Societies</b><br>
+    Societies in which you are verified and have an active account will appear here</p>
     <div>
   
 {% for data1  in account1 %}
@@ -45,7 +47,7 @@
     <br> 
     Secretary account
     <p>
-    {{data1['name']}}, {{ data1['city'] }} <br>   {{data1['Scode']}} <br> <label>Status: {{data1['secretarty_status']}}</label></p>
+    {{data1['name']}}, {{ data1['city'] }} <br>   {{data1['Scode']}} <br> </p>
     <form action="{{ url_for('shome') }}" method="post">
     <input type="hidden"  name="Sname" value="{{data1['Sname']}} ">
     <input type="hidden" name="Scode" value =" {{data1['Scode']}} ">
@@ -71,7 +73,7 @@
     {{data2['name']}}, {{ data2['city'] }}  <br>
     
     {{data2['Mcode']}}
-    <br> <label>Status: {{data1['secretarty_status']}}</label>
+    <br> 
 
 </p>    
 
@@ -87,7 +89,8 @@
    </div>
         {% endfor %} 
         
-  
+        <p><b>Inactive Societies</b><br>
+        Societies in which you are verified but have your account disbanded will appear here</p>
         {% for data3  in account3 %}
         <div  style=" background-color: #0ddaad; border-radius: 20px;  padding: 15px;
         width: 200px;
@@ -95,7 +98,7 @@
         <br> 
         Secretary account
         <p>
-        {{data3['name']}}, {{ data3['city'] }} <br>   {{data3['Scode']}} <br> <label>Status: {{data3['secretarty_status']}}</label></p>
+        {{data3['name']}}, {{ data3['city'] }} <br>   {{data3['Scode']}} <br> </p>
         
     </form>
     
@@ -115,14 +118,15 @@
         {{data4['name']}}, {{ data4['city'] }}  <br>
         
         {{data4['Mcode']}}
-        <br> <label>Status: {{data4['member_status']}}</label>
+        <br> 
     
     </p>    
         
        </div>
             {% endfor %} 
 
-
+            <p><b>Request Societies</b><br>
+            Societies in which your account is under verification will appear here</p>
             {% for data3  in account5 %}
             <div  style=" background-color: #0ddaad; border-radius: 20px;  padding: 15px;
             width: 200px;
@@ -130,7 +134,7 @@
             <br> 
             Secretary account
             <p>
-            {{data3['name']}}, {{ data3['city'] }} <br>   {{data3['Scode']}} <br> <label>Status: {{data3['secretarty_status']}}</label></p>
+            {{data3['name']}}, {{ data3['city'] }} <br>   {{data3['Scode']}} <br> </p>
             
         </form>
         
@@ -150,8 +154,7 @@
             {{data4['name']}}, {{ data4['city'] }}  <br>
             
             {{data4['Mcode']}}
-            <br> <label>Status: {{data4['member_status']}}</label>
-        
+            <br> 
         </p>    
             
            </div>
