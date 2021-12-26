@@ -1156,7 +1156,7 @@ def add_chats():
             message = request.form['message']
             msg_username = session['Sname'] 
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('INSERT INTO chat values (NULL , %s, %s, %s,  DEFAULT )', ( msg_username , message,session['code']))
+            cursor.execute('INSERT INTO chat values (NULL , %s, %s, %s,  DEFAULT )', ( msg_username , message,session['Scode']))
             mysql.connection.commit()   
             cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor1.execute('DELETE FROM chat WHERE society_code = %s AND msg_time < now() - interval 3 day', (session['Scode'],))
