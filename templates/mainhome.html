@@ -30,14 +30,8 @@
 
     <h2> Welcome to R-Portal!</h2>
    
-   
-     
-   
-
-    <h3>Select society you want to visit</Select></h3>
     <h3><div class="msg">{{ msg }}</div></h3>
-    <p><b>Active Societies</b><br>
-    Societies in which you are verified and have an active account will appear here</p>
+  
     <div>
   
 {% for data1  in account1 %}
@@ -47,7 +41,7 @@
     <br> 
     Secretary account
     <p>
-    {{data1['name']}}, {{ data1['city'] }} <br>   {{data1['Scode']}} <br> </p>
+    {{data1['name']}}, {{ data1['city'] }} <br>   {{data1['Scode']}} <br> <label>Status: Active</label>  <br></p>
     <form action="{{ url_for('shome') }}" method="post">
     <input type="hidden"  name="Sname" value="{{data1['Sname']}} ">
     <input type="hidden" name="Scode" value =" {{data1['Scode']}} ">
@@ -72,7 +66,7 @@
     <p>
     {{data2['name']}}, {{ data2['city'] }}  <br>
     
-    {{data2['Mcode']}}
+    {{data2['Mcode']}} <br>  <label>Status: Active</label> 
     <br> 
 
 </p>    
@@ -89,16 +83,15 @@
    </div>
         {% endfor %} 
         
-        <p><b>Inactive Societies</b><br>
-        Societies in which you are verified but have your account disbanded will appear here</p>
+      
         {% for data3  in account3 %}
-        <div  style=" background-color: #0ddaad; border-radius: 20px;  padding: 15px;
+        <div  style=" background-color: #7781d4; border-radius: 20px;  padding: 15px;
         width: 200px;
         height: 150px;" >
         <br> 
         Secretary account
         <p>
-        {{data3['name']}}, {{ data3['city'] }} <br>   {{data3['Scode']}} <br> </p>
+        {{data3['name']}}, {{ data3['city'] }} <br>   {{data3['Scode']}} <br>  <label>Status: Inactive</label>  <br></p>
         
     </form>
     
@@ -109,7 +102,7 @@
     <br>
     <div>
         {% for data4  in account4 %}
-        <div  style="	background-color: #38cdfa; border-radius: 20px;  padding: 15px;
+        <div  style="	background-color: #385ffa; border-radius: 20px;  padding: 15px;
         width: 200px;
         height: 150px;" >
     <br>
@@ -118,23 +111,22 @@
         {{data4['name']}}, {{ data4['city'] }}  <br>
         
         {{data4['Mcode']}}
-        <br> 
+        <br>  <label>Status: Inactive</label>  <br>
     
     </p>    
         
        </div>
             {% endfor %} 
 
-            <p><b>Request Societies</b><br>
-            Societies in which your account is under verification will appear here</p>
+           
             {% for data3  in account5 %}
-            <div  style=" background-color: #0ddaad; border-radius: 20px;  padding: 15px;
+            <div  style=" background-color: #063a52; border-radius: 20px;  padding: 15px;
             width: 200px;
             height: 150px;" >
             <br> 
             Secretary account
             <p>
-            {{data3['name']}}, {{ data3['city'] }} <br>   {{data3['Scode']}} <br> </p>
+            {{data3['name']}}, {{ data3['city'] }} <br>   {{data3['Scode']}} <br>  <label>Status: Requested</label>  <br></p>
             
         </form>
         
@@ -154,7 +146,7 @@
             {{data4['name']}}, {{ data4['city'] }}  <br>
             
             {{data4['Mcode']}}
-            <br> 
+            <br> <label>Status: Requested</label>  <br>
         </p>    
             
            </div>
