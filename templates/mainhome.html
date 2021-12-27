@@ -41,7 +41,7 @@
     <br> 
     Secretary account
     <p>
-    {{data1['name']}}, {{ data1['city'] }} <br>   {{data1['Scode']}} <br> <label>Status: Active</label>  <br></p>
+    {{data1['name']}}, {{ data1['city'] }} <br>   {{data1['Scode']}} <br> {{data1['Swing']}}` {{data1['Sflatno']}}  <label>Status: Active</label></p>
     <form action="{{ url_for('shome') }}" method="post">
     <input type="hidden"  name="Sname" value="{{data1['Sname']}} ">
     <input type="hidden" name="Scode" value =" {{data1['Scode']}} ">
@@ -66,8 +66,8 @@
     <p>
     {{data2['name']}}, {{ data2['city'] }}  <br>
     
-    {{data2['Mcode']}} <br>  <label>Status: Active</label> 
-    <br> 
+    {{data2['Mcode']}} <br>  {{data2['Mwing']}}` {{data2['Mflatno']}}  <label>Status: Active</label> 
+    
 
 </p>    
 
@@ -91,7 +91,7 @@
         <br> 
         Secretary account
         <p>
-        {{data3['name']}}, {{ data3['city'] }} <br>   {{data3['Scode']}} <br>  <label>Status: Inactive</label>  <br></p>
+        {{data3['name']}}, {{ data3['city'] }} <br>   {{data3['Scode']}} <br>  {{data3['Swing']}}` {{data3['Sflatno']}} <br> <label>Status: Inactive</label>  <br></p>
         
     </form>
     
@@ -111,7 +111,7 @@
         {{data4['name']}}, {{ data4['city'] }}  <br>
         
         {{data4['Mcode']}}
-        <br>  <label>Status: Inactive</label>  <br>
+        <br>  {{data4['Mwing']}}` {{data4['Mflatno']}} <br> <label>Status: Inactive</label>  <br>
     
     </p>    
         
@@ -126,7 +126,7 @@
             <br> 
             Secretary account
             <p>
-            {{data3['name']}}, {{ data3['city'] }} <br>   {{data3['Scode']}} <br>  <label>Status: Requested</label>  <br></p>
+            {{data3['name']}}, {{ data3['city'] }} <br>   {{data3['Scode']}} <br>  {{data3['Swing']}}` {{data3['Sflatno']}} <br> <label>Status: Requested</label>  <br></p>
             
         </form>
         
@@ -146,7 +146,7 @@
             {{data4['name']}}, {{ data4['city'] }}  <br>
             
             {{data4['Mcode']}}
-            <br> <label>Status: Requested</label>  <br>
+            <br> {{data4['Mwing']}}` {{data4['Mflatno']}} <br> <label>Status: Requested</label>  <br>
         </p>    
             
            </div>

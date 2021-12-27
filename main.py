@@ -270,7 +270,7 @@ def mregister():
                 msg = 'You have successfully registered!'
         elif request.method == 'POST':
             msg = 'Please fill out the form!'
-        return redirect(url_for('mainhome'), msg=msg)
+        return render_template('mainhome.html', msg=msg)
     elif session.get('user') is None:
             return login()
     else:
