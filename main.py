@@ -159,7 +159,7 @@ def sregister():
             cursor.execute('SELECT * FROM member WHERE username = %s AND Mcode = %s AND Mflatno = %s AND Mwing = %s', (username, code, flatno, wing,))
             account = cursor.fetchone()
             cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('SELECT * FROM secretary WHERE username = %s AND Scode = %s AND Sflatno = %s AND Swing = %s', (username, code, flatno, wing,))
+            cursor1.execute('SELECT * FROM secretary WHERE username = %s AND Scode = %s AND Sflatno = %s AND Swing = %s', (username, code, flatno, wing,))
             account1 = cursor1.fetchone()
             cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor2.execute('SELECT * FROM society WHERE code = %s', (code,))
