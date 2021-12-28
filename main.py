@@ -177,6 +177,7 @@ def sregister():
             else:
                 cursor1.execute('INSERT INTO secretary VALUES (NULL, %s, %s, %s, %s, %s, %s,%s , DEFAULT , DEFAULT)', (username , code ,  email , Aname , flatno , wing , mobile ,))
                 cursor2.execute('INSERT INTO society VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, NULL, NULL,%s, DEFAULT , DEFAULT)', (code , name , city , road , area , state , pin , acname, acno, mmid, bankname, branch, ifsc, kyc_file))
+                cursor.execute('INSERT INTO member VALUES (NULL, %s, %s, %s, %s, %s, %s,%s,DEFAULT,DEFAULT )', (username , code ,  email , Aname , flatno , wing , mobile))
                 mysql.connection.commit()
                 msg = 'You have successfully registered!'
         elif request.method == 'POST':
