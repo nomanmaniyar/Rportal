@@ -153,7 +153,6 @@ $(document).ready(function () {
         var flatno = $("#Sflatno").val();
         var swing = $("#Swing").val();
         var mobile = $("#Smobile").val();
-        var password = $("#Spassword").val();
 
         var nameError = '';
         var usernameEror = '';
@@ -161,24 +160,14 @@ $(document).ready(function () {
         var flatnoEror = '';
         var swingEror = '';
         var mobileEror = '';
-        var passwordEror = '';
         document.getElementById("Spname").innerHTML = nameError;
         document.getElementById("Spusername").innerHTML = usernameEror;
         document.getElementById("Spemail").innerHTML = emailEror;
         document.getElementById("Spflatno").innerHTML = flatnoEror;
         document.getElementById("Spwing").innerHTML = swingEror;
         document.getElementById("Spmobile").innerHTML = mobileEror;
-        document.getElementById("Sppassword").innerHTML = passwordEror
 
-        if (name.length < 1) {
-
-            child--;
-            chkError = true;
-            nameError = "Name is required"
-            document.getElementById("Spname").innerHTML = nameError;
-            console.log(name, ' Length is: ', name.length);
-
-        } if (username.length < 1) {
+        if (username.length < 1) {
 
             if (child == 0) {
                 chkError = true;
@@ -302,45 +291,7 @@ $(document).ready(function () {
             }
 
         }
-        if (password.length < 1) {
-            if (child == 0) {
-                chkError = true;
-                passwordEror = "Password is required"
-                document.getElementById("Sppassword").innerHTML = passwordEror
-                console.log(password, ' Length is: ', password.length);
-            }
-            else {
-                child--;
-                chkError = true;
-                passwordEror = "Password is required"
-                document.getElementById("Sppassword").innerHTML = passwordEror
-                console.log(password, ' Length is: ', password.length);
-            }
-        }
-        else {
-            var decimal = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/;
-            if (password.match(decimal)) {
-                console.log(password, "true");
-            } else {
-                if (child == 0) {
-                    chkError = true;
-                    passwordEror = "password must be between 8 to 15 characters which contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character";
-                    document.getElementById("Sppassword").innerHTML = passwordEror;
-                    console.log(password, "false");
-
-                    // document.form.Semail.focus();
-                }
-                else {
-                    child--;
-                    chkError = true;
-                    passwordEror = "password must be between 8 to 15 characters which contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character";
-                    document.getElementById("Sppassword").innerHTML = passwordEror;
-                    console.log(password, "false");
-
-                    // document.form.Semail.focus();
-                }
-            }
-        }
+        
     }
 
 
