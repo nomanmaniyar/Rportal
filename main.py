@@ -159,7 +159,7 @@ def sregister():
             cursor.execute('SELECT * FROM member WHERE username = %s AND Mcode = %s AND Mflatno = %s AND Mwing = %s', (username, code, flatno, wing,))
             account = cursor.fetchone()
             cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor1.execute('SELECT * FROM secretary WHERE username = %s AND Scode = %s AND Sflatno = %s AND Swing = %s', (username, code, flatno, wing,))
+            cursor.execute('SELECT * FROM secretary WHERE username = %s AND Scode = %s AND Sflatno = %s AND Swing = %s', (username, code, flatno, wing,))
             account1 = cursor1.fetchone()
             cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor2.execute('SELECT * FROM society WHERE code = %s', (code,))
@@ -238,6 +238,7 @@ def mcode1(code):
 def mregister():
     if 'user' in session:
         msg = ''
+        msg1= ''
         if request.method == 'POST' and 'Mcode' in request.form and 'Mflatno' in request.form and 'Mwing' in request.form and 'Semail' in request.form:
             username = session['username']
             code = request.form['Mcode']
@@ -268,10 +269,10 @@ def mregister():
                 text = "Hello \nYou have received new member request with followinh member details. \n Member details are :\n"
                 msg.body = text + "\n Flat No :" + wing + flatno + "\n Name : " + name + "\n phone No : " + mobile + "\n Email ID : " + email + part4
                 mail.send(msg)  
-                msg = 'You have successfully registered!'
+                msg1 = 'You have successfully registered!'
         elif request.method == 'POST':
             msg = 'Please fill out the form!'
-        return render_template('mainhome.html', msg=msg)
+        return render_template('member/mcode.html', msg=msg, msg1=msg1)
     elif session.get('user') is None:
             return login()
     else:

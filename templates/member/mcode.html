@@ -36,12 +36,18 @@
                                     aria-describedby="emailHelp" required>
                             </div>
                             <button type="submit" class="btn btn-primary w-100 mb-3">Verify</button> {% else %}
+                            {% if msg1 %}
+                            <div class="alert alert -danger msg" role="alert">
+                                {{ msg1 }}
+                                <span><br> <a href="{{ url_for('mainhome') }}" class="d-inline-block mb-0"> Continue</a></span>
+                            {% else %}
                             <div class="alert alert -danger msg" role="alert">
                                 {{ msg }}
                                 <span><br> Let's
                                     <a href="{{ url_for('mcode') }}" class="d-inline-block mb-0"> try
                                         again.</a></span>
                             </div>
+                            {% endif %}
                             {% endif %}
 
                         </form>
