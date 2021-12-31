@@ -70,12 +70,8 @@ otp = random.randint(111111,999999)
 @app.route('/')
 def index():
     return rportal()
-<<<<<<< HEAD
+    
 @app.route('/rportal/')
-=======
-
-@app.route('/R-Portal/')
->>>>>>> jay
 def rportal():
     return render_template('rportal.html')
 
