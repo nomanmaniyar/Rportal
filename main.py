@@ -46,27 +46,27 @@ app.config["MAIL_USERNAME"] = 'ajinfotics@gmail.com'
 app.config['MAIL_PASSWORD'] = 'Ajinfo@1234'  
 #app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
-part2 ="Your One Time Password for logging into R-Portal is\n\n" 
+part2 ="Your One Time Password for logging into rportal is\n\n" 
 part3="""\n\nIf you did not Initiated this request,please ignore this mail.
 
 If you have more queries, feel free to contact us at ajinfotics@gmail.com. 
 
 We will love to help and assist you at any movement.
 
-Automated mail sent by R-Portal. Please do not reply.
+Automated mail sent by rportal. Please do not reply.
 Regards! """
 part4 ="""\nIf you have any queries, feel free to contact us at ajinfotics@gmail.com. 
 We will love to help and assist you at any movement.
-Automated mail sent by R-Portal. Please do not reply.
+Automated mail sent by RPortal. Please do not reply.
 Regards! """
 mail = Mail(app)
 otp = random.randint(000000,999999)  
 
-#   Index Page - R-Portal
+#   Index Page - rportal
 @app.route('/')
 def index():
     return rportal()
-@app.route('/R-Portal/')
+@app.route('/rportal/')
 def rportal():
     return render_template('rportal.html')
 
@@ -75,7 +75,7 @@ def rportal():
 #
 
 #   User Registration
-@app.route('/R-Portal/register', methods=['GET','POST'])
+@app.route('/rportal/register', methods=['GET','POST'])
 def register():
     msg = ''
     if request.method == 'POST'and 'name' in request.form and 'username' in request.form and 'mobile' in request.form and 'email' in request.form and 'password' in request.form :
@@ -120,7 +120,7 @@ def invitation():
     code = str(str1 + num1)
     return code
     
-@app.route('/R-Portal/sregister', methods=['GET','POST'])
+@app.route('/rportal/sregister', methods=['GET','POST'])
 def sregister():
     if 'user' in session:
         msg = ''
@@ -159,7 +159,7 @@ def sregister():
             cursor.execute('SELECT * FROM member WHERE username = %s AND Mcode = %s AND Mflatno = %s AND Mwing = %s', (username, code, flatno, wing,))
             account = cursor.fetchone()
             cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('SELECT * FROM secretary WHERE username = %s AND Scode = %s AND Sflatno = %s AND Swing = %s', (username, code, flatno, wing,))
+            cursor1.execute('SELECT * FROM secretary WHERE username = %s AND Scode = %s AND Sflatno = %s AND Swing = %s', (username, code, flatno, wing,))
             account1 = cursor1.fetchone()
             cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor2.execute('SELECT * FROM society WHERE code = %s', (code,))
@@ -189,7 +189,7 @@ def sregister():
         return logout()
 
 #   Member Registration
-@app.route('/R-Portal/mcode', methods=['GET', 'POST'])
+@app.route('/rportal/mcode', methods=['GET', 'POST'])
 def mcode():
     if 'user' in session:
         msg = ''
@@ -211,7 +211,7 @@ def mcode():
     else:
         return logout()
 
-@app.route('/R-Portal/mcode1/<string:code>', methods=['GET', 'POST'])
+@app.route('/rportal/mcode1/<string:code>', methods=['GET', 'POST'])
 def mcode1(code):
     if 'user' in session:
         msg = ''
@@ -234,7 +234,7 @@ def mcode1(code):
     else:
         return logout()
 
-@app.route('/R-Portal/mregister', methods=['GET', 'POST'])
+@app.route('/rportal/mregister', methods=['GET', 'POST'])
 def mregister():
     if 'user' in session:
         msg = ''
@@ -279,8 +279,8 @@ def mregister():
         return logout()
 
 
-#   Security Guard Registeration
-@app.route('/R-Portal/add_security', methods=['GET','POST'])
+#   Security GuFard Registeration
+@app.route('/rportal/add_security', methods=['GET','POST'])
 def security():
     msg = ''
     if request.method == 'POST' and 'security_name' in request.form and 'security_username' in request.form and 'security_password' in request.form:
@@ -307,7 +307,7 @@ def security():
     return people()
 
 #   Staff Member Registaration
-@app.route('/R-Portal/add_staff', methods=['GET','POST'])
+@app.route('/rportal/add_staff', methods=['GET','POST'])
 def staff():
     msg = ''
     if request.method == 'POST' and 'staff_name' in request.form and 'staff_username' in request.form and 'staff_password' in request.form  and 'post' in request.form:
@@ -328,7 +328,7 @@ def staff():
         elif not staff_username or not staff_password or not staff_mobile:
             msg = 'Please fill out the form!'
         else:
-            cursor.execute('INSERT INTO staff VALUES (NULL, %s, %s, %s, %s, %s , DEFAULT, %s )', (staff_username , staff_password , staff_name , staff_mobile, session['code'],post))
+            cursor.execute('INSERT INTO staff VALUES (NULL, %s, %s, %s, %s, %s , DEFAULT, %s )', (staff_username , staff_password , staff_name , staff_mobile, session['Scode'],post))
             mysql.connection.commit()
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
@@ -339,7 +339,7 @@ def staff():
 #   Login Page
 #
 
-@app.route('/R-Portal/login', methods=['GET', 'POST'])
+@app.route('/rportal/login', methods=['GET', 'POST'])
 def login():
     msg = ''
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
@@ -471,7 +471,7 @@ def uotp():
         return logout()
  
 #   Forgot Password
-@app.route('/R-Portal/forgot_password', methods=['GET', 'POST'])
+@app.route('/rportal/forgot_password', methods=['GET', 'POST'])
 def forgot_password():
     msg = ''
     if request.method == 'POST' and 'username' in request.form and 'email' in request.form and 'password' in request.form:
@@ -510,7 +510,7 @@ def forgot_password():
     return render_template('forgot_password.html', msg=msg)
 
 #   Logout 
-@app.route('/R-Portal/logout')
+@app.route('/rportal/logout')
 def logout():   
     if 'secretary' in session:
         session.pop('secretary', None)
@@ -594,7 +594,7 @@ def logout():
 #
 #   User Part (MainHomePage)
 #
-@app.route('/R-Portal/mainhome')
+@app.route('/rportal/mainhome')
 def mainhome():
     session.pop('member', None)
     session.pop('Mid', None)
@@ -639,7 +639,7 @@ def mainhome():
 #
 #   Secretary Part
 #
-@app.route('/R-Portal/society_details')
+@app.route('/rportal/society_details')
 def people():
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -660,7 +660,7 @@ def people():
     else:
         return logout()
 
-@app.route('/R-Portal/inactive_people')
+@app.route('/rportal/inactive_people')
 def inpeople():
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -681,7 +681,7 @@ def inpeople():
     else:
         return logout()
 
-@app.route('/R-Portal/allow_members/')
+@app.route('/rportal/allow_members/')
 def allow_members():
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -693,7 +693,7 @@ def allow_members():
     else:
         return logout()
     
-@app.route('/R-Portal/a_members/<int:Mid>' , methods=['GET', 'POST'])
+@app.route('/rportal/a_members/<int:Mid>' , methods=['GET', 'POST'])
 def a_members(Mid):
     if 'secretary' in session:
         if request.method == 'POST' and 'Memail' in request.form and 'Mname':
@@ -711,7 +711,7 @@ def a_members(Mid):
     else:
         return logout()
 
-@app.route('/R-Portal/i_members/<int:Mid>', methods=['GET', 'POST'])
+@app.route('/rportal/i_members/<int:Mid>', methods=['GET', 'POST'])
 def i_members(Mid):
     if 'secretary' in session:
         if request.method == 'POST' and 'Memail' in request.form and 'Mname':
@@ -729,7 +729,7 @@ def i_members(Mid):
     else:
         return logout()
 
-@app.route('/R-Portal/ac_members/<int:Mid>', methods=['GET', 'POST'])
+@app.route('/rportal/ac_members/<int:Mid>', methods=['GET', 'POST'])
 def ac_members(Mid):
     if 'secretary' in session:
         if request.method == 'POST' and 'Memail' in request.form and 'Mname':
@@ -747,7 +747,7 @@ def ac_members(Mid):
     else:
         return logout()
 
-@app.route('/R-Portal/r_members', methods=['GET', 'POST'])
+@app.route('/rportal/r_members', methods=['GET', 'POST'])
 def r_members():
     if 'secretary' in session:
         if request.method == 'POST' and 'email' in request.form and 'message'  in request.form and 'Mid' :
@@ -760,7 +760,7 @@ def r_members():
             cursor.execute('DELETE FROM member WHERE Mid = %s',[Mid]) 
             mysql.connection.commit()
             msg = Message('Member Request Rejected' ,sender ='Rportal<me@Rportal.com', recipients = [email])
-            msg.body ="Hello! \n Your member request for the "+ name + " is rejected by "+ Sname + "!\n Reason: " + message +"\n\n Thank you for using R-Portal!\n" +part4
+            msg.body ="Hello! \n Your member request for the "+ name + " is rejected by "+ Sname + "!\n Reason: " + message +"\n\n Thank you for using rportal!\n" +part4
             mail.send(msg)  
             msg = 'Member Rejected/Deleted'
         return allow_members()
@@ -769,7 +769,7 @@ def r_members():
     else:
         return logout()
 
-@app.route('/R-Portal/d_members/<int:Mid>' , methods=['GET', 'POST'])
+@app.route('/rportal/d_members/<int:Mid>' , methods=['GET', 'POST'])
 def d_members(Mid):
     if 'secretary' in session:
         if request.method == 'POST' and 'Memail' in request.form and 'Mname':
@@ -787,7 +787,7 @@ def d_members(Mid):
     else:
         return logout()
 
-@app.route('/R-Portal/din_members/<int:Mid>')
+@app.route('/rportal/din_members/<int:Mid>')
 def din_members(Mid):
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -800,7 +800,7 @@ def din_members(Mid):
     else:
         return logout()
 
-@app.route('/R-Portal/i_security/<int:security_id>', methods=['GET', 'POST'])
+@app.route('/rportal/i_security/<int:security_id>', methods=['GET', 'POST'])
 def i_security(security_id):
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -812,7 +812,7 @@ def i_security(security_id):
     else:
         return logout()
         
-@app.route('/R-Portal/a_security/<int:security_id>', methods=['GET', 'POST'])
+@app.route('/rportal/a_security/<int:security_id>', methods=['GET', 'POST'])
 def a_security(security_id):
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -824,7 +824,7 @@ def a_security(security_id):
     else:
         return logout()
 
-@app.route('/R-Portal/d_security/<int:security_id>')
+@app.route('/rportal/d_security/<int:security_id>')
 def d_security(security_id):
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -836,7 +836,7 @@ def d_security(security_id):
     else:
         return logout()
 
-@app.route('/R-Portal/din_security/<int:security_id>')
+@app.route('/rportal/din_security/<int:security_id>')
 def din_security(security_id):
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -848,7 +848,7 @@ def din_security(security_id):
     else:
         return logout()
 
-@app.route('/R-Portal/i_staff/<int:staff_id>', methods=['GET', 'POST'])
+@app.route('/rportal/i_staff/<int:staff_id>', methods=['GET', 'POST'])
 def i_staff(staff_id):
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -860,7 +860,7 @@ def i_staff(staff_id):
     else:
         return logout()
         
-@app.route('/R-Portal/a_staff/<int:staff_id>', methods=['GET', 'POST'])
+@app.route('/rportal/a_staff/<int:staff_id>', methods=['GET', 'POST'])
 def a_staff(staff_id):
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -872,7 +872,7 @@ def a_staff(staff_id):
     else:
         return logout()
 
-@app.route('/R-Portal/d_staff/<int:staff_id>')
+@app.route('/rportal/d_staff/<int:staff_id>')
 def d_staff(staff_id):
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -884,7 +884,7 @@ def d_staff(staff_id):
     else:
         return logout()
 
-@app.route('/R-Portal/din_staff/<int:staff_id>')
+@app.route('/rportal/din_staff/<int:staff_id>')
 def din_staff(staff_id):
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -896,7 +896,7 @@ def din_staff(staff_id):
     else:
         return logout()
 
-@app.route('/R-Portal/shome', methods=['GET','POST'])
+@app.route('/rportal/shome', methods=['GET','POST'])
 def shome():
     if 'user' in session:
         if request.method == 'POST' and 'Sname' in request.form and 'Scode' in request.form and 'Semail'  in request.form and 'username'  in request.form and 'Sid':
@@ -924,7 +924,7 @@ def shome():
     else:
         return logout()
 
-@app.route('/R-Portal/sprofile')
+@app.route('/rportal/sprofile')
 def sprofile():
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -936,7 +936,7 @@ def sprofile():
     else:
         return logout()
 
-@app.route('/R-Portal/createnotice', methods=['GET', 'POST'] )
+@app.route('/rportal/createnotice', methods=['GET', 'POST'] )
 def createnotice():
     if 'secretary' in session:
         if request.method == 'POST' and 'editor' in request.form and 'subject' :
@@ -951,7 +951,7 @@ def createnotice():
     else:
         return logout()
     
-@app.route('/R-Portal/manage_complaint', methods=['GET','POST'])
+@app.route('/rportal/manage_complaint', methods=['GET','POST'])
 def complaint():
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -982,7 +982,7 @@ def generateToken():
     )
     return token
 
-@app.route('/R-Portal/createmeeting', methods=['GET', 'POST'] )
+@app.route('/rportal/createmeeting', methods=['GET', 'POST'] )
 def createmeeting():
     if 'secretary' in session:
         msg = ''
@@ -1034,7 +1034,7 @@ def createmeeting():
     else:
         return logout()
 
-@app.route('/R-Portal/contact')
+@app.route('/rportal/contact')
 def contact():
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1046,7 +1046,7 @@ def contact():
     else:
         return logout()
 
-@app.route('/R-Portal/add_contact', methods=['GET', 'POST'] )
+@app.route('/rportal/add_contact', methods=['GET', 'POST'] )
 def add_contact():
     if 'secretary' in session:
         msg = ''
@@ -1063,7 +1063,7 @@ def add_contact():
     else:
         return logout()
         
-@app.route('/R-Portal/d_contact/<int:contact_id>' , methods=['GET', 'POST'])
+@app.route('/rportal/d_contact/<int:contact_id>' , methods=['GET', 'POST'])
 def d_contact(contact_id):
     if 'secretary' in session:
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1075,7 +1075,7 @@ def d_contact(contact_id):
     else:
         return logout()
 
-@app.route('/R-Portal/add_docs', methods=['GET', 'POST'] )
+@app.route('/rportal/add_docs', methods=['GET', 'POST'] )
 def add_docs():
     if 'secretary' in session:
         msg = ''
@@ -1101,7 +1101,7 @@ def add_docs():
     else:
         return logout()
 
-@app.route('/R-Portal/docs')
+@app.route('/rportal/docs')
 def docs():
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1113,7 +1113,7 @@ def docs():
     else:
         return logout()
         
-@app.route('/R-Portal/d_docs/<int:doc_id>' , methods=['GET', 'POST'])
+@app.route('/rportal/d_docs/<int:doc_id>' , methods=['GET', 'POST'])
 def d_docs(doc_id):
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1125,7 +1125,7 @@ def d_docs(doc_id):
     else:
         return logout()
 
-@app.route('/R-Portal/invite')
+@app.route('/rportal/invite')
 def invite():
     if 'secretary' in session:
         account = session['Scode'];
@@ -1135,7 +1135,7 @@ def invite():
     else:
         return logout() 
 
-@app.route('/R-Portal/chats')
+@app.route('/rportal/chats')
 def chats():
     if 'secretary' in session:
         cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1150,7 +1150,7 @@ def chats():
     else:
         return logout() 
 
-@app.route('/R-Portal/add_chats', methods=['GET', 'POST'] )
+@app.route('/rportal/add_chats', methods=['GET', 'POST'] )
 def add_chats():
     if 'secretary' in session:
         msg = ''
@@ -1173,7 +1173,7 @@ def add_chats():
 #
 #   Member Part
 #
-@app.route('/R-Portal/mhome' , methods=['GET','POST'])
+@app.route('/rportal/mhome' , methods=['GET','POST'])
 def mhome():
     if 'user' in session:
         if request.method == 'POST' and 'Mname' in request.form and 'Mcode' in request.form and 'Memail'  in request.form and 'username'  in request.form and 'Mid':
@@ -1199,7 +1199,7 @@ def mhome():
     else:
         return logout()
 
-@app.route('/R-Portal/mprofile')
+@app.route('/rportal/mprofile')
 def mprofile():
     if 'member' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1211,7 +1211,7 @@ def mprofile():
     else:
         return logout()
 
-@app.route('/R-Portal/viewnotice')
+@app.route('/rportal/viewnotice')
 def viewnotice():
     if 'member' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1223,7 +1223,7 @@ def viewnotice():
     else:
         return logout()
     
-@app.route('/R-Portal/docsm')
+@app.route('/rportal/docsm')
 def docsm():
     if 'member' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1235,7 +1235,7 @@ def docsm():
     else:
         return logout()
 
-@app.route('/R-Portal/complaint', methods=['GET','POST'])
+@app.route('/rportal/complaint', methods=['GET','POST'])
 def member_complaint():
     if 'member' in session:
         msg = ''
@@ -1267,7 +1267,7 @@ def member_complaint():
     else:
         return logout()
 
-@app.route('/R-Portal/view_contact')
+@app.route('/rportal/view_contact')
 def view_contact():
     if 'member' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1279,7 +1279,7 @@ def view_contact():
     else:
         return logout()
 
-@app.route('/R-Portal/chat')
+@app.route('/rportal/chat')
 def chat():
     if 'member' in session:
         cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1294,7 +1294,7 @@ def chat():
     else:
         return logout() 
 
-@app.route('/R-Portal/add_chat', methods=['GET', 'POST'] )
+@app.route('/rportal/add_chat', methods=['GET', 'POST'] )
 def add_chat():
     if 'member' in session:
         msg = ''
@@ -1316,7 +1316,7 @@ def add_chat():
 #
 #   Admin Part
 #
-@app.route('/R-Portal/admin_home')
+@app.route('/rportal/admin_home')
 def admin_home():
     if 'admin' in session:
         return render_template('admin/admin_home.html', Ausername=session['Ausername'])
@@ -1325,7 +1325,7 @@ def admin_home():
     else:
         return logout()
 
-@app.route('/R-Portal/asoc')
+@app.route('/rportal/asoc')
 def asoc():
     if 'admin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1337,7 +1337,7 @@ def asoc():
     else:
         return logout()
   
-@app.route('/R-Portal/isoc')
+@app.route('/rportal/isoc')
 def isoc():
     if 'admin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1349,7 +1349,7 @@ def isoc():
     else:
         return logout()
     
-@app.route('/R-Portal/admin_req/')
+@app.route('/rportal/admin_req/')
 def admin_req():
     if 'admin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1361,7 +1361,7 @@ def admin_req():
     else:
         return logout()
 
-@app.route('/R-Portal/a_sec/<string:Scode>')
+@app.route('/rportal/a_sec/<string:Scode>')
 def a_sec(Scode):
     if 'admin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1378,7 +1378,7 @@ def a_sec(Scode):
     else:
         return logout()
 
-@app.route('/R-Portal/al_sec/<string:Scode>')
+@app.route('/rportal/al_sec/<string:Scode>')
 def al_sec(Scode):
     if 'admin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1395,7 +1395,7 @@ def al_sec(Scode):
     else:
         return logout()
 
-@app.route('/R-Portal/c_sec/<string:Scode>')
+@app.route('/rportal/c_sec/<string:Scode>')
 def c_sec(Scode):
     if 'admin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1412,7 +1412,7 @@ def c_sec(Scode):
     else:
         return logout()
 
-@app.route('/R-Portal/r_sec' , methods=['GET', 'POST'])
+@app.route('/rportal/r_sec' , methods=['GET', 'POST'])
 def r_sec():
     if 'admin' in session:
         if request.method == 'POST' and 'email' in request.form and 'message'  in request.form and 'Scode' :
@@ -1436,7 +1436,7 @@ def r_sec():
     else:
         return logout()
 
-@app.route('/R-Portal/contactdata')
+@app.route('/rportal/contactdata')
 def contactdata():
     if 'admin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1451,7 +1451,7 @@ def contactdata():
 #
 #   Security Part
 #
-@app.route('/R-Portal/security_home')
+@app.route('/rportal/security_home')
 def security_home():
     if 'security' in session:
         return render_template('security/security_home.html', security_username=session['security_username'])
@@ -1460,7 +1460,7 @@ def security_home():
     else:
         return logout()
 
-@app.route('/R-Portal/security_profile')
+@app.route('/rportal/security_profile')
 def security_profile():
     if 'security' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1472,7 +1472,7 @@ def security_profile():
     else:
         return logout()
 
-@app.route('/R-Portal/security_complaint',methods=['GET','POST'])
+@app.route('/rportal/security_complaint',methods=['GET','POST'])
 def security_complaint():
     if 'security' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1497,7 +1497,7 @@ def security_complaint():
     else:
         return logout()
 
-@app.route('/R-Portal/view_contacts')
+@app.route('/rportal/view_contacts')
 def view_contacts():
     if 'security' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1512,7 +1512,7 @@ def view_contacts():
 #
 #   Staff Part
 
-@app.route('/R-Portal/staff_home')
+@app.route('/rportal/staff_home')
 def staff_home():
     if 'staff' in session:
         return render_template('staff/staff_home.html', staff_username=session['staff_username'])
@@ -1521,7 +1521,7 @@ def staff_home():
     else:
         return logout()
 
-@app.route('/R-Portal/staff_profile')
+@app.route('/rportal/staff_profile')
 def staff_profile():
     if 'staff' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1533,7 +1533,7 @@ def staff_profile():
     else:
         return logout()
 
-@app.route('/R-Portal/staff_complaint',methods=['GET','POST'])
+@app.route('/rportal/staff_complaint',methods=['GET','POST'])
 def staff_complaint():
     if 'staff' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1558,7 +1558,7 @@ def staff_complaint():
     else:
         return logout()
 
-@app.route('/R-Portal/view_contactst')
+@app.route('/rportal/view_contactst')
 def view_contactst():
     if 'staff' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1571,7 +1571,7 @@ def view_contactst():
         return logout()
 
 #   Contact Us
-@app.route('/R-Portal/contactus', methods=['GET', 'POST'] )
+@app.route('/rportal/contactus', methods=['GET', 'POST'] )
 def contactus():
     if request.method == 'POST' and 'name' in request.form and 'email' in request.form and 'message' in request.form :
         name = request.form['name']

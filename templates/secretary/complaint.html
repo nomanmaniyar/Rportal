@@ -1,6 +1,6 @@
 {% extends 'secretary/slayout.html' %}
 
-{% block title %}R-Portal - Secretary Complaints{% endblock %}
+{% block title %}rportal - Secretary Complaints{% endblock %}
 
 {% block content %}
 <style>
@@ -35,7 +35,7 @@
  
                     <dialog id="dialog">
                     <button onclick="closeModal()"  class="btn-close" aria-label="Close" ></button><br>
-                    <form action ="/R-Portal/manage_complaint" method="post">
+                    <form action ="/rportal/manage_complaint" method="post">
                         <input type="hidden" name="cid" value="{{ data['complaint_id']}}" >
                         <input type="text" name="reply" placeholder="Enter Your Reply"><br><br>
                         <button   type="submit" >Send </button><br>         
@@ -72,7 +72,7 @@
  
                     <dialog id="dialog1">
                     <button onclick="closeModal()"  class="btn-close" aria-label="Close" ></button><br>
-                    <form action ="/R-Portal/manage_complaint" method="post">
+                    <form action ="/rportal/manage_complaint" method="post">
                         <input type="hidden" name="cid" value="{{ data1['complaint_id']}}" >
                         <input type="text" name="reply" placeholder="Enter Your Reply"><br><br>
                         <button   type="submit" >Send </button><br>         

@@ -1,6 +1,6 @@
 {% extends 'admin/admin.html' %}
 
-{% block title %}R-Portal x Ajinfotics!{% endblock %}
+{% block title %}rportal x Ajinfotics!{% endblock %}
 
 {% block content %}	
 
@@ -54,7 +54,7 @@
                         </ul>
                       </div>
                       <div class="thumb">
-                      <a class="btn btn-success" href="/R-Portal/a_sec/{{data.Scode}}"><i class="fas fa-user-plus " style="color:#08fa18"></i>Allow</a>
+                      <a class="btn btn-success" href="/rportal/a_sec/{{data.Scode}}"><i class="fas fa-user-plus " style="color:#08fa18"></i>Allow</a>
                       <button id="myBtn" class="btn btn-danger"><i class="fas fa-user-minus" style="color:#fa1808"></i>Reject</button>
               
                       </div>
@@ -76,7 +76,7 @@
   <div class="modal-content">
     <span class="close">&times;</span>
     <br>
-    <form action ="/R-Portal/r_sec" method="post"> <br>
+    <form action ="/rportal/r_sec" method="post"> <br>
         <textarea name="message" type="text" placeholder="Give Reason" required></textarea>  <br><br>
         <input type="hidden" name="email"  value="{{ data['Semail'] }}">
         <input type="hidden" name="Scode"  value="{{data['Scode']}}">

@@ -1,6 +1,6 @@
 {% extends 'member/mlayout.html' %}
 
-{% block title %}R-Portal - Member Profile{% endblock %}
+{% block title %}rportal - Member Profile{% endblock %}
 
 {% block content %}
 <h2>Member Profile Page</h2>
@@ -52,7 +52,7 @@
                     <canvas id="qr-code"></canvas>
                     <div class="social-media">
                         <a class="social-media-btn" href="" id="qr"  onClick="downloadQR()" ><i class="far fa-save"></i></a >
-                        <a class="social-media-btn"  href="whatsapp://send?text=http://127.0.0.1:5000/R-Portal/mcode/{{account['Scode']}}"  data-action="share/whatsapp/share"  
+                        <a class="social-media-btn"  href="whatsapp://send?text=http://127.0.0.1:5000/rportal/mcode/{{account['Scode']}}"  data-action="share/whatsapp/share"  
                         target="_blank"><i class="fab fa-whatsapp"></i></a>
                         <button class="social-media-btn"><i class="fab fa-instagram"></i></button>
                         <button class="social-media-btn"><i class="fab fa-twitter"></i></button>
@@ -61,7 +61,7 @@
                     </div>
                     
                     <div class="link-container">
-                        <p class="link">http://127.0.0.1:5000/R-Portal/mcode/{{account['Scode']}}</p>
+                        <p class="link">http://127.0.0.1:5000/rportal/mcode/{{account['Scode']}}</p>
                         <button class="copy-btn">copy</button>
                     </div>
                 </div>
@@ -83,7 +83,7 @@
             qr = new QRious({
             element: document.getElementById('qr-code'),
             size: 150,
-            value: "http://127.0.0.1:5000/R-Portal/mcode/{{account['Scode']}}"
+            value: "http://127.0.0.1:5000/rportal/mcode/{{account['Scode']}}"
             
         });
         downloadQR(); 

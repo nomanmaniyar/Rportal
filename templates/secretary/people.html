@@ -1,6 +1,6 @@
 {% extends 'secretary/slayout.html' %}
 
-{% block title %}R-Portal - Society Member Details{% endblock %}
+{% block title %}rportal - Society Member Details{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" href="/static/styles.css">
@@ -73,7 +73,7 @@
                           <li> <b>Flat No: </b>{{ data['Mwing'] }},{{ data['Mflatno'] }}</li>
                           <li><i class="fas fa-mobile"></i> <b>Contact No: </b>{{ data['Mmobile'] }}</li>
                           <li><i class="fas fa-email"></i> <b>Email ID : </b>{{ data['Memail'] }}</li>
-                          <form action="/R-Portal/i_members/{{data.Mid}}" method="post">
+                          <form action="/rportal/i_members/{{data.Mid}}" method="post">
                         <li><b> Status: </b>
                           <input type="hidden"  name="Mname" value={{ data['Mname'] }}></input>
                           <input type="hidden"  name="Memail" value={{ data['Memail'] }}></input>
@@ -82,7 +82,7 @@
                            <option value='1'>inactive</option>
                           </select>
                         </form> 
-                        <form action="/R-Portal/d_members/{{data.Mid}}" method="post">
+                        <form action="/rportal/d_members/{{data.Mid}}" method="post">
                        <li> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<button  aria-hidden="true"  style="border: none;outline: none;background: none;" type="submit"><i class="fa fa-trash" aria-hidden="true"  style="color:black"></i></button>
                         <input type="hidden"  name="Mname" value={{ data['Mname'] }}></input>
                         <input type="hidden"  name="Memail" value={{ data['Memail'] }}></input>
@@ -183,14 +183,14 @@
                         <ul class="list-unstyled">
                           <li><i class="fas fa-mobile"></i> <b>Contact No: </b>{{ data1['security_mobile'] }} </li>
                           
-                            <form action="/R-Portal/i_security/{{data1.security_id}}" >
+                            <form action="/rportal/i_security/{{data1.security_id}}" >
                             <li> <b> Status: </b>
                                  <select onchange='if(this.value !=0 ) { this.form.submit(); }'>
                                 <option value='0'>{{ data1['security_status'] }}</option>
                                 <option value='1'>inactive</option>
                                </select>
                              </form> 
-                           <li>  &nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;<a href="/R-Portal/d_security/{{data1.security_id}}"><i class="fa fa-trash" aria-hidden="true" onclick="return confirm('Are You Sure For Delete ?')" style="color:black"></i></a>
+                           <li>  &nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;<a href="/rportal/d_security/{{data1.security_id}}"><i class="fa fa-trash" aria-hidden="true" onclick="return confirm('Are You Sure For Delete ?')" style="color:black"></i></a>
                            </li>
                           </li>
                           
@@ -282,14 +282,14 @@
                       <div class="candidate-list-option">
                         <ul class="list-unstyled">
                           <li><i class="fas fa-mobile"></i><b>Contact No:</b> {{ data2['staff_mobile'] }}</li>
-                          <form action="/R-Portal/i_staff/{{data2.staff_id}}" >
+                          <form action="/rportal/i_staff/{{data2.staff_id}}" >
                             <li> <b> Status: </b>
                                  <select onchange='if(this.value !=0 ) { this.form.submit(); }'>
                                 <option value='0'>{{ data2['staff_status'] }}</option>
                                 <option value='1'>inactive</option>
                                </select>
                              </form> 
-                           <li>  &nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;<a href="/R-Portal/d_staff/{{data2.staff_id}}"><i class="fa fa-trash" aria-hidden="true" onclick="return confirm('Are You Sure For Delete ?')" style="color:black"></i></a>
+                           <li>  &nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;<a href="/rportal/d_staff/{{data2.staff_id}}"><i class="fa fa-trash" aria-hidden="true" onclick="return confirm('Are You Sure For Delete ?')" style="color:black"></i></a>
                            </li>
                           </li>
                       </div>

@@ -1,6 +1,6 @@
 {% extends 'secretary/slayout.html' %}
 
-{% block title %}R-Portal - Secretary Profile{% endblock %}
+{% block title %}rportal - Secretary Profile{% endblock %}
 
 {% block content %}
 <h2>Secretary Profile Page</h2>
@@ -103,7 +103,7 @@
             qr = new QRious({
             element: document.getElementById('qr-code'),
             size: 150,
-            value: "http://127.0.0.1:5000/R-Portal/mcode1/{{account['Scode']}}"
+            value: "http://127.0.0.1:5000/rportal/mcode1/{{account['Scode']}}"
             
         });
         downloadQR(); 
