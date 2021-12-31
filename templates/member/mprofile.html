@@ -73,6 +73,44 @@
 
     </table>
     <br>    
+    
+    <button class="btn btn-primary" onclick="openModal()" >Update Profile</button>  <br><br>
+ 
+    <dialog id="dialog">
+    <button alignment="right" onclick="closeModal()"  class="btn-close" aria-label="Close" ></button>
+     <form action="/R-Portal/mupdate" method="POST">
+         <br><br>
+         <p>To chnage your password, Go to forgot password page from login page.</p><br>
+        <input type="text" name="name" value="{{ account['Mname'] }}"><br><br>
+        <input type="text" name="flatno" value="{{ account['Mflatno'] }}"><br><br>
+        <input type="text" name="wing" value="{{ account['Mwing'] }}"><br><br>
+        <input type="mail" name="email" value="{{ account['Memail'] }}"><br><br>
+        <input type="text" name="mobile" value="{{ account['Mmobile'] }}"><br><br>
+        <button class="btn btn-primary" type="submit">Update</button><br>
+        <br>
+     </form>
+    
+    </dialog>
+       
+
+<style>
+    #dialog{width:300px;}
+.right{float:right}
+</style>
+
+<script>
+    var dailog = document.getElementById("dialog"); 
+
+function openModal() { 
+   // dailog.show(); 
+      dailog.showModal();
+} 
+
+function closeModal() { 
+    dailog.close(); 
+} 
+
+</script>
     <a href='javascript:self.history.back();'>Go Back</a>
 </div>
 

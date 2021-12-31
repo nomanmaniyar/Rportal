@@ -6,7 +6,6 @@
 <h2>Secretary Profile Page</h2>
 <div>
     <h3>Your account details are below:</h3>
-
     <h4>Personal Details:</h4>
     <table>
         <tr>
@@ -94,6 +93,80 @@
     </table>
     <br>    
     <br>
+    
+    <button class="btn btn-primary" onclick="openModal()" >Update Profile</button>  <br><br>
+ 
+    <dialog id="dialog">
+    <button alignment="right" onclick="closeModal()"  class="btn-close" aria-label="Close" ></button>
+     <form action="/R-Portal/supdate" method="POST">
+         <br><br>
+         <p>To chnage your password, Go to forgot password page from login page.</p><br>
+        <input type="text" name="name" value="{{ account['Sname'] }}"><br><br>
+        <input type="text" name="flatno" value="{{ account['Sflatno'] }}"><br><br>
+        <input type="text" name="wing" value="{{ account['Swing'] }}"><br><br>
+        <input type="mail" name="email" value="{{ account['Semail'] }}"><br><br>
+        <input type="text" name="mobile" value="{{ account['Smobile'] }}"><br><br>
+        <button class="btn btn-primary" type="submit">Update</button><br>
+        <br>
+     </form>
+    
+    </dialog>
+    
+    <button class="btn btn-primary" onclick="openModal1()" >Change Secretary</button>  <br><br>
+ 
+    <dialog id="dialog1">
+       <button alignment="right" onclick="closeModal1()"  class="btn-close" aria-label="Close" ></button>
+        <form action="/R-Portal/schange" method="POST">
+            <br><br>
+            <label>Select new Scretary:</label>
+            <select name="username" >
+                {% for data in account2 %}
+               <option >{{ data['username'] }}</option>
+               {% endfor %} 
+              </select><br><br>
+              
+              <h4>{{ account2['username'] }} </h4>
+                <input type="text" name="name" value="{{ account['Sname'] }}"><br><br>
+                <input type="text" name="flatno" value="{{ account['Sflatno'] }}"><br><br>
+                <input type="text" name="wing" value="{{ account['Swing'] }}"><br><br>
+                <input type="mail" name="email" value="{{ account['Semail'] }}"><br><br>
+                <input type="text" name="mobile" value="{{ account['Smobile'] }}"><br><br>
+                <p>To chnage your password, Go to forgot password page from login page.</p><br>
+           <button class="btn btn-primary" type="submit">Update</button><br>
+           <br>
+        </form>
+       
+       </dialog>
+   
+
+<style>
+    #dialog{width:300px;}
+    #dialog1{width:300px;}
+.right{float:right}
+</style>
+
+<script>
+    var dailog = document.getElementById("dialog"); 
+    var dailog1 = document.getElementById("dialog1"); 
+
+function openModal() { 
+   // dailog.show(); 
+      dailog.showModal();
+} 
+
+function closeModal() { 
+    dailog.close(); 
+} 
+
+function openModal1() { 
+   // dailog.show(); 
+      dailog1.showModal();
+} 
+
+function closeModal1() { 
+    dailog1.close(); 
+} 
+</script>
     <a href='javascript:self.history.back();'>Go Back</a>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
