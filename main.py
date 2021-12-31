@@ -982,7 +982,7 @@ def generateToken():
     )
     return token
 
-@app.route('/rportal/createmeeting', methods=['GET', 'POST'] )
+@app.route('/R-Portal/createmeeting', methods=['GET', 'POST'] )
 def createmeeting():
     if 'secretary' in session:
         msg = ''
