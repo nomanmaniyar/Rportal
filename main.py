@@ -21,13 +21,17 @@ import jwt
 import requests
 import json
 from time import time
+
 #sys.path.insert(0, 'Rportal/config')
 #from config import credentials as cred
+
 API_KEY = 'DVKW9UngTg2lI1FnqrQVWA'
 API_SEC = 'ZIN4AsaniiKYBBA0cQHLSupJOIZwMEdbcRm2'
+
 UPLOAD_FOLDER = '/path/to/the/uploads'
 UPLOAD_DOCS = '/path/to/the/uploads/docs'
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
+
 app = Flask(__name__)
 app.secret_key = '65142'
 app.config['MYSQL_HOST'] = '127.0.0.1'
@@ -42,7 +46,7 @@ mysql = MySQL(app)
 mail = Mail(app)
 app.config["MAIL_SERVER"]='smtp.gmail.com'  
 app.config["MAIL_PORT"] =465 #465 or 587 
-app.config["MAIL_USERNAME"] = 'ajinfotics@gmail.com'  
+app.config["MAIL_USERNAME"] = 'noreply.rportal@gmail.com'  
 app.config['MAIL_PASSWORD'] = 'Ajinfo@1234'  
 #app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
@@ -60,20 +64,24 @@ We will love to help and assist you at any movement.
 Automated mail sent by RPortal. Please do not reply.
 Regards! """
 mail = Mail(app)
-otp = random.randint(000000,999999)  
+otp = random.randint(111111,999999)  
 
 #   Index Page - rportal
 @app.route('/')
 def index():
     return rportal()
+<<<<<<< HEAD
 @app.route('/rportal/')
+=======
+
+@app.route('/R-Portal/')
+>>>>>>> jay
 def rportal():
     return render_template('rportal.html')
 
 #
 #   Registrations
 #
-
 #   User Registration
 @app.route('/rportal/register', methods=['GET','POST'])
 def register():
@@ -342,6 +350,7 @@ def staff():
 @app.route('/rportal/login', methods=['GET', 'POST'])
 def login():
     msg = ''
+    msg1 = ''
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
         username = request.form['username']
         passtext = request.form['password']
@@ -362,79 +371,96 @@ def login():
             passtext = request.form['password']
             password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('SELECT * FROM admin WHERE Ausername = %s AND Apassword = %s', (username, password,))
+            cursor.execute('SELECT * FROM userdetails WHERE email = %s AND password = %s ', (username, password,))
             account = cursor.fetchone()
             if account:
-                session['admin'] = True
-                session['Aid'] = account['Aid']
-                session['Ausername'] = account['Ausername']
-                return render_template("admin/admin.html")       
+                session['user'] = True
+                session['uid'] = account['uid']
+                session['username'] = account['username']
+                session['user_name'] = account['name']
+                session['user_email'] = account['email']
+                session['user_mobile'] = account['mobile']
+                
+                return uotp()
             elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                 username = request.form['username']
                 passtext = request.form['password']
                 password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
                 cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-                cursor.execute('SELECT * FROM security WHERE security_username = %s AND security_password = %s AND security_status=%s', (username, password,'active'))
+                cursor.execute('SELECT * FROM admin WHERE Ausername = %s AND Apassword = %s', (username, password,))
                 account = cursor.fetchone()
                 if account:
-                    session['security'] = True
-                    session['security_id'] = account['security_id']
-                    session['security_username'] = account['security_username']
-                    session['security_code'] = account['security_code']
-                    return render_template("security/security_home.html")       
+                    session['admin'] = True
+                    session['Aid'] = account['Aid']
+                    session['Ausername'] = account['Ausername']
+                    return render_template("admin/admin.html")       
                 elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                     username = request.form['username']
                     passtext = request.form['password']
                     password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
                     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-                    cursor.execute('SELECT * FROM staff WHERE staff_username = %s AND staff_password = %s AND staff_status=%s', (username, password,'active'))
+                    cursor.execute('SELECT * FROM security WHERE security_username = %s AND security_password = %s AND security_status=%s', (username, password,'active'))
                     account = cursor.fetchone()
                     if account:
-                        session['staff'] = True
-                        session['staff_id'] = account['staff_id']
-                        session['staff_username'] = account['staff_username']
-                        session['staff_code'] = account['staff_code']
-                        session['staff_post'] = account['post']
-                        return render_template("staff/staff_home.html") 
+                        session['security'] = True
+                        session['security_id'] = account['security_id']
+                        session['security_username'] = account['security_username']
+                        session['security_code'] = account['security_code']
+                        return render_template("security/security_home.html")       
                     elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                         username = request.form['username']
                         passtext = request.form['password']
                         password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
                         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-                        cursor.execute('SELECT * FROM security WHERE security_username = %s AND security_password = %s AND security_status=%s', (username, password,'request'))
+                        cursor.execute('SELECT * FROM staff WHERE staff_username = %s AND staff_password = %s AND staff_status=%s', (username, password,'active'))
                         account = cursor.fetchone()
                         if account:
-                            msg = 'Your account is not activated yet or under verification process! Please come back once your account get verified!!'
+                            session['staff'] = True
+                            session['staff_id'] = account['staff_id']
+                            session['staff_username'] = account['staff_username']
+                            session['staff_code'] = account['staff_code']
+                            session['staff_post'] = account['post']
+                            return render_template("staff/staff_home.html") 
                         elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                             username = request.form['username']
                             passtext = request.form['password']
                             password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
                             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-                            cursor.execute('SELECT * FROM staff WHERE staff_username = %s AND staff_password = %s AND staff_status=%s', (username, password,'request'))
+                            cursor.execute('SELECT * FROM security WHERE security_username = %s AND security_password = %s AND security_status=%s', (username, password,'request'))
                             account = cursor.fetchone()
                             if account:
-                                msg = 'Your account is not activated yet or under verification process! Please come back once your account get verified!!'  
+                                msg = 'Your account is not activated yet or under verification process! Please come back once your account get verified!!'
                             elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                                 username = request.form['username']
                                 passtext = request.form['password']
                                 password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
                                 cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-                                cursor.execute('SELECT * FROM security WHERE security_username = %s AND security_password = %s AND security_status=%s', (username, password,'inactive'))
+                                cursor.execute('SELECT * FROM staff WHERE staff_username = %s AND staff_password = %s AND staff_status=%s', (username, password,'request'))
                                 account = cursor.fetchone()
                                 if account:
-                                    msg = 'Your account is temparorily disbanded! Contact Secretary of your society to learn more.'
+                                    msg = 'Your account is not activated yet or under verification process! Please come back once your account get verified!!'  
                                 elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                                     username = request.form['username']
                                     passtext = request.form['password']
                                     password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
                                     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-                                    cursor.execute('SELECT * FROM staff WHERE staff_username = %s AND staff_password = %s AND staff_status=%s', (username, password,'inactive'))
+                                    cursor.execute('SELECT * FROM security WHERE security_username = %s AND security_password = %s AND security_status=%s', (username, password,'inactive'))
                                     account = cursor.fetchone()
                                     if account:
                                         msg = 'Your account is temparorily disbanded! Contact Secretary of your society to learn more.'
-                                    else:
-                                        msg = 'Incorrect username/password! Please check Username/Password and try again!'
-    return render_template('login.html', msg=msg)
+                                    elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+                                        username = request.form['username']
+                                        passtext = request.form['password']
+                                        password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
+                                        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                                        cursor.execute('SELECT * FROM staff WHERE staff_username = %s AND staff_password = %s AND staff_status=%s', (username, password,'inactive'))
+                                        account = cursor.fetchone()
+                                        if account:
+                                            msg = 'Your account is temparorily disbanded! Contact Secretary of your society to learn more.'
+                                        else:
+                                            msg = 'Incorrect username/password! Please check Username/Password and try again!'
+                                            msg1= 'If you are Security or Staff member, please use username only instead of email and try again'
+    return render_template('login.html', msg=msg, msg1=msg1)
 
 #   User OTP Validators
 @app.route('/validate',methods=["POST"])
@@ -476,18 +502,19 @@ def forgot_password():
     msg = ''
     if request.method == 'POST' and 'username' in request.form and 'email' in request.form and 'password' in request.form:
         username = request.form['username']
-        mail = request.form['email']
+        email = request.form['email']
         passtext = request.form['password']
         password = hashlib.sha256((passtext).encode('utf-8')).hexdigest()
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM userdetails WHERE username = %s AND email = %s', (username, mail,))
+        cursor.execute('SELECT * FROM userdetails WHERE username = %s AND email = %s', (username, email,))
         account = cursor.fetchone()
         if account:
-            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('UPDATE userdetails SET password = %s WHERE username = %s', (password,username))  
-            mysql.connection.commit()
-            msg = 'Password Changed Sucsessfully'
-            return render_template('forgot_password.html', msg=msg)
+            email = email
+            msg = Message('OTP confirmation for RPortal' ,sender ='Rportal<me@Rportal.com', recipients = [email])
+            msg.body = part2 + str(otp)+ part3 
+            mail.send(msg)
+            msg1 = 'OTP: ',otp
+            return render_template('forgot_otp.html', msg1=msg1, username=username, password=password)
         elif request.method == 'POST' and 'username' in request.form:
             username = request.form['username']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -506,8 +533,26 @@ def forgot_password():
                     return render_template('forgot_password.html', msg=msg)    
                 else:
                     msg = 'Invalid username/Email! Please check Username/Email and try again!'
-                    return render_template('forgot_password.html', msg=msg)    
+                    return render_template('forgot_password.html', msg=msg)   
+            return render_template('forgot_password.html', msg=msg) 
+        return render_template('forgot_password.html', msg=msg)
     return render_template('forgot_password.html', msg=msg)
+
+@app.route('/fvalidate',methods=["POST"])
+def fvalidate(): 
+    form_otp = request.form['otp']  
+    username = request.form['username']
+    passtext = request.form['password']
+    if otp == int(form_otp):  
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE userdetails SET password = %s WHERE username = %s', (passtext,username))  
+        mysql.connection.commit()
+        msg = 'Password Changed Sucsessfully'
+        return render_template('forgot_password.html', msg=msg)
+    else: 
+        msg = 'OTP Does not match! Try Again!!'
+        return render_template('forgot_otp.html', msg=msg)
+
 
 #   Logout 
 @app.route('/rportal/logout')
@@ -930,13 +975,55 @@ def sprofile():
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM secretary INNER JOIN society ON secretary.Scode = society.code WHERE Sid = %s', (session['Sid'],))
         account = cursor.fetchone()
-        return render_template('secretary/sprofile.html', account=account)
+        cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor2.execute('SELECT username from member WHERE Mcode=%s AND member_status=%s', (session['Scode'],'active',))
+        account2 = cursor2.fetchall()
+        print(account2)
+        print(session['Scode'])
+        return render_template('secretary/sprofile.html', account=account, account2=account2)
     elif session.get('secretary') is None:
         return login()
     else:
         return logout()
 
-@app.route('/rportal/createnotice', methods=['GET', 'POST'] )
+@app.route('/R-Portal/supdate', methods=['GET', 'POST'] )
+def supdate():
+    if 'secretary' in session:
+        if request.method == 'POST' and 'flatno' in request.form and 'wing' in request.form:
+            email = request.form['email']
+            Aname = request.form['name']
+            flatno = request.form['flatno']
+            wing = request.form['wing']
+            mobile = request.form['mobile']
+            cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor1.execute('UPDATE secretary SET Sname=%s, Sflatno=%s, Swing=%s, Semail=%s, Smobile=%s WHERE Sid=%s', (Aname , flatno , wing , email, mobile, session['Sid'],))
+            mysql.connection.commit()
+        return sprofile()
+    elif session.get('secretary') is None:
+        return login()
+    else:
+        return logout()
+
+@app.route('/R-Portal/schange', methods=['GET', 'POST'] )
+def schange():
+    if 'secretary' in session:
+        if request.method == 'POST' and 'flatno' in request.form and 'wing' in request.form:
+            email = request.form['email']
+            username = request.form['username']
+            Aname = request.form['name']
+            flatno = request.form['Sflatno']
+            wing = request.form['Swing']
+            mobile = request.form['mobile']
+            cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor2.execute('UPDATE secretary SET username=%s, Sname = %s, Sflatno=%s, Swing=%s, Semail=%s, Smobile=%s WHERE Sid=%s', (username, Aname , flatno , wing , email, mobile, session['Sid']))
+            mysql.connection.commit()
+        return sprofile()
+    elif session.get('secretary') is None:
+        return login()
+    else:
+        return logout()
+        
+@app.route('/R-Portal/createnotice', methods=['GET', 'POST'] )
 def createnotice():
     if 'secretary' in session:
         if request.method == 'POST' and 'editor' in request.form and 'subject' :
@@ -1211,8 +1298,26 @@ def mprofile():
     else:
         return logout()
 
-@app.route('/rportal/viewnotice')
-def viewnotice():
+@app.route('/R-Portal/mupdate', methods=['GET', 'POST'] )
+def mupdate():
+    if 'member' in session:
+        if request.method == 'POST' and 'flatno' in request.form and 'wing' in request.form:
+            email = request.form['email']
+            Aname = request.form['name']
+            flatno = request.form['flatno']
+            wing = request.form['wing']
+            mobile = request.form['mobile']
+            cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor1.execute('UPDATE member SET Mname=%s, Mflatno=%s, Mwing=%s, Memail=%s, Mmobile=%s, member_status=%s WHERE Mid=%s', (Aname , flatno , wing , email, mobile, 'inactive', session['Mid'],))
+            mysql.connection.commit()
+        return mprofile()
+    elif session.get('member') is None:
+        return login()
+    else:
+        return logout()
+
+@app.route('/R-Portal/viewnotice')
+def mviewnotice():
     if 'member' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT *  from notice WHERE notice_code = %s', (session['Mcode'],) ) 
@@ -1472,7 +1577,22 @@ def security_profile():
     else:
         return logout()
 
-@app.route('/rportal/security_complaint',methods=['GET','POST'])
+@app.route('/R-Portal/security_update', methods=['GET', 'POST'] )
+def security_update():
+    if 'security' in session:
+        if request.method == 'POST' and 'name' in request.form and 'mobile' in request.form:
+            Aname = request.form['name']
+            mobile = request.form['mobile']
+            cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor1.execute('UPDATE security SET security_name=%s, security_mobile=%s, security_status=%s WHERE security_id=%s', (Aname, mobile, 'inactive', session['security_id'],))
+            mysql.connection.commit()
+        return security_profile()
+    elif session.get('security') is None:
+        return login()
+    else:
+        return logout()
+
+@app.route('/R-Portal/security_complaint',methods=['GET','POST'])
 def security_complaint():
     if 'security' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1533,7 +1653,22 @@ def staff_profile():
     else:
         return logout()
 
-@app.route('/rportal/staff_complaint',methods=['GET','POST'])
+@app.route('/R-Portal/staff_update', methods=['GET', 'POST'] )
+def staff_update():
+    if 'staff' in session:
+        if request.method == 'POST' and 'name' in request.form and 'mobile' in request.form:
+            Aname = request.form['name']
+            mobile = request.form['mobile']
+            cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor1.execute('UPDATE staff SET staff_name=%s, staff_mobile=%s, staff_status=%s WHERE staff_id=%s', (Aname, mobile, 'inactive', session['staff_id'],))
+            mysql.connection.commit()
+        return staff_profile()
+    elif session.get('staff') is None:
+        return login()
+    else:
+        return logout()
+
+@app.route('/R-Portal/staff_complaint',methods=['GET','POST'])
 def staff_complaint():
     if 'staff' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
