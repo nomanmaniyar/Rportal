@@ -967,22 +967,25 @@ def shome():
 
 @app.route('/rportal/sprofile')
 def sprofile():
+    
+    
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM secretary INNER JOIN society ON secretary.Scode = society.code WHERE Sid = %s', (session['Sid'],))
         account = cursor.fetchone()
-        cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor2.execute('SELECT username from member WHERE Mcode=%s AND member_status=%s', (session['Scode'],'active',))
-        account2 = cursor2.fetchall()
-        print(account2)
-        print(session['Scode'])
-        return render_template('secretary/sprofile.html', account=account, account2=account2)
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        
+        cursor1.execute('SELECT Mname FROM  member where member_status=%s  AND Mcode=%s ', ( 'active' ,  session['Scode'], ) )
+        account1 = cursor1.fetchall()
+        print(  account1 )
+
+        return render_template('secretary/sprofile.html', account=account, account1=account1)
     elif session.get('secretary') is None:
         return login()
     else:
         return logout()
 
-@app.route('/R-Portal/supdate', methods=['GET', 'POST'] )
+@app.route('/rportal/supdate', methods=['GET', 'POST'] )
 def supdate():
     if 'secretary' in session:
         if request.method == 'POST' and 'flatno' in request.form and 'wing' in request.form:
@@ -1000,7 +1003,7 @@ def supdate():
     else:
         return logout()
 
-@app.route('/R-Portal/schange', methods=['GET', 'POST'] )
+@app.route('/rportal/schange', methods=['GET', 'POST'] )
 def schange():
     if 'secretary' in session:
         if request.method == 'POST' and 'flatno' in request.form and 'wing' in request.form:
@@ -1019,7 +1022,7 @@ def schange():
     else:
         return logout()
         
-@app.route('/R-Portal/createnotice', methods=['GET', 'POST'] )
+@app.route('/rportal/createnotice', methods=['GET', 'POST'] )
 def createnotice():
     if 'secretary' in session:
         if request.method == 'POST' and 'editor' in request.form and 'subject' :
@@ -1065,7 +1068,7 @@ def generateToken():
     )
     return token
 
-@app.route('/R-Portal/createmeeting', methods=['GET', 'POST'] )
+@app.route('/rportal/createmeeting', methods=['GET', 'POST'] )
 def createmeeting():
     if 'secretary' in session:
         msg = ''
@@ -1294,7 +1297,7 @@ def mprofile():
     else:
         return logout()
 
-@app.route('/R-Portal/mupdate', methods=['GET', 'POST'] )
+@app.route('/rportal/mupdate', methods=['GET', 'POST'] )
 def mupdate():
     if 'member' in session:
         if request.method == 'POST' and 'flatno' in request.form and 'wing' in request.form:
@@ -1312,7 +1315,7 @@ def mupdate():
     else:
         return logout()
 
-@app.route('/R-Portal/viewnotice')
+@app.route('/rportal/viewnotice')
 def mviewnotice():
     if 'member' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1573,7 +1576,7 @@ def security_profile():
     else:
         return logout()
 
-@app.route('/R-Portal/security_update', methods=['GET', 'POST'] )
+@app.route('/rportal/security_update', methods=['GET', 'POST'] )
 def security_update():
     if 'security' in session:
         if request.method == 'POST' and 'name' in request.form and 'mobile' in request.form:
@@ -1588,7 +1591,7 @@ def security_update():
     else:
         return logout()
 
-@app.route('/R-Portal/security_complaint',methods=['GET','POST'])
+@app.route('/rportal/security_complaint',methods=['GET','POST'])
 def security_complaint():
     if 'security' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1649,7 +1652,7 @@ def staff_profile():
     else:
         return logout()
 
-@app.route('/R-Portal/staff_update', methods=['GET', 'POST'] )
+@app.route('/rportal/staff_update', methods=['GET', 'POST'] )
 def staff_update():
     if 'staff' in session:
         if request.method == 'POST' and 'name' in request.form and 'mobile' in request.form:
@@ -1664,7 +1667,7 @@ def staff_update():
     else:
         return logout()
 
-@app.route('/R-Portal/staff_complaint',methods=['GET','POST'])
+@app.route('/rportal/staff_complaint',methods=['GET','POST'])
 def staff_complaint():
     if 'staff' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
