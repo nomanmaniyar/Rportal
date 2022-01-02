@@ -329,7 +329,7 @@ def staff():
         elif not staff_username or not staff_password or not staff_mobile:
             msg = 'Please fill out the form!'
         else:
-            cursor.execute('INSERT INTO staff VALUES (NULL, %s, %s, %s, %s, %s , DEFAULT, %s )', (staff_username , staff_password , staff_name , staff_mobile, session['Scode'],post))
+            cursor.execute('INSERT INTO staff VALUES (NULL, %s, %s, %s, %s, %s , %s , DEFAULT )', (staff_username , staff_password , staff_name , staff_mobile,post,session['Scode'],))
             mysql.connection.commit()
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
