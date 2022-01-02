@@ -232,7 +232,7 @@ def mcode1(code):
             else:
                 mysql.connection.commit()
                 msg='Invalid Society Code!'
-        return render_template('member/mcode.html', msg=msg)
+        return render_template('member/Mcode.html', msg=msg)
     elif session.get('user') is None:
             return login()
     else:

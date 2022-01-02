@@ -35,7 +35,9 @@
                                     placeholder="Enter your resedential code" id="code" name="code"
                                     aria-describedby="emailHelp" required>
                             </div>
-                        <button type="submit" class="btn btn-primary w-100 mb-3">Verify</button> {% else %}
+                           
+                            <button type="submit" class="btn btn-primary w-100 mb-3">Verify</button> <button  class="btn btn-primary w-100 mb-3" onclick="openModal()" >Scan QR</button> 
+                            {% else %}
                             {% if msg1 %}
                             <div class="alert alert -danger msg" role="alert">
                                 {{ msg1 }}
@@ -56,8 +58,15 @@
             </div>
         </div>
     </div>
+  
+ <dialog id="dialog">
+     <br>
+    <video id="preview"></video>
+    <br>
+    
+    </dialog>
 
- <!--<video id="preview"></video>-->
+ 
 
     <!-- Footer -->
     <footer class=" text-dark text-center position-relative bg-light-pink">
@@ -66,7 +75,7 @@
             </p>
         </div>
     </footer>
-  <!----
+  
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
 
@@ -74,7 +83,7 @@
           let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
           scanner.addListener('scan', function (content) {
             
-            window.location.href =content;
+            window.location.replace(content);
           });
           Instascan.Camera.getCameras().then(function (cameras) {
             if (cameras.length > 0) {
@@ -85,7 +94,24 @@
           }).catch(function (e) {
             console.error(e);
           });
-        </script>-->
+        </script>
+        <style>
+            #dialog{width:600px;}
+        .right{float:right}
+        </style>
+        
+        <script>
+            var dailog = document.getElementById("dialog"); 
+        
+        function openModal() { 
+           // dailog.show(); 
+              dailog.showModal();
+        } 
+        
+        function closeModal() { 
+            dailog.close(); 
+        } 
+        </script>
 
 
 </body>
