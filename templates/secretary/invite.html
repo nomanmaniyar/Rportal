@@ -20,10 +20,18 @@
     </div>
     
     <div class="link-container">
-        <p class="link">http://127.0.0.1:5000/rportal/mcode1/'{{account}}'</p>
+       
+        <p class="link" id="link"></p>
         <button class="copy-btn">copy</button>
+        
     </div>
 </div>
+<script>
+    const link = "http://127.0.0.1:5000/rportal/mcode1/{{account}}"
+    let text = link.replace(/\s+/g, '');
+    
+    document.getElementById("link").innerHTML = text;
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 <script>
     var qr;
@@ -31,7 +39,7 @@
             qr = new QRious({
             element: document.getElementById('qr-code'),
             size: 150,
-            value: "http://127.0.0.1:5000/rportal/mcode1/'{{account}}'"
+            value: ("http://127.0.0.1:5000/rportal/mcode1/{{account}}".replace(/\s+/g, ''))
             
         });
         downloadQR(); 
