@@ -228,7 +228,7 @@ def mcode1(code):
                 cursor.execute('select name, city, road, area, state, pin, code , Semail from society inner join secretary WHERE code = %s', (code ,))
                 account = cursor.fetchone()
                 name =session['user_name']
-                return render_template('member/mverify.html', account=account, msg=msg, name = name ,username=session['username'], email=session['user_email'], mobile=session['user_mobile'])
+                return render_template('member/mverify.html', account=account, msg=msg, name=session['user_name'],username=session['username'], email=session['user_email'], mobile=session['user_mobile'])
             else:
                 mysql.connection.commit()
                 msg='Invalid Society Code!'
@@ -967,8 +967,6 @@ def shome():
 
 @app.route('/rportal/sprofile')
 def sprofile():
-    
-    
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM secretary INNER JOIN society ON secretary.Scode = society.code WHERE Sid = %s', (session['Sid'],))
