@@ -1091,7 +1091,7 @@ def createmeeting():
                             },
                 "settings": {"host_video": "true",
                             "participant_video": "true",
-                            "join_before_host": "true",
+                            "join_before_host": "TRUE",
                             "mute_upon_entry": "False",
                             "watermark": "true",
                             "audio": "voip",
@@ -1105,14 +1105,18 @@ def createmeeting():
             r = requests.post(
             f'https://api.zoom.us/v2/users/me/meetings/', 
             headers=headers, data=json.dumps(meetingdetails))
+         #   print("\n creating zoom meeting ... \n")
+          #  print(r.text,sep='\n')
             print("\n creating zoom meeting ... \n")
-            print(r.text,sep='\n')
-            print("\n creating zoom meeting ... \n")
-            join_URL = [json.loads(r.text)]
+           # join_URL = [json.loads(r.text)]
+            print(r.text)
+            result = json.loads(r.text)
+            print("\n\n")
+            print(result['join_url'])
             #meetingPassword = ["password"]
-            print(
-                f'\n here is your zoom meeting link {join_URL} and your \ password: \n')
-            msg = join_URL
+            #print(
+             #   f'\n here is your zoom meeting link {join_URL} and your \ password: \n')
+           # msg = join_URL
             #msg1 = "paasword :" + meetingPassword
         return render_template('secretary/createmeeting.html', msg = msg)
     elif session.get('secretary') is None:
