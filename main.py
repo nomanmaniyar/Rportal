@@ -1080,24 +1080,22 @@ def createmeeting():
             agenda = request.form['agenda']
             meetingdetails = {
                 "topic":  topic,
-                "type": 1,
+                "type": 2,
                 "start_time":  start_time,
                 "duration":  duration,
                 "timezone": "India/Mumbai",
                 "agenda":  agenda,
                
                 "recurrence": {"type": 1,
-                            "repeat_interval": 2
+                            "repeat_interval": 1
                             },
                 "settings": {"host_video": "true",
-                            "participant_video": "true",
-                            "join_before_host": "true",
-                            "mute_upon_entry": "False",
-                            "watermark": "true",
-                            "audio": "voip",
-                            "auto_recording": "cloud",
-                            "private_meeting":"true",
-                            "pre_schedule":"true",
+                               "participant_video": "true",
+                               "join_before_host": "true",
+                               "mute_upon_entry": "False",
+                               "watermark": "true",
+                               "audio": "voip",
+                               "auto_recording": "cloud"
                             }
                 }
             headers = {'authorization': 'Bearer %s' % generateToken(),
@@ -1105,16 +1103,17 @@ def createmeeting():
             r = requests.post(
             f'https://api.zoom.us/v2/users/me/meetings/', 
             headers=headers, data=json.dumps(meetingdetails))
-            print("\n creating zoom meeting ... \n")
-            print(r.text,sep='\n')
-            print("\n creating zoom meeting ... \n")
-            join_URL = [json.loads(r.text)]
+            #print("\n creating zoom meeting ... \n")
+           # print(r.text,sep='\n')
+            #print("\n creating zoom meeting ... \n")
+            result = json.loads(r.text)
+            link = result['join_url']
             #meetingPassword = ["password"]
-            print(
-                f'\n here is your zoom meeting link {join_URL} and your \ password: \n')
-            msg = join_URL
-            #msg1 = "paasword :" + meetingPassword
-        return render_template('secretary/createmeeting.html', msg = msg)
+            #print(
+               # f'\n here is your zoom meeting link {join_URL} and your \ password: \n')
+            msg = link 
+            msg1 = "\n Host Key : 528614"
+        return render_template('secretary/createmeeting.html', msg = msg , msg1= msg1)
     elif session.get('secretary') is None:
         return login()
     else:
