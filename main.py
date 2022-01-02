@@ -219,19 +219,16 @@ def mcode():
 def mcode1(code):
     if 'user' in session:
         msg = ''
-        if request.method == 'POST' and 'code' in request.form:
-            code = request.form['code']
-            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('SELECT * FROM society WHERE code = %s', (code,))
+        code = code
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM society WHERE code = %s', (code,))
+        account = cursor.fetchone()
+        if account:
+            cursor.execute('select name, city, road, area, state, pin, code , Semail from society inner join secretary WHERE code = %s', (code ,))
             account = cursor.fetchone()
-            if account:
-                cursor.execute('select name, city, road, area, state, pin, code , Semail from society inner join secretary WHERE code = %s', (code ,))
-                account = cursor.fetchone()
-                name =session['user_name']
-                return render_template('member/mverify.html', account=account, msg=msg, name=session['user_name'],username=session['username'], email=session['user_email'], mobile=session['user_mobile'])
-            else:
-                mysql.connection.commit()
-                msg='Invalid Society Code!'
+            return render_template('member/mverify.html', account=account, name=session['user_name'],username=session['username'], email=session['user_email'], mobile=session['user_mobile'])
+        else:
+            msg='Invalid Society Code!'
         return render_template('member/Mcode.html', msg=msg)
     elif session.get('user') is None:
             return login()
