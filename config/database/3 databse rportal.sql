@@ -221,6 +221,25 @@ CREATE TABLE IF NOT EXISTS `chat` (
   	PRIMARY KEY (`msg_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `visitor` (
+	`vid` int(11) NOT NULL AUTO_INCREMENT,
+	`vname` varchar(255) NOT NULL,
+    `vmobile` varchar(255) NOT NULL,
+	`vehical_no` varchar(255) ,
+    `in_time` varchar(255) NOT NULL,
+	`out_time` varchar(255),
+	`vpic` varchar(255) NOT NULL,
+    `username` varchar(255) NOT NULL,
+	`Mflatno` varchar(255) NOT NULL,
+	`Mwing` varchar(255) NOT NULL,
+	`vstatus` varchar(255) NOT NULL,
+	`society_code` varchar(255) NOT NULL,
+	`security` varchar(255) NOT NULL,
+	`entry_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  	PRIMARY KEY (`vid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+select * from visitor;
+
 CREATE TABLE `meetings` (
   `meet_id` int NOT NULL AUTO_INCREMENT,
   `topic` varchar(255) NOT NULL,
