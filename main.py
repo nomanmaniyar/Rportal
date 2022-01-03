@@ -1657,27 +1657,26 @@ def addvisitor():
         if not os.path.isdir(target):
             os.makedirs(target)
         if request.method == 'POST'and 'vname' in request.form  and 'vmobile' in request.form  and 'vehical_no' in request.form and 'in_time' in request.form  and 'vpic' in request.form and 'username' in request.form and  'Mflatno' in request.form and 'Mwing' in request.form  :
-                vname = request.form['vname']
-                vmobile = request.form['vmobile'] 
-                vehical_no = request.form['vehical_no'] 
-                in_time = request.form['in_time']
-                username = request.form['username']   
-                Mflatno = request.form['Mflatno']   
-                Mwing = request.form['Mwing']  
-                ...
-                file = request.files['vpic']
-                file_name = file.filename or ''
-                destination = ''.join([target, file_name])
-                file.save(destination)
-                vpic  = file_name
-                ...
-                cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-                cursor.execute('INSERT INTO visitor values (NULL , %s, %s, %s, %s,Null, %s, %s, %s, %s, %s,%s  DEFAULT )',( vname ,vmobile ,vehical_no , in_time ,vpic,username,Mflatno,Mwing,"request",session['security_code'], session['security_username']))
-                mysql.connection.commit() 
-                msg = "visitor Add successfully!"
-                return render_template('security/addvisitor.html',msg=msg )
-        else:
-            return render_template('security/addvisitor.html')
+            vname = request.form['vname']
+            vmobile = request.form['vmobile'] 
+            vehical_no = request.form['vehical_no'] 
+            in_time = request.form['in_time']
+            username = request.form['username']   
+            Mflatno = request.form['Mflatno']   
+            Mwing = request.form['Mwing']  
+            
+            ...
+            file = request.files['vpic']
+            file_name = file.filename or ''
+            destination = ''.join([target, file_name])
+            file.save(destination)
+            vpic  = file_name
+            ...
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('INSERT INTO visitor values (NULL , %s, %s, %s, %s,Null, %s, %s, %s, %s, %s,%s  DEFAULT )',( vname ,vmobile ,vehical_no , in_time ,vpic,username,Mflatno,Mwing,"request",session['security_code'], session['security_username']))
+            mysql.connection.commit() 
+            msg = "visitor Add successfully!"
+        return render_template('security/addvisitor.html',msg=msg )
     elif session.get('security') is None:
         return login()
     else:
