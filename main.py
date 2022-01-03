@@ -30,6 +30,7 @@ API_SEC = 'ZIN4AsaniiKYBBA0cQHLSupJOIZwMEdbcRm2'
 
 UPLOAD_FOLDER = '/path/to/the/uploads'
 UPLOAD_DOCS = '/path/to/the/uploads/docs'
+UPLOAD_vpic = '/path/to/the/uploads/vpic'
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
 
 app = Flask(__name__)
@@ -41,6 +42,7 @@ app.config['MYSQL_DB'] = 'rportal'
 app.config['charset'] ='utf8'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['UPLOAD_DOCS'] = UPLOAD_DOCS
+app.config['UPLOAD_vpic'] = UPLOAD_vpic
 mysql = MySQL(app)
  
 mail = Mail(app)
@@ -946,7 +948,7 @@ def shome():
             session['secretary'] = True
             session['Sid'] = Sid
             session['Susername'] = username
-            session['Scode'] = Scode
+            session['Scode']= Scode
             session['Semail'] = Semail
             session['Sname'] = Sname
         if 'secretary' in session:
@@ -970,9 +972,9 @@ def sprofile():
         account = cursor.fetchone()
         cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         
-        cursor1.execute('SELECT Mname FROM  member where member_status=%s  AND Mcode=%s ', ( 'active' ,  session['Scode'], ) )
+        cursor1.execute('SELECT Mname FROM  member where member_status=%s  AND Mcode=%s ', ( 'active' ,session['Scode'], ) )
         account1 = cursor1.fetchall()
-        print(  account1 )
+        
 
         return render_template('secretary/sprofile.html', account=account, account1=account1)
     elif session.get('secretary') is None:
@@ -1621,6 +1623,66 @@ def view_contacts():
         return login()
     else:
         return logout()
+
+@app.route('/rportal/visitorlog')
+def visitorlog():
+    if 'security' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT *  from visitor WHERE  society_code = %s AND vstatus = %s', (session['security_code'],'closed') ) 
+        account = cursor.fetchall() 
+        return render_template('security/visitorlog.html', account=account)
+    elif session.get('security') is None:
+        return login()
+    else:
+        return logout()
+
+@app.route('/rportal/recentvisitor')
+def recentvisitor():
+    if 'security' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT *  from visitor WHERE  society_code = %s AND vstatus = %s', (session['security_code'],'closed') ) 
+        account = cursor.fetchall() 
+        return render_template('security/visitorlog.html', account=account)
+    elif session.get('security') is None:
+        return login()
+    else:
+        return logout()
+
+
+@app.route('/rportal/addvisitor', methods=['GET', 'POST'] )
+def addvisitor():
+    if 'security' in session:
+        msg = ''
+        target = os.path.join( '/Rportal/static/upload/vpic')
+        if not os.path.isdir(target):
+            os.makedirs(target)
+        if request.method == 'POST'and 'vname' in request.form  and 'vmobile' in request.form  and 'vehical_no' in request.form and 'in_time' in request.form  and 'vpic' in request.form and 'username' in request.form and  'Mflatno' in request.form and 'Mwing' in request.form  :
+                vname = request.form['vname']
+                vmobile = request.form['vmobile'] 
+                vehical_no = request.form['vehical_no'] 
+                in_time = request.form['in_time']
+                username = request.form['username']   
+                Mflatno = request.form['Mflatno']   
+                Mwing = request.form['Mwing']  
+                ...
+                file = request.files['vpic']
+                file_name = file.filename or ''
+                destination = ''.join([target, file_name])
+                file.save(destination)
+                vpic  = file_name
+                ...
+                cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                cursor.execute('INSERT INTO visitor values (NULL , %s, %s, %s, %s,Null, %s, %s, %s, %s, %s,%s  DEFAULT )',( vname ,vmobile ,vehical_no , in_time ,vpic,username,Mflatno,Mwing,"request",session['security_code'], session['security_username']))
+                mysql.connection.commit() 
+                msg = "visitor Add successfully!"
+                return render_template('security/addvisitor.html',msg=msg )
+        else:
+            return render_template('security/addvisitor.html')
+    elif session.get('security') is None:
+        return login()
+    else:
+        return logout()
+              
     
 #
 #   Staff Part

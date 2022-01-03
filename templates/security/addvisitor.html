@@ -1,0 +1,36 @@
+{% extends 'security/security_layout.html' %}
+
+{% block title %}ADD Visitor{% endblock %}
+
+{% block content %}
+
+<style>
+    table, th, td {
+      border:1px solid black;
+    }
+</style>
+
+
+    <div>
+      {{msg}}
+    <h3>Visitorlog</h3>
+   
+     <form action="{{url_for('addvisitor')}}"  enctype="multipart/form-data" method="POST"><br>
+       <input type="text" name="vname" placeholder="Visitor Name" required> <br>
+       <input type="tel" name="vmobile" placeholder="Visitor Mobile Number" ><br>
+        <input type="text" name="vehical_no"placeholder="Vehical Number" ><br>
+       <input type="time" name="in_time" required><br>
+       <input type="text" name="username" placeholder="Member Name" >
+       <input type="text" name="Mwing" placeholder="Wing" >
+        <input type="number" name="Mflatno" placeholder="Flat No"  required><br>
+        <input type="file"  name="vpic" >
+        <input class="btn btn-primary" type="submit" value="ADD"><br>
+
+        <br>
+     </form>
+    
+  
+
+</div>
+
+{% endblock %}

@@ -46,7 +46,6 @@ INSERT INTO `secretary` (`Sid`,  `username`,`Scode`, `Semail`,`Sname`,`Sflatno`,
 INSERT INTO `secretary` (`Sid`,  `username`, `Scode`, `Semail`,`Sname`,`Sflatno`,`Swing`,`Smobile`) VALUES (2, 'shinde','SAIR11', 'jay.sharma@matoshri.edu.in','Shivnath Sahebrao Shinde','1','B','9420829593');
 alter table secretary auto_increment = 3;
 SELECT * FROM secretary;
-
 CREATE TABLE IF NOT EXISTS `member` (
 	`Mid` int(11) NOT NULL AUTO_INCREMENT,
 	`username` varchar(50) NOT NULL,
@@ -220,4 +219,24 @@ CREATE TABLE IF NOT EXISTS `chat` (
 	`msg_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   	PRIMARY KEY (`msg_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `visitor` (
+	`vid` int(11) NOT NULL AUTO_INCREMENT,
+	`vname` varchar(255) NOT NULL,
+    `vmobile` varchar(255) NOT NULL,
+	`vehical_no` varchar(255) ,
+    `in_time` varchar(255) NOT NULL,
+	`out_time` varchar(255) NOT NULL,
+	`vpic` varchar(255) NOT NULL,
+    `username` varchar(255) NOT NULL,
+	`Mflatno` varchar(255) NOT NULL,
+	`Mwing` varchar(255) NOT NULL,
+	`vstatus` varchar(255) NOT NULL,
+	`society_code` varchar(255) NOT NULL,
+	`security` varchar(255) NOT NULL,
+	`entry_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  	PRIMARY KEY (`vid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
