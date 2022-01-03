@@ -46,6 +46,7 @@ INSERT INTO `secretary` (`Sid`,  `username`,`Scode`, `Semail`,`Sname`,`Sflatno`,
 INSERT INTO `secretary` (`Sid`,  `username`, `Scode`, `Semail`,`Sname`,`Sflatno`,`Swing`,`Smobile`) VALUES (2, 'shinde','SAIR11', 'jay.sharma@matoshri.edu.in','Shivnath Sahebrao Shinde','1','B','9420829593');
 alter table secretary auto_increment = 3;
 SELECT * FROM secretary;
+
 CREATE TABLE IF NOT EXISTS `member` (
 	`Mid` int(11) NOT NULL AUTO_INCREMENT,
 	`username` varchar(50) NOT NULL,
@@ -194,7 +195,9 @@ INSERT INTO `notice` (`notice_id`,`notice_subject`, `notice_message`, `notice_co
 INSERT INTO `notice` (`notice_id`,`notice_subject`, `notice_message`, `notice_code`) VALUES ('2', 'Test Subject', 'Test Notice Message', 'SAIR11');
 alter table notice auto_increment = 3;
 select * from notice;
+
 UPDATE complaint SET complaint_reply = 'sry', complaint_status = 'review'  WHERE complaint_id = '1';
+
 CREATE TABLE IF NOT EXISTS `contact` (
 	`contact_id` int(11) NOT NULL AUTO_INCREMENT,
 	`contact_label` VARCHAR(255) NOT NULL,
@@ -227,7 +230,7 @@ CREATE TABLE IF NOT EXISTS `visitor` (
     `vmobile` varchar(255) NOT NULL,
 	`vehical_no` varchar(255) ,
     `in_time` varchar(255) NOT NULL,
-	`out_time` varchar(255) NOT NULL,
+	`out_time` varchar(255),
 	`vpic` varchar(255) NOT NULL,
     `username` varchar(255) NOT NULL,
 	`Mflatno` varchar(255) NOT NULL,
@@ -238,5 +241,5 @@ CREATE TABLE IF NOT EXISTS `visitor` (
 	`entry_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   	PRIMARY KEY (`vid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
+select * from visitor;
 

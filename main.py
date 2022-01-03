@@ -30,7 +30,7 @@ API_SEC = 'ZIN4AsaniiKYBBA0cQHLSupJOIZwMEdbcRm2'
 
 UPLOAD_FOLDER = '/path/to/the/uploads'
 UPLOAD_DOCS = '/path/to/the/uploads/docs'
-UPLOAD_vpic = '/path/to/the/uploads/vpic'
+UPLOAD_VPIC = '/path/to/the/uploads/vpic'
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
 
 app = Flask(__name__)
@@ -42,7 +42,7 @@ app.config['MYSQL_DB'] = 'rportal'
 app.config['charset'] ='utf8'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['UPLOAD_DOCS'] = UPLOAD_DOCS
-app.config['UPLOAD_vpic'] = UPLOAD_vpic
+app.config['UPLOAD_VPIC'] = UPLOAD_VPIC
 mysql = MySQL(app)
  
 mail = Mail(app)
@@ -1656,7 +1656,7 @@ def addvisitor():
         target = os.path.join( '/Rportal/static/upload/vpic')
         if not os.path.isdir(target):
             os.makedirs(target)
-        if request.method == 'POST'and 'vname' in request.form  and 'vmobile' in request.form  and 'vehical_no' in request.form and 'in_time' in request.form  and 'vpic' in request.form and 'username' in request.form and  'Mflatno' in request.form and 'Mwing' in request.form  :
+        if request.method == 'POST' and 'vname' in request.form  and 'vmobile' in request.form:
             vname = request.form['vname']
             vmobile = request.form['vmobile'] 
             vehical_no = request.form['vehical_no'] 
@@ -1672,11 +1672,12 @@ def addvisitor():
             file.save(destination)
             vpic  = file_name
             ...
+            
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('INSERT INTO visitor values (NULL , %s, %s, %s, %s,Null, %s, %s, %s, %s, %s,%s  DEFAULT )',( vname ,vmobile ,vehical_no , in_time ,vpic,username,Mflatno,Mwing,"request",session['security_code'], session['security_username']))
+            cursor.execute('INSERT INTO visitor VALUES (NULL, %s, %s, %s, %s, NULL, %s, %s, %s, %s, %s, %s, %s, DEFAULT )',(vname, vmobile, vehical_no, in_time, vpic, username, Mflatno, Mwing, 'request', session['security_code'], session['security_username'],))
             mysql.connection.commit() 
             msg = "visitor Add successfully!"
-        return render_template('security/addvisitor.html',msg=msg )
+        return render_template('security/addvisitor.html',msg=msg)
     elif session.get('security') is None:
         return login()
     else:
