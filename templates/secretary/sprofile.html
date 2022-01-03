@@ -89,14 +89,20 @@
  
     <dialog id="dialog">
     <button alignment="right" onclick="closeModal()"  class="btn-close" aria-label="Close" ></button>
+    <br><h4>Update Profile</h4><br>
      <form action="/rportal/supdate" method="POST">
-         <br><br>
-         <p>To chnage your password, Go to forgot password page from login page.</p><br>
-        <input type="text" name="name" value="{{ account['Sname'] }}"><br><br>
-        <input type="text" name="flatno" value="{{ account['Sflatno'] }}"><br><br>
-        <input type="text" name="wing" value="{{ account['Swing'] }}"><br><br>
-        <input type="mail" name="email" value="{{ account['Semail'] }}"><br><br>
+        <label>Name:</label><br>
+        <input type="text" name="name" value="{{ account['Sname'] }}"><br>
+        <label>Flat Number:</label><br>
+        <input type="text" name="flatno" value="{{ account['Sflatno'] }}"><br>
+        <label>Wing:</label><br>
+        <input type="text" name="wing" value="{{ account['Swing'] }}"><br>
+        <label>E-Mail ID:</label><br>
+        <input type="mail" name="email" value="{{ account['Semail'] }}"><br>
+        <label>Mobile Number:</label><br>
         <input type="text" name="mobile" value="{{ account['Smobile'] }}"><br><br>
+        <a href="{{ url_for('forgot_password') }}" class="d-inline-block mb-0">Change Password</a><br>
+        <p>Note: Save existing details first before changing password</p><br>
         <button class="btn btn-primary" type="submit">Update</button><br>
         <br>
      </form>
@@ -107,25 +113,29 @@
  
     <dialog id="dialog1">
        <button alignment="right" onclick="closeModal1()"  class="btn-close" aria-label="Close" ></button>
+       <br><h4>Change Secretary</h4><br>
         <form action="/rportal/schange" method="POST">
-            <br><br>
-            <label>Select new Scretary:</label><br>
+            <h5>Select new Secretary:</h5>
+            <label>Select Username:</label><br>
             <select name="username" >
-                
             {% for data in account1 %}
-               <option >{{ data['Mname'] }}</option>
+               <option >{{ data['username'] }}</option>
                {% endfor %}
             </select><br><br>
-             
-            
-            {{ account1['Mname'] }}              
-                <input type="text" name="name" value="{{ account['Sname'] }}"><br><br>
-                <input type="text" name="flatno" value="{{ account['Sflatno'] }}"><br><br>
-                <input type="text" name="wing" value="{{ account['Swing'] }}"><br><br>
-                <input type="mail" name="email" value="{{ account['Semail'] }}"><br><br>
-                <input type="text" name="mobile" value="{{ account['Smobile'] }}"><br><br>
-                <p>To chnage your password, Go to forgot password page from login page.</p><br>
-           <button class="btn btn-primary" type="submit">Update</button><br>
+                <h5>Enter new secretary details</h5>
+                <label>Name:</label><br>
+                <input type="text" name="name" placeholder="Enter name here"><br>
+                <label>Flat No.:</label><br>
+                <input type="text" name="flatno" placeholder="Enter Flat no here"><br>
+                <label>Wing:</label><br>
+                <input type="text" name="wing" placeholder="Enter Wing here"><br>
+                <label>Email ID:</label><br>
+                <input type="mail" name="email" placeholder="Enter E-Mail here here"><br>
+                <label>Mobile Number:</label><br>
+                <input type="text" name="mobile" placeholder="Enter Mobile number here"><br><br>
+                <a href="{{ url_for('forgot_password') }}" class="d-inline-block mb-0">Change Password</a><br>
+                <p>Note: Save existing details first before changing password</p><br>
+                <button class="btn btn-primary" type="submit">Update</button><br>
            <br>
         </form>
      

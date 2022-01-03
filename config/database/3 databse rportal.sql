@@ -195,6 +195,7 @@ INSERT INTO `notice` (`notice_id`,`notice_subject`, `notice_message`, `notice_co
 alter table notice auto_increment = 3;
 select * from notice;
 UPDATE complaint SET complaint_reply = 'sry', complaint_status = 'review'  WHERE complaint_id = '1';
+
 CREATE TABLE IF NOT EXISTS `contact` (
 	`contact_id` int(11) NOT NULL AUTO_INCREMENT,
 	`contact_label` VARCHAR(255) NOT NULL,
@@ -219,4 +220,33 @@ CREATE TABLE IF NOT EXISTS `chat` (
 	`msg_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   	PRIMARY KEY (`msg_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `meetings` (
+  `meet_id` int NOT NULL AUTO_INCREMENT,
+  `topic` varchar(255) NOT NULL,
+  `starttime` timestamp NOT NULL,
+  `endtime` timestamp NULL DEFAULT NULL,
+  `duration` int NOT NULL,
+  `url` varchar(255) NOT NULL,
+  `agenda` varchar(255) NOT NULL,
+  `society_code` varchar(255) NOT NULL,
+  `status` varchar(255) NOT NULL,
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`meet_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+select * from meetings;
+
+CREATE TABLE IF NOT EXISTS `maintenance` (
+	`main_id` int(11) NOT NULL AUTO_INCREMENT,
+	`Musername` varchar(255) NOT NULL,
+    `code` varchar(50) NOT NULL,
+	`bill_date` timestamp NOT NULL,
+    `due_date` timestamp,
+    `paid_date` timestamp,
+    `amount` float,
+    `pending_amount` float,
+    `payment_status` varchar(255),
+  	PRIMARY KEY (`main_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+select * from maintenance;
 

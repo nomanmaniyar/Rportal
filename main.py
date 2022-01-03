@@ -282,7 +282,7 @@ def mregister():
         return logout()
 
 
-#   Security GuFard Registeration
+#   Security Guard Registeration
 @app.route('/rportal/add_security', methods=['GET','POST'])
 def security():
     msg = ''
@@ -970,11 +970,10 @@ def sprofile():
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM secretary INNER JOIN society ON secretary.Scode = society.code WHERE Sid = %s', (session['Sid'],))
         account = cursor.fetchone()
+
         cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        
-        cursor1.execute('SELECT Mname FROM  member where member_status=%s  AND Mcode=%s ', ( 'active' ,  session['Scode'], ) )
+        cursor1.execute('SELECT username FROM  member where member_status=%s AND Mcode=%s', ('active', session['Scode'], ) )
         account1 = cursor1.fetchall()
-        print(  account1 )
 
         return render_template('secretary/sprofile.html', account=account, account1=account1)
     elif session.get('secretary') is None:
