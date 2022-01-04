@@ -16,19 +16,11 @@ from flask import Flask, render_template, flash, request, redirect, url_for
 from flask_mail import Message 
 import os 
 import hashlib
-import sys
-import jwt
-import requests
-import json
-from time import time
-import time, datetime
-from datetime import datetime, timedelta
+
 
 #sys.path.insert(0, 'Rportal/config')
 #from config import credentials as cred
 
-API_KEY = 'DVKW9UngTg2lI1FnqrQVWA'
-API_SEC = 'ZIN4AsaniiKYBBA0cQHLSupJOIZwMEdbcRm2'
 
 UPLOAD_FOLDER = '/path/to/the/uploads'
 UPLOAD_DOCS = '/path/to/the/uploads/docs'
@@ -1055,63 +1047,7 @@ def complaint():
     elif session.get('secretary') is None:
         return login()
     else:
-        return logout()
-
-def generateToken():
-    token = jwt.encode( {'iss': API_KEY, 'exp': time() + 5000},
-        API_SEC,
-        algorithm = 'HS256'  
-    )
-    return token
-
-@app.route('/rportal/createmeeting', methods=['GET', 'POST'] )
-def createmeeting():
-    if 'secretary' in session:
-        msg = ''
-        msg1 = ''
-        if request.method == 'POST' and 'topic' in request.form and 'starttime' in request.form and 'duration' in request.form and 'agenda' in request.form:
-            topic = request.form['topic']
-            start_time = request.form['starttime']
-            duration = request.form['duration']
-            agenda = request.form['agenda']
-            meetingdetails = {
-                "topic":  topic,
-                "type": 2,
-                "start_time":  start_time,
-                "duration":  duration,
-                "timezone": "India/Mumbai",
-                "agenda":  agenda,
-               
-                "recurrence": {"type": 1,
-                            "repeat_interval": 1
-                            },
-                "settings": {"host_video": "true",
-                               "participant_video": "true",
-                               "join_before_host": "true",
-                               "mute_upon_entry": "False",
-                               "watermark": "true",
-                               "audio": "voip",
-                               "auto_recording": "cloud"
-                            }
-                }
-            headers = {'authorization': 'Bearer %s' % generateToken(),
-               'content-type': 'application/json'}
-            r = requests.post(
-            f'https://api.zoom.us/v2/users/me/meetings/', 
-            headers=headers, data=json.dumps(meetingdetails))
-            result = json.loads(r.text)
-            link = result['join_url']
-            msg = link 
-            end_time = start_time + timedelta(minutes=duration)
-            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('INSERT INTO meetings values (NULL , %s, %s, %s, %s, %s, %s, %s, %s, DEFAULT)', (topic, start_time, end_time, duration, link, agenda, session['Scode'], 'live'))
-            mysql.connection.commit() 
-            msg1 = 'Meeting Scheduled'
-        return render_template('secretary/createmeeting.html', msg = msg, msg1= msg1)
-    elif session.get('secretary') is None:
-        return login()
-    else:
-        return logout()
+       return logout()
 
 @app.route('/rportal/contact')
 def contact():
