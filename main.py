@@ -24,6 +24,7 @@ import hashlib
 
 UPLOAD_FOLDER = '/path/to/the/uploads'
 UPLOAD_DOCS = '/path/to/the/uploads/docs'
+UPLOAD_VPIC = '/path/to/the/uploads/vpic'
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
 
 app = Flask(__name__)
@@ -35,6 +36,7 @@ app.config['MYSQL_DB'] = 'rportal'
 app.config['charset'] ='utf8'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['UPLOAD_DOCS'] = UPLOAD_DOCS
+app.config['UPLOAD_VPIC'] = UPLOAD_VPIC
 mysql = MySQL(app)
  
 mail = Mail(app)
@@ -940,7 +942,7 @@ def shome():
             session['secretary'] = True
             session['Sid'] = Sid
             session['Susername'] = username
-            session['Scode'] = Scode
+            session['Scode']= Scode
             session['Semail'] = Semail
             session['Sname'] = Sname
         if 'secretary' in session:
@@ -1556,6 +1558,66 @@ def view_contacts():
         return login()
     else:
         return logout()
+
+@app.route('/rportal/visitorlog')
+def visitorlog():
+    if 'security' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT *  from visitor WHERE  society_code = %s AND vstatus = %s', (session['security_code'],'closed') ) 
+        account = cursor.fetchall() 
+        return render_template('security/visitorlog.html', account=account)
+    elif session.get('security') is None:
+        return login()
+    else:
+        return logout()
+
+@app.route('/rportal/recentvisitor')
+def recentvisitor():
+    if 'security' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT *  from visitor WHERE  society_code = %s AND vstatus = %s', (session['security_code'],'closed') ) 
+        account = cursor.fetchall() 
+        return render_template('security/visitorlog.html', account=account)
+    elif session.get('security') is None:
+        return login()
+    else:
+        return logout()
+
+
+@app.route('/rportal/addvisitor', methods=['GET', 'POST'] )
+def addvisitor():
+    if 'security' in session:
+        msg = ''
+        target = os.path.join( '/Rportal/static/upload/vpic')
+        if not os.path.isdir(target):
+            os.makedirs(target)
+        if request.method == 'POST' and 'vname' in request.form  and 'vmobile' in request.form:
+            vname = request.form['vname']
+            vmobile = request.form['vmobile'] 
+            vehical_no = request.form['vehical_no'] 
+            in_time = request.form['in_time']
+            username = request.form['username']   
+            Mflatno = request.form['Mflatno']   
+            Mwing = request.form['Mwing']  
+            
+            ...
+            file = request.files['vpic']
+            file_name = file.filename or ''
+            destination = ''.join([target, file_name])
+            file.save(destination)
+            vpic  = file_name
+            ...
+            
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('INSERT INTO visitor VALUES (NULL, %s, %s, %s, %s, NULL, %s, %s, %s, %s, %s, %s, %s, DEFAULT )',(vname, vmobile, vehical_no, in_time, vpic, username, Mflatno, Mwing, 'request', session['security_code'], session['security_username'],))
+            mysql.connection.commit() 
+            msg = "visitor Add successfully!"
+        return render_template('security/addvisitor.html',msg=msg)
+    elif session.get('security') is None:
+        return login()
+    else:
+        return logout()
+              
     
 #
 #   Staff Part

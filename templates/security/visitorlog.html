@@ -1,0 +1,26 @@
+{% extends 'security/security_layout.html' %}
+
+{% block title %}visitorlog{% endblock %}
+
+{% block content %}
+
+  <table  class="table" style="width:100%">
+
+    {% if account !=0 %}
+         {% for data  in account %}
+         <td>
+             
+           {{data['doc_filename']}}
+         </td>
+        
+       </table>
+     
+   {% else %}
+       
+      
+       <b><h4>No Data Found.</h4> </b><br>
+       {% endfor %} 
+   {% endif %} 
+   
+   </div>
+   {% endblock %}
