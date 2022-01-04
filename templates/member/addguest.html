@@ -1,0 +1,36 @@
+{% extends 'member/mlayout.html' %}
+{% block title %}rportal{% endblock %}
+
+{% block content %}
+
+<style>
+    table, th, td {
+      border:1px solid black;
+    }
+</style>
+
+
+<div>
+    {{msg}}
+  <h3>Add Guest</h3>
+ 
+   <form action="{{url_for('addguest')}}"  enctype="multipart/form-data" method="POST"><br>
+     <input type="text" name="vname" placeholder="Guest Name" required> <br>
+     <input type="tel" name="vmobile" placeholder="Guest Mobile Number" ><br>
+      <input type="text" name="vehical_no"placeholder="Vehical Number" ><br>
+      <label>In Time</label>
+     <input type="time" name="in_time" required><br>
+     <label>Out Time</label>
+     <input type="time" name="out_time" required><br>
+     <input type="text" name="Mwing" placeholder="Wing" >
+     <input type="number" name="Mflatno" placeholder="Flat No"  required><br>
+      <input type="file"  name="vpic" ><br>
+      <input class="btn btn-primary" type="submit" value="ADD"><br>
+
+      <br>
+   </form>
+  
+
+
+</div>
+{% endblock %}

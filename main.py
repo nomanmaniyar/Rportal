@@ -1412,6 +1412,41 @@ def add_chat():
         return login()
     else:
         return logout()
+
+@app.route('/rportal/addguest', methods=['GET', 'POST'] )
+def addguest():
+    if 'member' in session:
+        msg = ''
+        target2 = os.path.join( '/Rportal/static/upload/vpic/')
+        if not os.path.isdir(target2):
+            os.makedirs(target2)
+        if request.method == 'POST' and 'vname' in request.form  and 'vmobile' in request.form  and 'vehical_no' in request.form and 'in_time' in request.form   and 'out_time' in request.form and 'Mflatno' in request.form and 'Mwing' in request.form  and  'vpic' in request.form:
+            vname = request.form['vname']
+            vmobile = request.form['vmobile'] 
+            vehical_no = request.form['vehical_no'] 
+            in_time = request.form['in_time']
+            out_time = request.form['out_time']
+            username = session['Musername']
+            Mflatno = request.form['Mflatno']
+            Mwing = request.form['Mwing']
+            
+            ...
+            file = request.files['vpic']
+            file_name = file.filename or ''
+            destination = ''.join([target2, file_name])
+            file.save(destination)
+            vpic  = file_name
+            ...
+            
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('INSERT INTO visitor VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NULL, DEFAULT )',(vname, vmobile, vehical_no, in_time,out_time, vpic, username, Mflatno, Mwing, 'active', session['Mcode'],))
+            msg = "Guest Add successfully!"
+        return render_template('member/addguest.html',msg=msg)
+    elif session.get('member') is None:
+        return login()
+    else:
+        return logout()
+
               
 #
 #   Admin Part
@@ -1419,7 +1454,7 @@ def add_chat():
 @app.route('/rportal/admin_home')
 def admin_home():
     if 'admin' in session:
-        return render_template('admin/admin_home.html', Ausername=session['Ausername'])
+        return render_template('admin/admin_home.html', Ausername=session['Ausername'] )
     elif session.get('admin') is None:
         return login()
     else:
@@ -1518,7 +1553,7 @@ def r_sec():
         if request.method == 'POST' and 'email' in request.form and 'message'  in request.form and 'Scode' :
             email = request.form['email']
             message = request.form['message']
-            Scode = request.form['Scode']
+            Scode = request.form['Scode'] 
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('DELETE FROM secretary WHERE Scode = %s',[Scode]) 
             cursor.execute('DELETE FROM society WHERE code = %s',[Scode]) 
@@ -1640,9 +1675,9 @@ def visitorlog():
 def recentvisitor():
     if 'security' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT *  from visitor WHERE  society_code = %s AND vstatus = %s', (session['security_code'],'closed') ) 
+        cursor.execute('SELECT *  from visitor WHERE  society_code = %s AND vstatus = %s', (session['security_code'],'request') ) 
         account = cursor.fetchall() 
-        return render_template('security/visitorlog.html', account=account)
+        return render_template('security/recentvisitor.html', account=account)
     elif session.get('security') is None:
         return login()
     else:
@@ -1653,10 +1688,10 @@ def recentvisitor():
 def addvisitor():
     if 'security' in session:
         msg = ''
-        target = os.path.join( '/Rportal/static/upload/vpic')
-        if not os.path.isdir(target):
-            os.makedirs(target)
-        if request.method == 'POST' and 'vname' in request.form  and 'vmobile' in request.form:
+        target2 = os.path.join( '/Rportal/static/upload/vpic/')
+        if not os.path.isdir(target2):
+            os.makedirs(target2)
+        if request.method == 'POST' and 'vname' in request.form  and 'vmobile' in request.form  and 'vehical_no' in request.form  and 'in_time' in request.form  and 'username' in request.form and 'Mflatno'in request.form and 'Mwing'in request.form and 'vpic'in request.form :
             vname = request.form['vname']
             vmobile = request.form['vmobile'] 
             vehical_no = request.form['vehical_no'] 
@@ -1668,7 +1703,7 @@ def addvisitor():
             ...
             file = request.files['vpic']
             file_name = file.filename or ''
-            destination = ''.join([target, file_name])
+            destination = ''.join([target2, file_name])
             file.save(destination)
             vpic  = file_name
             ...
