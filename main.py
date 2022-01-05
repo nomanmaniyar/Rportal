@@ -571,6 +571,8 @@ def logout():
         session.pop('Musername', None)
         session.pop('Mcode', None)
         session.pop('Memail',None)
+        session.pop('Mflatno',None)
+        session.pop('Mwing',None)
         return redirect(url_for('rportal'))
     elif 'member' in session:
         session.pop('member', None)
@@ -579,6 +581,8 @@ def logout():
         session.pop('Musername', None)
         session.pop('Mcode', None)
         session.pop('Memail',None)
+        session.pop('Mflatno',None)
+        session.pop('Mwing',None)
         session.pop('secretary', None)
         session.pop('Sid', None)
         session.pop('Sname', None)
@@ -629,6 +633,8 @@ def logout():
         session.pop('Musername', None)
         session.pop('Mcode', None)
         session.pop('Memail',None)
+        session.pop('Mflatno',None)
+        session.pop('Mwing',None)
         return redirect(url_for('rportal'))
 
 #
@@ -642,6 +648,8 @@ def mainhome():
     session.pop('Musername', None)
     session.pop('Mcode', None)
     session.pop('Memail', None)
+    session.pop('Mflatno', None)
+    session.pop('Mwing', None)
     session.pop('secretary', None)
     session.pop('Sid', None)
     session.pop('Sname', None)
@@ -1262,12 +1270,16 @@ def mhome():
             Memail = request.form['Memail']
             username = request.form['username']
             Mid = request.form['Mid']
+            Mflatno = request.form['Mflatno']
+            Mwing = request.form['Mwing']
             session['member'] = True
             session['Mid'] = Mid
             session['Musername'] = username
             session['Mcode'] = Mcode
             session['Memail'] = Memail
             session['Mname'] = Mname
+            session['Mflatno'] = Mflatno
+            session['Mwing'] = Mwing
         if 'member' in session:
                 return render_template('member/mhome.html', Mname=session['Mname'])
         elif 'member' in session:
@@ -1681,7 +1693,6 @@ def recentvisitor():
     else:
         return logout()
 
-
 @app.route('/rportal/addvisitor', methods=['GET', 'POST'] )
 def addvisitor():
     if 'security' in session:
@@ -1689,7 +1700,7 @@ def addvisitor():
         target2 = os.path.join( '/Rportal/static/upload/vpic/')
         if not os.path.isdir(target2):
             os.makedirs(target2)
-        if request.method == 'POST' and 'vname' in request.form  and 'vmobile' in request.form  and 'vehical_no' in request.form  and 'in_time' in request.form  and 'username' in request.form and 'Mflatno'in request.form and 'Mwing'in request.form and 'vpic'in request.form :
+        if request.method == 'POST' and 'vname' in request.form  and 'vmobile' in request.form:
             vname = request.form['vname']
             vmobile = request.form['vmobile'] 
             vehical_no = request.form['vehical_no'] 
@@ -1705,11 +1716,16 @@ def addvisitor():
             file.save(destination)
             vpic  = file_name
             ...
-            
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('INSERT INTO visitor VALUES (NULL, %s, %s, %s, %s, NULL, %s, %s, %s, %s, %s, %s, %s, DEFAULT )',(vname, vmobile, vehical_no, in_time, vpic, username, Mflatno, Mwing, 'request', session['security_code'], session['security_username'],))
-            mysql.connection.commit() 
-            msg = "visitor Add successfully!"
+            cursor.execute('SELECT * FROM member WHERE Mflatno = %s AND Mwing = %s AND Mcode=%s', (Mflatno, Mwing,session['security_code'],))
+            account = cursor.fetchone()
+            if account:
+                cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                cursor1.execute('INSERT INTO visitor VALUES (NULL, %s, %s, %s, %s, NULL, %s, %s, %s, %s, %s, %s, %s, DEFAULT )',(vname, vmobile, vehical_no, in_time, vpic, username, Mflatno, Mwing, 'request', session['security_code'], session['security_username'],))
+                mysql.connection.commit() 
+                msg = "visitor Add successfully!"
+            else:
+                msg = "Member not found! Please check detils and try again."
         return render_template('security/addvisitor.html',msg=msg)
     elif session.get('security') is None:
         return login()

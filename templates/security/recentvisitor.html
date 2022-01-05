@@ -11,10 +11,18 @@
          <tr class="candidates-list">
           <td class="title">
             <div class="thumb">
-            <img  src="/static/upload/vpic/vpic{{data[vpic]}}" height="70%" width="20%">
+            <img  src="/static/upload/vpic/{{data['vpic']}}" height="40%" width="20%" alt="Visitor image">
             
             <h6 class="mb-2" ><b>{{ data['vname'] }}</b></h6>
-                    <li><i class="fas fa-mobile"></i> <b>Contact No: </b>{{ data['vmobile'] }} </li>
+                    <li>
+                      <i class="fas fa-mobile"></i> <b>Contact No: </b>{{ data['vmobile'] }}<br>
+                    </li>
+                    <li>
+                      <i class="fas fa-building"></i> <b>Visited to: </b>{{ data['Mwing'] }}/{{ data['Mflatno'] }}<br>
+                    </li>
+                    <li>
+                      <i class="fas fa-question-circle"></i> <b>Status: </b>{{ data['vstatus'] }}<br>
+                     </li>
                   </li>
                 </li>
                 
