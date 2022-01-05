@@ -1,3 +1,5 @@
+import socket
+import dns.resolver
 from email import message
 import email
 from json import decoder
@@ -104,12 +106,50 @@ def register():
         elif account1:
             msg = 'Warning! Account already exists!!'
         else:
-            cursor1.execute('INSERT INTO userdetails VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT)', (username , name ,  password , mobile ,  email ,))
-            mysql.connection.commit()
-            msg = 'You have successfully registered!'
-    elif request.method == 'POST':
-            msg = 'elif code!'
+            email_address = email
+            addressToVerify = email_address
+            domain_name = email_address.split('@')[1]
+            records = dns.resolver.query(domain_name, 'MX')
+            mxRecord = records[0].exchange
+            mxRecord = str(mxRecord)
+            host = socket.gethostname()
+            server = smtplib.SMTP()
+            server.set_debuglevel(0)
+            server.connect(mxRecord)
+            server.helo(host)
+            server.mail('me@domain.com')
+            code, message = server.rcpt(str(addressToVerify))
+            server.quit()
+            if code == 250:
+                email = email
+                msg = Message('OTP confirmation for RPortal' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
+                msg.body = part2 + str(otp)+ part3 
+                mail.send(msg)
+                msg1 = 'OTP: ',otp
+                return render_template('register_otp.html', msg1=msg1, name=name, mobile=mobile, email=email, username=username, password=password)
+            else:
+                msg ='Mail adderss not found! Change the address and try again'
+                return render_template('register.html',msg=msg)
+        return render_template('register.html',msg=msg)
     return render_template('register.html',msg=msg)
+
+@app.route('/rvalidate',methods=["POST"])
+def rvalidate(): 
+    form_otp = request.form['otp']  
+    username = request.form['username']
+    password = request.form['password']
+    name = request.form['name']
+    email = request.form['email']
+    mobile = request.form['mobile']
+    if otp == int(form_otp):  
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('INSERT INTO userdetails VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT)', (username , name ,  password , mobile ,  email ,))
+        mysql.connection.commit()
+        msg = 'You have successfully registered!'
+        return render_template('register.html',msg=msg)
+    else: 
+        msg = 'OTP Does not match! Try Again!!'
+        return render_template('register_otp.html', msg=msg)
 
 #   Secretary Registration 
 def invitation():
@@ -463,7 +503,7 @@ def validate():
     if 'user' in session:     
         user_otp = request.form['otp']  
         if otp == int(user_otp):  
-              return redirect(url_for('mainhome')) 
+            return redirect(url_for('mainhome')) 
         else: 
             msg = 'OTP Does not match! Try Again!!'
             return render_template('otp.html', msg=msg)
@@ -477,7 +517,7 @@ def uotp():
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM  userdetails WHERE uid = %s', (session['uid'],))
         account = cursor.fetchone()
-        if account:
+        if account: 
             email = account['email']
             msg = Message('OTP confirmation for RPortal' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
             msg.body = part2 + str(otp)+ part3 
@@ -504,12 +544,30 @@ def forgot_password():
         cursor.execute('SELECT * FROM userdetails WHERE username = %s AND email = %s', (username, email,))
         account = cursor.fetchone()
         if account:
-            email = email
-            msg = Message('OTP confirmation for RPortal' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
-            msg.body = part2 + str(otp)+ part3 
-            mail.send(msg)
-            msg1 = 'OTP: ',otp
-            return render_template('forgot_otp.html', msg1=msg1, username=username, password=password)
+            email_address = email
+            addressToVerify = email_address
+            domain_name = email_address.split('@')[1]
+            records = dns.resolver.query(domain_name, 'MX')
+            mxRecord = records[0].exchange
+            mxRecord = str(mxRecord)
+            host = socket.gethostname()
+            server = smtplib.SMTP()
+            server.set_debuglevel(0)
+            server.connect(mxRecord)
+            server.helo(host)
+            server.mail('me@domain.com')
+            code, message = server.rcpt(str(addressToVerify))
+            server.quit()
+            if code == 250:
+                email = email
+                msg = Message('OTP confirmation for RPortal' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
+                msg.body = part2 + str(otp)+ part3 
+                mail.send(msg)
+                msg1 = 'OTP: ',otp
+                return render_template('forgot_otp.html', msg1=msg1, username=username, password=password)
+            else:
+                msg ='Mail adderss not found! Change the address and try again'
+                return render_template('forgot_password.html',msg=msg)            
         elif request.method == 'POST' and 'username' in request.form:
             username = request.form['username']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
