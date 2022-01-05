@@ -6,7 +6,11 @@
 <h2>Staff Profile Page</h2>
 <div>
     <h3>Your account details are below:</h3>
-    <h4>Personal Details:</h4>
+    <h4>Personal Details:<button style=" background-color: Transparent;
+        background-repeat:no-repeat;
+        border: none;
+        cursor:pointer;
+        overflow: hidden;"  onclick="openModal()" ><i class="fas fa-user-edit"></i></button></h4>
     <table>
         <tr>
             <td>Name:</td>
@@ -32,12 +36,14 @@
  
     <dialog id="dialog">
     <button alignment="right" onclick="closeModal()"  class="btn-close" aria-label="Close" ></button>
-     <form action="/R-Portal/staff_update" method="POST">
-         <br><br>
-         <p>To chnage your password, Go to forgot password page from login page.</p><br>
-        <input type="text" name="name" value="{{ account['staff_name'] }}"><br><br>
-       
+    <br><h4>Update Profile</h4><br>
+    <form action="/R-Portal/staff_update" method="POST">
+        <label>Name:</label><br>
+        <input type="text" name="name" value="{{ account['staff_name'] }}"><br>
+        <label>Mobile Number:</label><br>
         <input type="text" name="mobile" value="{{ account['staff_mobile'] }}"><br><br>
+        <a href="{{ url_for('forgot_password') }}" class="d-inline-block mb-0">Change Password</a><br>
+        <p>Note: Save existing details first before changing password</p><br>
         <button class="btn btn-primary" type="submit">Update</button><br>
         <br>
      </form>

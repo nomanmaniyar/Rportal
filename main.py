@@ -30,6 +30,7 @@ API_SEC = 'ZIN4AsaniiKYBBA0cQHLSupJOIZwMEdbcRm2'
 
 UPLOAD_FOLDER = '/path/to/the/uploads'
 UPLOAD_DOCS = '/path/to/the/uploads/docs'
+UPLOAD_VPIC = '/path/to/the/uploads/vpic'
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
 
 app = Flask(__name__)
@@ -41,6 +42,7 @@ app.config['MYSQL_DB'] = 'rportal'
 app.config['charset'] ='utf8'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['UPLOAD_DOCS'] = UPLOAD_DOCS
+app.config['UPLOAD_VPIC'] = UPLOAD_VPIC
 mysql = MySQL(app)
  
 mail = Mail(app)
@@ -219,20 +221,17 @@ def mcode():
 def mcode1(code):
     if 'user' in session:
         msg = ''
-        if request.method == 'POST' and 'code' in request.form:
-            code = request.form['code']
-            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('SELECT * FROM society WHERE code = %s', (code,))
+        code = code
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM society WHERE code = %s', (code,))
+        account = cursor.fetchone()
+        if account:
+            cursor.execute('select name, city, road, area, state, pin, code , Semail from society inner join secretary WHERE code = %s', (code ,))
             account = cursor.fetchone()
-            if account:
-                cursor.execute('select name, city, road, area, state, pin, code , Semail from society inner join secretary WHERE code = %s', (code ,))
-                account = cursor.fetchone()
-                name =session['user_name']
-                return render_template('member/mverify.html', account=account, msg=msg, name = name ,username=session['username'], email=session['user_email'], mobile=session['user_mobile'])
-            else:
-                mysql.connection.commit()
-                msg='Invalid Society Code!'
-        return render_template('member/mcode.html', msg=msg)
+            return render_template('member/mverify.html', account=account, name=session['user_name'],username=session['username'], email=session['user_email'], mobile=session['user_mobile'])
+        else:
+            msg='Invalid Society Code!'
+        return render_template('member/Mcode.html', msg=msg)
     elif session.get('user') is None:
             return login()
     else:
@@ -269,7 +268,7 @@ def mregister():
             else:
                 cursor.execute('INSERT INTO member VALUES (NULL, %s, %s, %s, %s, %s, %s,%s,DEFAULT,DEFAULT )', (username , code ,  email , name , flatno , wing , mobile))
                 mysql.connection.commit()
-                msg = Message('New Member Request' ,sender ='Rportal<me@Rportal.com', recipients = [Semail]) 
+                msg = Message('New Member Request' ,sender ='Residents Portal<me@Rportal.com', recipients = [Semail]) 
                 text = "Hello \nYou have received new member request with followinh member details. \n Member details are :\n"
                 msg.body = text + "\n Flat No :" + wing + flatno + "\n Name : " + name + "\n phone No : " + mobile + "\n Email ID : " + email + part4
                 mail.send(msg)  
@@ -283,7 +282,7 @@ def mregister():
         return logout()
 
 
-#   Security GuFard Registeration
+#   Security Guard Registeration
 @app.route('/rportal/add_security', methods=['GET','POST'])
 def security():
     msg = ''
@@ -332,7 +331,7 @@ def staff():
         elif not staff_username or not staff_password or not staff_mobile:
             msg = 'Please fill out the form!'
         else:
-            cursor.execute('INSERT INTO staff VALUES (NULL, %s, %s, %s, %s, %s , DEFAULT, %s )', (staff_username , staff_password , staff_name , staff_mobile, session['Scode'],post))
+            cursor.execute('INSERT INTO staff VALUES (NULL, %s, %s, %s, %s, %s, %s, DEFAULT)',(staff_username, staff_password, staff_name, staff_mobile, post, session['Scode'],))
             mysql.connection.commit()
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
@@ -480,7 +479,7 @@ def uotp():
         account = cursor.fetchone()
         if account:
             email = account['email']
-            msg = Message('OTP confirmation for RPortal' ,sender ='Rportal<me@Rportal.com', recipients = [email])
+            msg = Message('OTP confirmation for RPortal' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
             msg.body = part2 + str(otp)+ part3 
             mail.send(msg) 
             msg1 = 'OTP: ',otp
@@ -506,7 +505,7 @@ def forgot_password():
         account = cursor.fetchone()
         if account:
             email = email
-            msg = Message('OTP confirmation for RPortal' ,sender ='Rportal<me@Rportal.com', recipients = [email])
+            msg = Message('OTP confirmation for RPortal' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
             msg.body = part2 + str(otp)+ part3 
             mail.send(msg)
             msg1 = 'OTP: ',otp
@@ -572,6 +571,8 @@ def logout():
         session.pop('Musername', None)
         session.pop('Mcode', None)
         session.pop('Memail',None)
+        session.pop('Mflatno',None)
+        session.pop('Mwing',None)
         return redirect(url_for('rportal'))
     elif 'member' in session:
         session.pop('member', None)
@@ -580,6 +581,8 @@ def logout():
         session.pop('Musername', None)
         session.pop('Mcode', None)
         session.pop('Memail',None)
+        session.pop('Mflatno',None)
+        session.pop('Mwing',None)
         session.pop('secretary', None)
         session.pop('Sid', None)
         session.pop('Sname', None)
@@ -630,6 +633,8 @@ def logout():
         session.pop('Musername', None)
         session.pop('Mcode', None)
         session.pop('Memail',None)
+        session.pop('Mflatno',None)
+        session.pop('Mwing',None)
         return redirect(url_for('rportal'))
 
 #
@@ -643,6 +648,8 @@ def mainhome():
     session.pop('Musername', None)
     session.pop('Mcode', None)
     session.pop('Memail', None)
+    session.pop('Mflatno', None)
+    session.pop('Mwing', None)
     session.pop('secretary', None)
     session.pop('Sid', None)
     session.pop('Sname', None)
@@ -743,7 +750,7 @@ def a_members(Mid):
             mysql.connection.commit()
             email = request.form['Memail']
             Mname = request.form['Mname']
-            msg = Message('Your Joining Request is accepted' ,sender ='Rportal<me@Rportal.com', recipients = [email])
+            msg = Message('Your Joining Request is accepted' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
             msg.body ="Hello!" + Mname + " \n your account activate for login please login on rportal ." + part4
             mail.send(msg) 
         return allow_members()
@@ -761,7 +768,7 @@ def i_members(Mid):
             mysql.connection.commit()
             email = request.form['Memail']
             Mname = request.form['Mname']
-            msg = Message('Account Inactive' ,sender ='Rportal<me@Rportal.com', recipients = [email])
+            msg = Message('Account Inactive' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
             msg.body ="Hello!" + Mname + " \n You have Temporary Inactive from secreatry please contact with your secretary." + part4
             mail.send(msg)  
             return people()
@@ -779,7 +786,7 @@ def ac_members(Mid):
             mysql.connection.commit()
             email = request.form['Memail']
             Mname = request.form['Mname']
-            msg = Message('Account activated' ,sender ='Rportal<me@Rportal.com', recipients = [email])
+            msg = Message('Account activated' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
             msg.body ="Hello!" + Mname + " \n You have active from secreatry any query please contact with your secretary." + part4
             mail.send(msg)  
         return inpeople()
@@ -800,7 +807,7 @@ def r_members():
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('DELETE FROM member WHERE Mid = %s',[Mid]) 
             mysql.connection.commit()
-            msg = Message('Member Request Rejected' ,sender ='Rportal<me@Rportal.com', recipients = [email])
+            msg = Message('Member Request Rejected' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
             msg.body ="Hello! \n Your member request for the "+ name + " is rejected by "+ Sname + "!\n Reason: " + message +"\n\n Thank you for using rportal!\n" +part4
             mail.send(msg)  
             msg = 'Member Rejected/Deleted'
@@ -819,7 +826,7 @@ def d_members(Mid):
             mysql.connection.commit()
             email = request.form['Memail']
             Mname = request.form['Mname']
-            msg = Message('Account Delete' ,sender ='Rportal<me@Rportal.com', recipients = [email])
+            msg = Message('Account Delete' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
             msg.body ="Hello!" + Mname + " \n Your account has deleted from secreatry please contact with your secretary.\n" + part4
             mail.send(msg)  
         return people()
@@ -949,7 +956,7 @@ def shome():
             session['secretary'] = True
             session['Sid'] = Sid
             session['Susername'] = username
-            session['Scode'] = Scode
+            session['Scode']= Scode
             session['Semail'] = Semail
             session['Sname'] = Sname
         if 'secretary' in session:
@@ -967,17 +974,14 @@ def shome():
 
 @app.route('/rportal/sprofile')
 def sprofile():
-    
-    
     if 'secretary' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM secretary INNER JOIN society ON secretary.Scode = society.code WHERE Sid = %s', (session['Sid'],))
         account = cursor.fetchone()
+
         cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        
-        cursor1.execute('SELECT Mname FROM  member where member_status=%s  AND Mcode=%s ', ( 'active' ,  session['Scode'], ) )
+        cursor1.execute('SELECT username FROM  member where member_status=%s AND Mcode=%s', ('active', session['Scode'], ) )
         account1 = cursor1.fetchall()
-        print(  account1 )
 
         return render_template('secretary/sprofile.html', account=account, account1=account1)
     elif session.get('secretary') is None:
@@ -1059,7 +1063,7 @@ def complaint():
     elif session.get('secretary') is None:
         return login()
     else:
-        return logout()
+       return logout()
 
 def generateToken():
     token = jwt.encode( {'iss': API_KEY, 'exp': time() + 5000},
@@ -1073,6 +1077,7 @@ def createmeeting():
     if 'secretary' in session:
         msg = ''
         msg1 = ''
+        msg2 = ''
         if request.method == 'POST' and 'topic' in request.form and 'starttime' in request.form and 'duration' in request.form and 'agenda' in request.form  :
             topic = request.form['topic']
             start_time = request.form['starttime']
@@ -1080,24 +1085,22 @@ def createmeeting():
             agenda = request.form['agenda']
             meetingdetails = {
                 "topic":  topic,
-                "type": 1,
+                "type": 2,
                 "start_time":  start_time,
                 "duration":  duration,
                 "timezone": "India/Mumbai",
                 "agenda":  agenda,
                
                 "recurrence": {"type": 1,
-                            "repeat_interval": 2
+                            "repeat_interval": 1
                             },
                 "settings": {"host_video": "true",
-                            "participant_video": "true",
-                            "join_before_host": "true",
-                            "mute_upon_entry": "False",
-                            "watermark": "true",
-                            "audio": "voip",
-                            "auto_recording": "cloud",
-                            "private_meeting":"true",
-                            "pre_schedule":"true",
+                               "participant_video": "true",
+                               "join_before_host": "true",
+                               "mute_upon_entry": "False",
+                               "watermark": "true",
+                               "audio": "voip",
+                               "auto_recording": "cloud"
                             }
                 }
             headers = {'authorization': 'Bearer %s' % generateToken(),
@@ -1105,16 +1108,15 @@ def createmeeting():
             r = requests.post(
             f'https://api.zoom.us/v2/users/me/meetings/', 
             headers=headers, data=json.dumps(meetingdetails))
-            print("\n creating zoom meeting ... \n")
-            print(r.text,sep='\n')
-            print("\n creating zoom meeting ... \n")
-            join_URL = [json.loads(r.text)]
-            #meetingPassword = ["password"]
-            print(
-                f'\n here is your zoom meeting link {join_URL} and your \ password: \n')
-            msg = join_URL
-            #msg1 = "paasword :" + meetingPassword
-        return render_template('secretary/createmeeting.html', msg = msg)
+            result = json.loads(r.text)
+            link = result['join_url']
+            msg = link 
+            msg1 = "\n Host Key : 528614"
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('INSERT INTO meetings values (NULL , %s, %s, NULL, %s, %s, %s, %s, %s, DEFAULT)', (topic, start_time, duration, link, agenda, session['Scode'], 'live'))
+            mysql.connection.commit() 
+            msg2 = 'Meeting Scheduled'
+        return render_template('secretary/createmeeting.html', msg = msg , msg1= msg1, msg2=msg2)
     elif session.get('secretary') is None:
         return login()
     else:
@@ -1268,12 +1270,16 @@ def mhome():
             Memail = request.form['Memail']
             username = request.form['username']
             Mid = request.form['Mid']
+            Mflatno = request.form['Mflatno']
+            Mwing = request.form['Mwing']
             session['member'] = True
             session['Mid'] = Mid
             session['Musername'] = username
             session['Mcode'] = Mcode
             session['Memail'] = Memail
             session['Mname'] = Mname
+            session['Mflatno'] = Mflatno
+            session['Mwing'] = Mwing
         if 'member' in session:
                 return render_template('member/mhome.html', Mname=session['Mname'])
         elif 'member' in session:
@@ -1416,6 +1422,41 @@ def add_chat():
         return login()
     else:
         return logout()
+
+@app.route('/rportal/addguest', methods=['GET', 'POST'] )
+def addguest():
+    if 'member' in session:
+        msg = ''
+        target2 = os.path.join( '/Rportal/static/upload/vpic/')
+        if not os.path.isdir(target2):
+            os.makedirs(target2)
+        if request.method == 'POST' and 'vname' in request.form  and 'vmobile' in request.form  and 'vehical_no' in request.form and 'in_time' in request.form   and 'out_time' in request.form and 'Mflatno' in request.form and 'Mwing' in request.form  and  'vpic' in request.form:
+            vname = request.form['vname']
+            vmobile = request.form['vmobile'] 
+            vehical_no = request.form['vehical_no'] 
+            in_time = request.form['in_time']
+            out_time = request.form['out_time']
+            username = session['Musername']
+            Mflatno = request.form['Mflatno']
+            Mwing = request.form['Mwing']
+            
+            ...
+            file = request.files['vpic']
+            file_name = file.filename or ''
+            destination = ''.join([target2, file_name])
+            file.save(destination)
+            vpic  = file_name
+            ...
+            
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('INSERT INTO visitor VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NULL, DEFAULT )',(vname, vmobile, vehical_no, in_time,out_time, vpic, username, Mflatno, Mwing, 'active', session['Mcode'],))
+            msg = "Guest Add successfully!"
+        return render_template('member/addguest.html',msg=msg)
+    elif session.get('member') is None:
+        return login()
+    else:
+        return logout()
+
               
 #
 #   Admin Part
@@ -1423,7 +1464,7 @@ def add_chat():
 @app.route('/rportal/admin_home')
 def admin_home():
     if 'admin' in session:
-        return render_template('admin/admin_home.html', Ausername=session['Ausername'])
+        return render_template('admin/admin_home.html', Ausername=session['Ausername'] )
     elif session.get('admin') is None:
         return login()
     else:
@@ -1522,7 +1563,7 @@ def r_sec():
         if request.method == 'POST' and 'email' in request.form and 'message'  in request.form and 'Scode' :
             email = request.form['email']
             message = request.form['message']
-            Scode = request.form['Scode']
+            Scode = request.form['Scode'] 
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('DELETE FROM secretary WHERE Scode = %s',[Scode]) 
             cursor.execute('DELETE FROM society WHERE code = %s',[Scode]) 
@@ -1530,7 +1571,7 @@ def r_sec():
             cursor.execute('DELETE FROM security WHERE security_code = %s',[Scode]) 
             cursor.execute('DELETE FROM staff WHERE staff_code = %s',[Scode]) 
             mysql.connection.commit()
-            msg = Message('Society Rejected' ,sender ='Rportal<me@Rportal.com', recipients = [email])
+            msg = Message('Society Rejected' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
             msg.body ="Hi \n"+ message
             mail.send(msg)  
             msg = 'Society Rejected/Deleted'
@@ -1627,6 +1668,70 @@ def view_contacts():
         return login()
     else:
         return logout()
+
+@app.route('/rportal/visitorlog')
+def visitorlog():
+    if 'security' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT *  from visitor WHERE  society_code = %s AND vstatus = %s', (session['security_code'],'closed') ) 
+        account = cursor.fetchall() 
+        return render_template('security/visitorlog.html', account=account)
+    elif session.get('security') is None:
+        return login()
+    else:
+        return logout()
+
+@app.route('/rportal/recentvisitor')
+def recentvisitor():
+    if 'security' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT *  from visitor WHERE  society_code = %s AND vstatus = %s', (session['security_code'],'request') ) 
+        account = cursor.fetchall() 
+        return render_template('security/recentvisitor.html', account=account)
+    elif session.get('security') is None:
+        return login()
+    else:
+        return logout()
+
+@app.route('/rportal/addvisitor', methods=['GET', 'POST'] )
+def addvisitor():
+    if 'security' in session:
+        msg = ''
+        target2 = os.path.join( '/Rportal/static/upload/vpic/')
+        if not os.path.isdir(target2):
+            os.makedirs(target2)
+        if request.method == 'POST' and 'vname' in request.form  and 'vmobile' in request.form:
+            vname = request.form['vname']
+            vmobile = request.form['vmobile'] 
+            vehical_no = request.form['vehical_no'] 
+            in_time = request.form['in_time']
+            username = request.form['username']   
+            Mflatno = request.form['Mflatno']   
+            Mwing = request.form['Mwing']  
+            
+            ...
+            file = request.files['vpic']
+            file_name = file.filename or ''
+            destination = ''.join([target2, file_name])
+            file.save(destination)
+            vpic  = file_name
+            ...
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT * FROM member WHERE Mflatno = %s AND Mwing = %s AND Mcode=%s', (Mflatno, Mwing,session['security_code'],))
+            account = cursor.fetchone()
+            if account:
+                cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                cursor1.execute('INSERT INTO visitor VALUES (NULL, %s, %s, %s, %s, NULL, %s, %s, %s, %s, %s, %s, %s, DEFAULT )',(vname, vmobile, vehical_no, in_time, vpic, username, Mflatno, Mwing, 'request', session['security_code'], session['security_username'],))
+                mysql.connection.commit() 
+                msg = "visitor Add successfully!"
+            else:
+                msg = "Member not found! Please check detils and try again."
+        return render_template('security/addvisitor.html',msg=msg)
+    elif session.get('security') is None:
+        return login()
+    else:
+        return logout()
+              
     
 #
 #   Staff Part

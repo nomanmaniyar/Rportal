@@ -19,9 +19,8 @@
     <div class="dropdown">
         <button onclick="myFunction()" class="dropbtn"><i  class="fa fa-plus" aria-hidden="true"></i></button>
         <div id="myDropdown" class="dropdown-content">
-            <a  class="dropdown-item" type="button" href="{{ url_for('mcode') }}">Member</a>
             <a  class="dropdown-item" type="button" href="{{ url_for('sregister') }}">Secretary</a>
-          
+            <a  class="dropdown-item" type="button" href="{{ url_for('mcode') }}">Member</a>
         </div>
       </div>
        &nbsp; &nbsp; &nbsp; &nbsp;
@@ -77,6 +76,8 @@
         <input type="hidden" name="Memail" value="{{data2['Memail']}} ">
         <input  type="hidden" name="username" value="{{data2['username']}}">
         <input  type="hidden" name="Mid" value="{{data2['Mid']}}">
+        <input  type="hidden" name="Mflatno" value="{{data2['Mflatno']}}">
+        <input  type="hidden" name="Mwing" value="{{data2['Mwing']}}">
         <button type="submit" class="btn btn-primary">Launch</button>
     </form>
     
