@@ -1343,12 +1343,12 @@ def docsm():
 def member_complaint():
     if 'member' in session:
         msg = ''
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT post from staff WHERE staff_code= %s AND staff_status=%s', (session['Mcode'],'active',))
+        account = cursor.fetchall() 
         cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor1.execute('SELECT post from staff WHERE staff_code= %s AND staff_status=%s', (session['Mcode'],'active',))
-        account = cursor1.fetchall() 
-        cursor4 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor4.execute('SELECT * from complaint WHERE complaint_username= %s AND complaint_status = %s', (session['Musername'], 'active'))
-        account4 = cursor4.fetchall()
+        cursor1.execute('SELECT * from complaint WHERE complaint_username= %s AND complaint_status = %s', (session['Musername'], 'active'))
+        account1 = cursor1.fetchall()
         cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor2.execute('SELECT * from complaint WHERE complaint_username= %s AND complaint_status = %s', (session['Musername'], 'review'))
         account2 = cursor2.fetchall()
@@ -1359,13 +1359,13 @@ def member_complaint():
             compaint_subject = request.form['complaint_subject']
             complaint_message = request.form['complaint_message']
             complaint_against = request.form['complaint_against']
-            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('INSERT INTO complaint VALUES (NULL, %s, %s, %s, %s, %s, %s, DEFAULT, NULL, NULL, DEFAULT)', (session['Musername'] , session['Mname'] , compaint_subject, complaint_message, session['Mcode'], complaint_against,))
+            cursor4 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor4.execute('INSERT INTO complaint VALUES (NULL, %s, %s, %s, %s, %s, %s, DEFAULT, NULL, NULL, DEFAULT)', (session['Musername'] , session['Mname'] , compaint_subject, complaint_message, session['Mcode'], complaint_against,))
             mysql.connection.commit()
             msg = 'Complaint Added Succsesfully!'
         elif request.method == 'POST':
             msg = 'Please fill out the form!'
-        return render_template('member/member_complaint.html', msg=msg , account=account,account2= account2, account3=account3, account4=account4)
+        return render_template('member/member_complaint.html', msg=msg , account=account,account2= account2, account3=account3, account1=account1)
     elif session.get('member') is None:
         return login()
     else:
@@ -1685,7 +1685,6 @@ def staff_complaint():
             cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor3.execute('UPDATE complaint SET complaint_reply = %s, complaint_status = %s  WHERE complaint_id = %s', (complaint_reply, 'review', complaint_id ))
             mysql.connection.commit()
-            staff_complaint()
         return render_template('staff/staff_complaint.html', account=account, account1=account1, account2=account2)
     elif session.get('staff') is None:
         return login()

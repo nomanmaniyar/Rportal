@@ -66,12 +66,12 @@
                 <b>Complaint against:</b></label>&nbsp;{{ data1['complaint_against'] }}<br><br>
                 <b>Reply by {{data1['complaint_against']}}:</b>&nbsp;{{data1['complaint_reply']}}<br><br>
                 <b>Status: </b>&nbsp;{{data1['complaint_status']}}<br><br>
-                <button class="btn btn-primary" onclick="openModal()" >Reply</button>  <br>
+                <button class="btn btn-primary" onclick="openModal1()" >Reply</button>  <br>
                     <p>Note: You can give your reply only <b>once.</b></p>
                     <br><br>
  
                     <dialog id="dialog1">
-                    <button onclick="closeModal()"  class="btn-close" aria-label="Close" ></button><br>
+                    <button onclick="closeModal1()"  class="btn-close" aria-label="Close" ></button><br>
                     <form action ="/rportal/manage_complaint" method="post">
                         <input type="hidden" name="cid" value="{{ data1['complaint_id']}}" >
                         <input type="text" name="reply" placeholder="Enter Your Reply"><br><br>
@@ -133,6 +133,15 @@ function openModal() {
 
 function closeModal() { 
     dailog.close(); 
+} 
+
+function openModal1() { 
+   // dailog.show(); 
+      dailog1.showModal();
+} 
+
+function closeModal1() { 
+    dailog1.close(); 
 } 
 </script>
 
