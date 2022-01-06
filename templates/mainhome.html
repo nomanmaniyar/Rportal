@@ -150,11 +150,13 @@
             </p>
           </div>
           <form action="{{url_for('mhome')}}" method="post">
-            <input type="hidden" name="Mname" value="{{data2['Mname']}} ">
-            <input type="hidden" name="Mcode" value="{{data2['Mcode']}} ">
+            <input type="hidden"  name="Mname" value="{{data2['Mname']}} ">
+            <input type="hidden" name="Mcode" value ="{{data2['Mcode']}} ">
             <input type="hidden" name="Memail" value="{{data2['Memail']}} ">
-            <input type="hidden" name="username" value="{{data2['username']}}">
-            <input type="hidden" name="Mid" value="{{data2['Mid']}}">
+            <input  type="hidden" name="username" value="{{data2['username']}}">
+            <input  type="hidden" name="Mid" value="{{data2['Mid']}}">
+            <input  type="hidden" name="Mflatno" value="{{data2['Mflatno']}}">
+            <input  type="hidden" name="Mwing" value="{{data2['Mwing']}}">
             <div class="card-footer" style="background: white;">
               <button type="submit" class="btn btn-primary">Launch</button>
             </div>
