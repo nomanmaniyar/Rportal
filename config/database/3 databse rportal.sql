@@ -244,13 +244,12 @@ select * from visitor;
 CREATE TABLE `meetings` (
   `meet_id` int NOT NULL AUTO_INCREMENT,
   `topic` varchar(255) NOT NULL,
-  `starttime` timestamp NOT NULL,
-  `endtime` timestamp NULL DEFAULT NULL,
+  `date` varchar(255) NOT NULL,
+  `start_time` varchar(255) NOT NULL,
   `duration` int NOT NULL,
   `url` varchar(255) NOT NULL,
   `agenda` varchar(255) NOT NULL,
   `society_code` varchar(255) NOT NULL,
-  `status` varchar(255) NOT NULL,
   `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`meet_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
