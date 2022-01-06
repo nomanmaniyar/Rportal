@@ -3,163 +3,217 @@
 
 <head>
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> 
-	
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
-    	
-		<link rel="stylesheet" href="static/css/bootstrap.min.css">
-		<script src="static/js/bootstrap.min.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
-    <title>mainhome</title>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.0/font/bootstrap-icons.css" integrity="sha384-7ynz3n3tAGNUYFZD3cWe5PDcE36xj85vyFkawcF6tIwxvIecqKvfw
+  LiaFdizhPpN" crossorigin="anonymous">
+  <title>mainhome</title>
 </head>
+
 <body>
-  <header  style="float: right;">
-    <div class="dropdown">
-        <button onclick="myFunction()" class="dropbtn"><i  class="fa fa-plus" aria-hidden="true"></i></button>
-        <div id="myDropdown" class="dropdown-content">
-            <a  class="dropdown-item" type="button" href="{{ url_for('mcode') }}">Member</a>
-            <a  class="dropdown-item" type="button" href="{{ url_for('sregister') }}">Secretary</a>
-          
+  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow">
+    <div class="container">
+      <a href="#" class="navbar-brand" id="title" style="padding-top: 10px;">
+        <h4 style="line-height: 3px;">
+          Societys
+        </h4>
+        <span style="font-size: xx-small; display: inline;">by <h6 style=" display: inline-block;">RPortal</h6></span>
+      </a>
+      <div class=" h-stack">
+        <!-- <ul class="navbar-nav" id="navmenu">
+        <li class="nav-item"> -->
+        <div class="dropdown">
+          <button onclick="myFunction()" class="dropbtn"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
+              fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16" style="margin-bottom: 5px; color: black;">
+              <path fill-rule="evenodd"
+                d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
+            </svg></button>
+          <div id="myDropdown" class="dropdown-menu">
+            <h6 class="dropdown-header">Join Society as</h6>
+            <hr class="dropdown-divider">
+            <a class="dropdown-item" type="button" href="{{ url_for('mcode') }}">Member</a>
+            <a class="dropdown-item" type="button" href="{{ url_for('sregister') }}">Secretary</a>
+          </div>
         </div>
+        &nbsp; &nbsp; &nbsp; &nbsp;
+        <!-- </li>
+        <li class="nav-item"> -->
+        <a href="{{ url_for('logout') }}" role="button" class="btn btn-outline-dark btn-md"><svg
+            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-left"
+            viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+              d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0v2z" />
+            <path fill-rule="evenodd"
+              d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z" />
+          </svg> Log Out</a>
+        <!-- </li>
+      </ul> -->
       </div>
-       &nbsp; &nbsp; &nbsp; &nbsp;
-    <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
-  </header>
-
-    <h2> Welcome to R-Portal!</h2>
-   
-    <h3><div class="msg">{{ msg }}</div></h3>
-  
-    <div>
-  
-{% for data1  in account1 %}
-    <div  style=" background-color: #0ddaad; border-radius: 20px;  padding: 15px;
-    width: 200px;
-    height: 150px;" >
-    <br> 
-    Secretary account
-    <p>
-    {{data1['name']}}, {{ data1['city'] }} <br>   {{data1['Scode']}} <br> {{data1['Swing']}}` {{data1['Sflatno']}}  <label>Status: Active</label></p>
-    <form action="{{ url_for('shome') }}" method="post">
-    <input type="hidden"  name="Sname" value="{{data1['Sname']}} ">
-    <input type="hidden" name="Scode" value =" {{data1['Scode']}} ">
-    <input type="hidden" name="Semail" value="{{data1['Semail']}} ">
-    <input  type="hidden" name="username" value=" {{data1['username']}}">
-    <input  type="hidden" name="Sid" value=" {{data1['Sid']}}">
-    <button type="submit" class="btn btn-primary">Launch</button>
-</form>
-
-
-    </div><br>
-{% endfor %} 
-</div>
-
-<div>
-    {% for data2  in account2 %}
-    <div  style="	background-color: #38cdfa; border-radius: 20px;  padding: 15px;
-    width: 200px;
-    height: 150px;" >
-<br>
- Member account
-    <p>
-    {{data2['name']}}, {{ data2['city'] }}  <br>
-    
-    {{data2['Mcode']}} <br>  {{data2['Mwing']}}` {{data2['Mflatno']}}  <label>Status: Active</label> 
-    
-
-</p>    
-
-    <form action="{{url_for('mhome')}}" method="post">
-        <input type="hidden"  name="Mname" value="{{data2['Mname']}} ">
-        <input type="hidden" name="Mcode" value =" {{data2['Mcode']}} ">
-        <input type="hidden" name="Memail" value="{{data2['Memail']}} ">
-        <input  type="hidden" name="username" value=" {{data2['username']}}">
-        <input  type="hidden" name="Mid" value=" {{data2['Mid']}}">
-        <button type="submit" class="btn btn-primary">Launch</button>
-    </form>
-    
-   </div><br>
-        {% endfor %} 
-        
-        {% for data3  in account3 %}
-        <div  style=" background-color: #7781d4; border-radius: 20px;  padding: 15px;
-        width: 200px;
-        height: 150px;" >
-        <br> 
-        Secretary account
-        <p>
-        {{data3['name']}}, {{ data3['city'] }} <br>   {{data3['Scode']}} <br>  {{data3['Swing']}}` {{data3['Sflatno']}} <br> <label>Status: Inactive</label>  <br></p>
-        
-    </form>
-    
-    
-        </div>
-    {% endfor %} 
     </div>
-    <div>
-        {% for data4  in account4 %}
-        <div  style="	background-color: #385ffa; border-radius: 20px;  padding: 15px;
-        width: 200px;
-        height: 150px;" >
-    <br>
-     Member account
-        <p>
-        {{data4['name']}}, {{ data4['city'] }}  <br>
-        
-        {{data4['Mcode']}}
-        <br>  {{data4['Mwing']}}` {{data4['Mflatno']}} <br> <label>Status: Inactive</label>  <br>
-    
-    </p>    
-        
-       </div><br>
-            {% endfor %} 
-            <br>
-           
-            {% for data3  in account5 %}
-            <div  style=" background-color: #063a52; border-radius: 20px;  padding: 15px;
-            width: 200px;
-            height: 150px;" >
-            <br> 
-            Secretary account
-            <p>
-            {{data3['name']}}, {{ data3['city'] }} <br>   {{data3['Scode']}} <br>  {{data3['Swing']}}` {{data3['Sflatno']}} <br> <label>Status: Requested</label>  <br></p>
-            
-        </form>
-        
-        
-            </div>
-        {% endfor %} 
+  </nav>
+
+  <div class="container bg-light text-dark text-center text-sm-start" style="padding-top:5rem ">
+    <div class="app-card alert alert-dismissible shadow-sm mb-4 border-left-decoration" role="alert">
+
+      <h3 class="mb-3 p-3">Welcome to RPortal!</h3>
+
+      <!--//app-card-body-->
+    </div>
+
+
+    <div class="container shadow">
+      <div class="row row-cols-1 row-cols-md-3 g-4 p3">
+        <!-- Secretary Requested-->
+
+        {% for data3 in account5 %}
+        <div class="card col-md-6 col-lg-3 mx-3">
+          <img src="../static/Icon/1Building.svg" class="card-img-top " alt="...">
+          <div class="card-body">
+            <h5 class="card-title"> Secretary account</h5>
+            <p class="card-text">{{data3['name']}},<br> {{data3['city']}} <br>
+              {{data3['Swing']}}{{data3['Sflatno']}}
+              <br> <label> <b>Society Code:</b> {{data3['Scode']}}</label>
+              <br> <label> <b>Status:</b> Requested</label> <br>
+            </p>
+          </div>
         </div>
-        <br>
-        <div>
-            {% for data4  in account6 %}
-            <div  style="	background-color: #38cdfa; border-radius: 20px;  padding: 15px;
-            width: 200px;
-            height: 150px;" >
-        <br>
-         Member account
-            <p>
-            {{data4['name']}}, {{ data4['city'] }}  <br>
-            
-            {{data4['Mcode']}}
-            <br> {{data4['Mwing']}}` {{data4['Mflatno']}} <br> <label>Status: Requested</label>  <br>
-        </p>    
-            
-           </div><br>
-                {% endfor %} 
-</div>
-<br>
-<script>
+        {% endfor %}
+
+        <!-- Secratary InActive -->
+        {% for data3 in account3 %}
+        <div class="card col-md-6 col-lg-3 mx-3">
+          <img src="../static/Icon/1Building.svg" class="card-img-top " alt="...">
+          <div class="card-body">
+            <h5 class="card-title"> Secretary account</h5>
+            <p class="card-text">{{data3['name']}}, {{ data3['city'] }} <br>
+              {{data3['Swing']}}
+              {{data3['Sflatno']}}
+              <br> <label> <b>Society Code:</b> {{data3['Scode']}}</label>
+              <br> <label> <b> Status:</b> Inactive</label> <br>
+            </p>
+          </div>
+          <div class="card-footer" style="background: white;">
+            <a href="#" class="btn btn-primary disabled">Launch</a>
+          </div>
+
+        </div>
+        {% endfor %}
+
+        <!-- Secratary Active -->
+        {% for data1 in account1 %}
+        <div class="card col-md-6 col-lg-3 mx-3">
+
+          <img src="../static/Icon/1Building.svg" class="card-img-top " alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Secretary account</h5>
+            <p class="card-text">{{data1['name']}}, {{ data1['city'] }} <br>
+              {{data1['Swing']}}
+              {{data1['Sflatno']}}
+              <br> <label> <b>Society Code:</b> {{data1['Scode']}}</label> <br>
+              <label> <b>Status:</b> Active</label> <br>
+            </p>
+          </div>
+          <form action="{{ url_for('shome') }}" method="post">
+            <input type="hidden" name="Sname" value="{{data1['Sname']}} ">
+            <input type="hidden" name="Scode" value="{{data1['Scode']}} ">
+            <input type="hidden" name="Semail" value="{{data1['Semail']}} ">
+            <input type="hidden" name="username" value="{{data1['username']}}">
+            <input type="hidden" name="Sid" value="{{data1['Sid']}}">
+            <div class="card-footer" style="background: white;">
+              <button type="submit" class="btn btn-primary">Launch</button>
+            </div>
+          </form>
+        </div>
+        {% endfor %}
+
+        <!-- MEMBER Active -->
+        {% for data2 in account2 %}
+        <div class="card col-md-6 col-lg-3 mx-3">
+          <img src="../static/Icon/1Building.svg" class="card-img-top " alt="...">
+          <div class="card-body">
+            <h5 class="card-title"> Member account</h5>
+            <p class="card-text">{{data2['name']}}, {{ data2['city'] }} <br>
+              {{data2['Mwing']}}{{data2['Mflatno']}}
+              <br> <label> <b>Society Code:</b> {{data2['Mcode']}}</label> <br>
+              <label><b>Status:</b>Active</label>
+            </p>
+          </div>
+          <form action="{{url_for('mhome')}}" method="post">
+            <input type="hidden" name="Mname" value="{{data2['Mname']}} ">
+            <input type="hidden" name="Mcode" value="{{data2['Mcode']}} ">
+            <input type="hidden" name="Memail" value="{{data2['Memail']}} ">
+            <input type="hidden" name="username" value="{{data2['username']}}">
+            <input type="hidden" name="Mid" value="{{data2['Mid']}}">
+            <div class="card-footer" style="background: white;">
+              <button type="submit" class="btn btn-primary">Launch</button>
+            </div>
+          </form>
+        </div>
+        {% endfor %}
+
+        <!-- MEMBER InActive -->
+        {% for data4 in account4 %}
+        <div class="card col-md-6 col-lg-3 mx-3 ">
+          <img src="../static/Icon/1Building.svg" class="card-img-top " alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Member account</h5>
+            <p class="card-text">{{data4['name']}}, {{ data4['city'] }}
+              <br> {{data4['Mwing']}}{{data4['Mflatno']}}
+              <br> <label> <b>Society Code:</b> {{data4['Mcode']}}</label>
+              <br><label><b> Status:</b> Inactive</label> <br>
+            </p>
+          </div>
+          <div class="card-footer" style="background: white;">
+            <a href="#" class="btn btn-primary disabled">Launch</a>
+          </div>
+        </div>
+        {% endfor %}
+
+        <!-- MEMBER Requested-->
+        {% for data4 in account6 %}
+        <div class="card col-md-6 col-lg-3 mx-3 ">
+          <img src="../static/Icon/1Building.svg" class="card-img-top " alt="...">
+          <div class="card-body">
+            <h5 class="card-title"> Member account</h5>
+            <p class="card-text">{{data4['name']}}, {{ data4['city'] }}
+              <br> {{data4['Mwing']}}` {{data4['Mflatno']}}
+              <br> <label> <b>Society Code:</b> {{data4['Mcode']}}</label>
+              <br> <label> <b> Status: </b>Requested</label>
+              <br>
+            </p>
+          </div>
+        </div>
+        {% endfor %}
+
+      </div>
+    </div>
+  </div>
+  <!-- Footer -->
+  <footer class="pb-2 bg-light text-dark text-center position-relative">
+    <div class="container">
+      <p class="lead">Copyright &copy; 2021 R-Portal
+        <!-- <img src="../static/Icon/DenApp.svg" class="img-fluid w-25" alt="" />  -->
+      </p>
+    </div>
+  </footer>
+  <script>
     /* When the user clicks on the button, 
     toggle between hiding and showing the dropdown content */
     function myFunction() {
       document.getElementById("myDropdown").classList.toggle("show");
     }
-    
+
     // Close the dropdown if the user clicks outside of it
-    window.onclick = function(event) {
+    window.onclick = function (event) {
       if (!event.target.matches('.dropbtn')) {
         var dropdowns = document.getElementsByClassName("dropdown-content");
         var i;
@@ -171,46 +225,58 @@
         }
       }
     }
-    </script>
-<style>
+  </script>
+  <style>
+    .shadow {
+      box-shadow: 0 3px 6px rgba(3, 0, 71, .1) !important
+    }
+
     .dropbtn {
-      background-color:  #b6b7b8;
+      background-color: #dfe3e800;
       color: white;
-      padding: 10px;
-      font-size: 10px;
+      /* padding-top: 5px; */
+      /* margin-top: 5px;  */
+      font-size: x-large;
       border: none;
+      border-radius: 100%;
       cursor: pointer;
     }
-    
-    .dropbtn:hover, .dropbtn:focus {
-      background-color: #b6b7b8;
+
+    .dropbtn:hover,
+    .dropbtn:focus {
+      background-color: #a9a9a99f;
     }
-    
+
     .dropdown {
       position: relative;
       display: inline-block;
     }
-    
+
     .dropdown-content {
       display: none;
       position: absolute;
       background-color: #f1f1f1;
       min-width: 100px;
       overflow: auto;
-      box-shadow: 0px 8px 10px 0px rgba(0,0,0,0.2);
+      box-shadow: 0px 8px 10px 0px rgba(0, 0, 0, 0.2);
       z-index: 1;
     }
-    
+
     .dropdown-content a {
       color: black;
       padding: 6px 10px;
       text-decoration: none;
       display: block;
     }
-    
-    .dropdown a:hover {background-color: #ddd;}
-    
-    .show {display: block;}
-    </style>
+
+    .dropdown a:hover {
+      background-color: #ddd;
+    }
+
+    .show {
+      display: block;
+    }
+  </style>
 </body>
+
 </html>
