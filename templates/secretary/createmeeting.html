@@ -28,7 +28,7 @@
         <label for="complaint_message">
           
         </label>
-        <input type="time" name="starttime" placeholder="Enter Start Time" id="starttime" required>
+        <input type="time" name="start_time" placeholder="Enter Start Time" id="start_time"  required>
         <br><br>
 
         <label for="complaint_subject">
@@ -47,6 +47,40 @@
     
         </div>
     </div>
-</form>
+</form> <br>
+<br>
+
+<div>
+    <h3>Meetings</h3><br>
+{% if account !=0 %}
+{% for data  in account %}
+<table  class="table" style="width:100%">
+  <td>
+      
+     <h2>{{data['topic']}}</h2><br>
+     <label>Meeting Date:</label><h3>{{data['date']}}</h3>
+     <label>Meeting Start Time:</label> <h3>{{data['start_time']}}</h3>
+     <label>Meeting Duration :</label><h3>{{data['duration']}}</h3><br>
+     <label> Agenda :</label>
+    <h4>{{data['agenda']}}</h4><br>
+     <a  href="{{data['url']}}" >{{data['url']}}</a><br>
+  </td>
+</table>
+<br><br>
+{% else %}
+
+
+<b><h4>No Meetings Found.</h4> </b><br>
+{% endfor %} 
+{% endif %} 
+<a href='javascript:self.history.back();'>Go Back</a>
+</div>
+
+</div>
+
+
+
+
+
 
 {% endblock %}

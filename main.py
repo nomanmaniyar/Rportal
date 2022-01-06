@@ -1136,11 +1136,12 @@ def createmeeting():
         msg = ''
         msg1 = ''
         msg2 = ''
-        if request.method == 'POST' and 'topic' in request.form and 'starttime' in request.form and 'duration' in request.form and 'agenda' in request.form  :
+        if request.method == 'POST' and 'topic' in request.form and 'start_time' in request.form and 'duration' in request.form and 'agenda' in request.form  :
             topic = request.form['topic']
-            start_time = request.form['starttime']
+            start_time = request.form['start_time']
             duration = request.form['duration']
             agenda = request.form['agenda']
+            date = request.form['date']
             meetingdetails = {
                 "topic":  topic,
                 "type": 2,
@@ -1171,10 +1172,16 @@ def createmeeting():
             msg = link 
             msg1 = "\n Host Key : 528614"
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('INSERT INTO meetings values (NULL , %s, %s, NULL, %s, %s, %s, %s, %s, DEFAULT)', (topic, start_time, duration, link, agenda, session['Scode'], 'live'))
+            cursor.execute('INSERT INTO meetings values (NULL , %s,%s ,%s ,%s, %s, %s, %s,  DEFAULT)', (topic, date, start_time, duration, link, agenda, session['Scode']))
             mysql.connection.commit() 
             msg2 = 'Meeting Scheduled'
-        return render_template('secretary/createmeeting.html', msg = msg , msg1= msg1, msg2=msg2)
+            return render_template('secretary/createmeeting.html', msg = msg , msg1= msg1, msg2=msg2 )
+        else:
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT *  from meetings WHERE society_code = %s  ', (session['Scode'],) ) 
+            account = cursor.fetchall()
+            return render_template('secretary/createmeeting.html', account= account)
+
     elif session.get('secretary') is None:
         return login()
     else:
@@ -1398,6 +1405,18 @@ def docsm():
         cursor.execute('SELECT *  from document WHERE society_code = %s', (session['Mcode'],) ) 
         account = cursor.fetchall() 
         return render_template('member/docsm.html', account=account)
+    elif session.get('member') is None:
+        return login()
+    else:
+        return logout()
+
+@app.route('/rportal/meetings')
+def meetings():
+    if 'member' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT *  from meetings WHERE society_code = %s  ', (session['Mcode'],) ) 
+        account = cursor.fetchall() 
+        return render_template('member/meetings.html', account=account)
     elif session.get('member') is None:
         return login()
     else:
@@ -1746,6 +1765,23 @@ def recentvisitor():
         cursor.execute('SELECT *  from visitor WHERE  society_code = %s AND vstatus = %s', (session['security_code'],'request') ) 
         account = cursor.fetchall() 
         return render_template('security/recentvisitor.html', account=account)
+    elif session.get('security') is None:
+        return login()
+    else:
+        return logout()
+
+@app.route('/rportal/visitorexit',methods=['GET','POST'])
+def visitorexit():
+    if 'security' in session:
+        out_time =''
+        vid =''
+        if request.method == 'POST' and 'vid' in request.form and 'out_time' in request.form:
+            vid = request.form['vid']
+            out_time = request.form['out_time']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE visitor SET out_time = %s , vstatus = %s  WHERE  vid = %s ', (out_time ,'Exit',vid) )
+        mysql.connection.commit()
+        return recentvisitor() 
     elif session.get('security') is None:
         return login()
     else:
