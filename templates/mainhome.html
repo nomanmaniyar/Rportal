@@ -20,29 +20,12 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow">
-    <div class="container">
-      <a href="#" class="navbar-brand" id="title" style="padding-top: 10px;">
-        <h4 style="line-height: 3px;">
-          Societys
-        </h4>
-        <span style="font-size: xx-small; display: inline;">by <h6 style=" display: inline-block;">RPortal</h6></span>
-      </a>
-      <div class=" h-stack">
-        <!-- <ul class="navbar-nav" id="navmenu">
-        <li class="nav-item"> -->
-        <div class="dropdown">
-          <button onclick="myFunction()" class="dropbtn"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
-              fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16" style="margin-bottom: 5px; color: black;">
-              <path fill-rule="evenodd"
-                d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
-            </svg></button>
-          <div id="myDropdown" class="dropdown-menu">
-            <h6 class="dropdown-header">Join Society as</h6>
-            <hr class="dropdown-divider">
-            <a class="dropdown-item" type="button" href="{{ url_for('mcode') }}">Member</a>
-            <a class="dropdown-item" type="button" href="{{ url_for('sregister') }}">Secretary</a>
-          </div>
+  <header  style="float: right;">
+    <div class="dropdown">
+        <button onclick="myFunction()" class="dropbtn"><i  class="fa fa-plus" aria-hidden="true"></i></button>
+        <div id="myDropdown" class="dropdown-content">
+            <a  class="dropdown-item" type="button" href="{{ url_for('sregister') }}">Secretary</a>
+            <a  class="dropdown-item" type="button" href="{{ url_for('mcode') }}">Member</a>
         </div>
         &nbsp; &nbsp; &nbsp; &nbsp;
         <!-- </li>
@@ -58,6 +41,81 @@
         <!-- </li>
       </ul> -->
       </div>
+       &nbsp; &nbsp; &nbsp; &nbsp;
+    <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+  </header>
+
+    <h2> Welcome to rportal!</h2>
+   
+    <h3><div class="msg">{{ msg }}</div></h3>
+  
+    <div>
+  
+{% for data1  in account1 %}
+    <div  style=" background-color: #0ddaad; border-radius: 20px;  padding: 15px;
+    width: 200px;
+    height: 150px;" >
+    <br> 
+    Secretary account
+    <p>
+    {{data1['name']}}, {{ data1['city'] }} <br>   {{data1['Scode']}} <br> {{data1['Swing']}}` {{data1['Sflatno']}}  <label>Status: Active</label></p>
+    <form action="{{ url_for('shome') }}" method="post">
+    <input type="hidden"  name="Sname" value="{{data1['Sname']}} ">
+    <input type="hidden" name="Scode" value ="{{data1['Scode']}} ">
+    <input type="hidden" name="Semail" value="{{data1['Semail']}} ">
+    <input  type="hidden" name="username" value="{{data1['username']}}">
+    <input  type="hidden" name="Sid" value="{{data1['Sid']}}">
+    <button type="submit" class="btn btn-primary">Launch</button>
+</form>
+
+
+    </div><br>
+{% endfor %} 
+</div>
+
+<div>
+    {% for data2  in account2 %}
+    <div  style="	background-color: #38cdfa; border-radius: 20px;  padding: 15px;
+    width: 200px;
+    height: 150px;" >
+<br>
+ Member account
+    <p>
+    {{data2['name']}}, {{ data2['city'] }}  <br>
+    
+    {{data2['Mcode']}} <br>  {{data2['Mwing']}}` {{data2['Mflatno']}}  <label>Status: Active</label> 
+    
+
+</p>    
+
+    <form action="{{url_for('mhome')}}" method="post">
+        <input type="hidden"  name="Mname" value="{{data2['Mname']}} ">
+        <input type="hidden" name="Mcode" value ="{{data2['Mcode']}} ">
+        <input type="hidden" name="Memail" value="{{data2['Memail']}} ">
+        <input  type="hidden" name="username" value="{{data2['username']}}">
+        <input  type="hidden" name="Mid" value="{{data2['Mid']}}">
+        <input  type="hidden" name="Mflatno" value="{{data2['Mflatno']}}">
+        <input  type="hidden" name="Mwing" value="{{data2['Mwing']}}">
+        <button type="submit" class="btn btn-primary">Launch</button>
+    </form>
+    
+   </div><br>
+        {% endfor %} 
+        
+        {% for data3  in account3 %}
+        <div  style=" background-color: #7781d4; border-radius: 20px;  padding: 15px;
+        width: 200px;
+        height: 150px;" >
+        <br> 
+        Secretary account
+        <p>
+        {{data3['name']}}, {{ data3['city'] }} <br>   {{data3['Scode']}} <br>  {{data3['Swing']}}` {{data3['Sflatno']}} <br> <label>Status: Inactive</label>  <br></p>
+        
+    </form>
+    
+    
+        </div>
+    {% endfor %} 
     </div>
   </nav>
 

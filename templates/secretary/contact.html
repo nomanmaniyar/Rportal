@@ -1,6 +1,6 @@
 {% extends 'secretary/slayout.html' %}
 
-{% block title %}R-Portal - Contacts{% endblock %}
+{% block title %}rportal - Contacts{% endblock %}
 
 {% block content %}
 
@@ -17,7 +17,7 @@
  
  <dialog id="dialog">
     <button align="right" onclick="closeModal()"  class="btn-close" aria-label="Close" ></button>
-     <form action="/R-Portal/add_contact" method="POST">
+     <form action="/rportal/add_contact" method="POST">
          <br><br>
         <input type="txt" name="contact_label" placeholder="Enter Contact Name"><br><br>
         <input type="tel" name="contact_no" placeholder="Enter Contact Number +91"><br><br>
@@ -51,7 +51,7 @@ function closeModal() {
     <table  class="table" style="width:100%">
       <td>
           <label>{{contact['contact_label']}} :</label>
-          <a  href="tel:+{{account['contact_no']}}" >{{contact['contact_no']}}</a>&nbsp;&nbsp;<a href="/R-Portal/d_contact/{{contact['contact_id']}}"  aria-hidden="true"  style="border: none;outline: none;background: none;" onclick="return confirm('Are you sure you want to delete this contact?');"><i class="fa fa-trash" aria-hidden="true"  style="color:black"></i></a>
+          <a  href="tel:+{{account['contact_no']}}" >{{contact['contact_no']}}</a>&nbsp;&nbsp;<a href="/rportal/d_contact/{{contact['contact_id']}}"  aria-hidden="true"  style="border: none;outline: none;background: none;" onclick="return confirm('Are you sure you want to delete this contact?');"><i class="fa fa-trash" aria-hidden="true"  style="color:black"></i></a>
       </td>
      
     </table>

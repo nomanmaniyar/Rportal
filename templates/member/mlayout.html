@@ -14,7 +14,7 @@
 	<body class="loggedin">
 		<nav class="navtop">
 			<div>
-				<h1>R-Portal!</h1>
+				<h1>rportal!</h1>
 				<br>
             	<a href="{{ url_for('mainhome') }}"><i class="fas fa-home"></i>Switch society</a>
             	<br>
@@ -31,6 +31,10 @@
 				<a href="{{ url_for('docsm') }}"><i class="fa fa-folder-open" aria-hidden="true"></i>Document</a>
             	<br>
 				<a href="{{ url_for('chat') }}"><i class="fas fa-comments-alt"></i>Chat</a>
+            	<br>
+				<a href="{{ url_for('meetings') }}">Meetings</a>
+            	<br>
+				<a href="{{ url_for('addguest') }}">Add Guest</a>
             	<br>
 				<a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i>Logout</a>
 				<br>

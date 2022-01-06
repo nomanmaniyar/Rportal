@@ -89,15 +89,14 @@ CREATE TABLE IF NOT EXISTS `society` (
   	`bankname` varchar(255) NOT NULL,
     `branch` varchar(200) NOT NULL,
   	`ifsc` varchar(255) NOT NULL,
-  	`socrule` varchar(2000),
-	`mainrule` varchar(2000),
+	`soc_bal` float(50),
 	`kyc_file` varchar(255),
     `society_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
 	`society_status` varchar(255) default 'request',
     PRIMARY KEY (`id`,`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-INSERT INTO `society` (`id`, `code`, `name`,`city`, `road`,`area`,`state`,`pin`,`acname`,`acno`,`mmid`,`bankname`,`branch`,`ifsc`,`socrule`,`mainrule`,`kyc_file`) VALUES (1, 'GOKU11', 'Gokuldham Society', 'Goregaon East', 'Powder Gali','Goregaon','Maharastra','422001','Gokuldham CO OP Hsg Society','85858858585858','5155755','DBS Bank','Singapour','SBIN0006333','Sample Society Rules','Sample Maintanance Rules','path');
-INSERT INTO `society` (`id`, `code`, `name`,`city`, `road`,`area`,`state`,`pin`,`acname`,`acno`,`mmid`,`bankname`,`branch`,`ifsc`,`socrule`,`mainrule`,`kyc_file`) VALUES (2, 'SAIR11', 'Sai Residency', 'Nasik', 'Gajpanth','Mhasrul','Maharastra','422003','Sai Residency Account','5454545455454545','2525255','Bank of Maharastra','Panchvati','DBSS0IN0811','Sample Society Rules','Sample Maintanance Rules','path');
+INSERT INTO `society` (`id`, `code`, `name`,`city`, `road`,`area`,`state`,`pin`,`acname`,`acno`,`mmid`,`bankname`,`branch`,`ifsc`,`soc_bal`,`kyc_file`) VALUES (1, 'GOKU11', 'Gokuldham Society', 'Goregaon East', 'Powder Gali','Goregaon','Maharastra','422001','Gokuldham CO OP Hsg Society','85858858585858','5155755','DBS Bank','Singapour','SBIN0006333','00.00','path');
+INSERT INTO `society` (`id`, `code`, `name`,`city`, `road`,`area`,`state`,`pin`,`acname`,`acno`,`mmid`,`bankname`,`branch`,`ifsc`,`soc_bal`,`kyc_file`) VALUES (2, 'SAIR11', 'Sai Residency', 'Nasik', 'Gajpanth','Mhasrul','Maharastra','422003','Sai Residency Account','5454545455454545','2525255','Bank of Maharastra','Panchvati','DBSS0IN0811','00.00','path');
 alter table society auto_increment = 3;
 select * from society;
 
@@ -195,7 +194,9 @@ INSERT INTO `notice` (`notice_id`,`notice_subject`, `notice_message`, `notice_co
 INSERT INTO `notice` (`notice_id`,`notice_subject`, `notice_message`, `notice_code`) VALUES ('2', 'Test Subject', 'Test Notice Message', 'SAIR11');
 alter table notice auto_increment = 3;
 select * from notice;
+
 UPDATE complaint SET complaint_reply = 'sry', complaint_status = 'review'  WHERE complaint_id = '1';
+
 CREATE TABLE IF NOT EXISTS `contact` (
 	`contact_id` int(11) NOT NULL AUTO_INCREMENT,
 	`contact_label` VARCHAR(255) NOT NULL,
@@ -220,4 +221,51 @@ CREATE TABLE IF NOT EXISTS `chat` (
 	`msg_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   	PRIMARY KEY (`msg_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `visitor` (
+	`vid` int(11) NOT NULL AUTO_INCREMENT,
+	`vname` varchar(255) NOT NULL,
+    `vmobile` varchar(255) NOT NULL,
+	`vehical_no` varchar(255) ,
+    `in_time` varchar(255) NOT NULL,
+	`out_time` varchar(255),
+	`vpic` varchar(255) NOT NULL,
+    `username` varchar(255) NOT NULL,
+	`Mflatno` varchar(255) NOT NULL,
+	`Mwing` varchar(255) NOT NULL,
+	`vstatus` varchar(255) NOT NULL,
+	`society_code` varchar(255) NOT NULL,
+	`security` varchar(255) NOT NULL,
+	`entry_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  	PRIMARY KEY (`vid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+select * from visitor;
+
+CREATE TABLE `meetings` (
+  `meet_id` int NOT NULL AUTO_INCREMENT,
+  `topic` varchar(255) NOT NULL,
+  `date` varchar(255) NOT NULL,
+  `start_time` varchar(255) NOT NULL,
+  `duration` int NOT NULL,
+  `url` varchar(255) NOT NULL,
+  `agenda` varchar(255) NOT NULL,
+  `society_code` varchar(255) NOT NULL,
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`meet_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+select * from meetings;
+
+CREATE TABLE IF NOT EXISTS `maintenance` (
+	`main_id` int(11) NOT NULL AUTO_INCREMENT,
+	`Musername` varchar(255) NOT NULL,
+    `code` varchar(50) NOT NULL,
+	`bill_date` timestamp NOT NULL,
+    `due_date` timestamp,
+    `paid_date` timestamp,
+    `amount` float,
+    `pending_amount` float,
+    `payment_status` varchar(255),
+  	PRIMARY KEY (`main_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+select * from maintenance;
 

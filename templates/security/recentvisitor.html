@@ -1,0 +1,48 @@
+{% extends 'security/security_layout.html' %}
+
+{% block title %}visitorlog{% endblock %}
+
+{% block content %}
+<div>
+  <table  class="table" style="width:100%">
+
+    {% if account !=0 %}
+         {% for data  in account %}
+         <tr >
+          <td class="title">
+            <div class="thumb">
+            <img  src="/static/upload/vpic/{{data['vpic']}}" height="40%" width="20%" alt="Visitor image">
+            
+            <h6 class="mb-2" ><b>{{ data['vname'] }}</b></h6>
+                    
+                      <b>Contact No: </b>{{ data['vmobile'] }}<br>
+                    
+                        <b>Visited to: </b>{{ data['Mwing'] }}{{ data['Mflatno'] }}<br>
+                 <b>Status: </b>{{ data['vstatus'] }}<br>
+                 <form action="{{ url_for('visitorexit') }}" method="POST">
+                 <input type="hidden" name="id" value="{{data['vid']}}" required >
+                 <label>Out Time</label>
+                 <input type="time" name="out_time" required >
+                 <input type="submit" class="btn btn-primary" value="Exit">
+                </form>
+                
+                
+            </div>
+          </div>
+        </div>
+      </td>
+      </tr>
+        
+       </table>
+      
+     
+   {% else %}
+       
+      
+       <b><h4>No Data Found.</h4> </b><br>
+       {% endfor %} 
+   {% endif %} 
+   
+   </div>
+
+   {% endblock %}

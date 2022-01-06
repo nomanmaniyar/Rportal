@@ -1,6 +1,6 @@
 {% extends 'member/mlayout.html' %}
 
-{% block title %}R-Portal Member Complaint{% endblock %}
+{% block title %}rportal Member Complaint{% endblock %}
 
 {% block content %}
 <br>
@@ -14,16 +14,16 @@
   <h4>Complaints under review:</h4>
 <table class="table" style="width:100%">
 
-    {% for data1 in account2 %}
+    {% for data2 in account2 %}
     <div class="content">
         <tr>
             <br>
-            <b>Complaint Subject:</b>&nbsp;{{ data1['complaint_subject'] }}<br><br>
-            <b>Complaint Against</b>&nbsp;{{data1['complaint_against']}}<br><br>
-            <b>Complaint message:</b>&nbsp;{{ data1['complaint_message'] }}<br><br>
-            <b>Complaint Date Time: </b>&nbsp;{{ data1['complaint_time'] }}<br><br>
-            <b>Reply by {{data1['complaint_against']}}:</b>&nbsp;{{data1['complaint_reply']}}<br><br>
-            <b>Status: </b>&nbsp;{{data1['complaint_status']}}<br><br>
+            <b>Complaint Subject:</b>&nbsp;{{ data2['complaint_subject'] }}<br><br>
+            <b>Complaint Against</b>&nbsp;{{data2['complaint_against']}}<br><br>
+            <b>Complaint message:</b>&nbsp;{{ data2['complaint_message'] }}<br><br>
+            <b>Complaint Date Time: </b>&nbsp;{{ data2['complaint_time'] }}<br><br>
+            <b>Reply by {{data2['complaint_against']}}:</b>&nbsp;{{data2['complaint_reply']}}<br><br>
+            <b>Status: </b>&nbsp;{{data2['complaint_status']}}<br><br>
         </tr> 
         <hr>
     </div>
@@ -36,15 +36,15 @@
   <h4>Active complaints:</h4>
   <table class="table" style="width:100%">
     
-      {% for data3 in account4 %}
+      {% for data1 in account1 %}
       <div class="content">
           <tr>
               <br>
-              <b>Complaint Subject:</b>&nbsp;{{ data3['complaint_subject'] }}<br><br>
-              <b>Complaint Against</b>&nbsp;{{data3['complaint_against']}}<br><br>
-              <b>Complaint message:</b>&nbsp;{{ data3['complaint_message'] }}<br><br>
-              <b>Complaint Date Time: </b>&nbsp;{{ data3['complaint_time'] }}<br><br>
-              <b>Status: </b>&nbsp;{{data3['complaint_status']}}<br><br>
+              <b>Complaint Subject:</b>&nbsp;{{ data1['complaint_subject'] }}<br><br>
+              <b>Complaint Against</b>&nbsp;{{data1['complaint_against']}}<br><br>
+              <b>Complaint message:</b>&nbsp;{{ data1['complaint_message'] }}<br><br>
+              <b>Complaint Date Time: </b>&nbsp;{{ data1['complaint_time'] }}<br><br>
+              <b>Status: </b>&nbsp;{{data1['complaint_status']}}<br><br>
           </tr> 
           <hr>
       </div>
@@ -57,17 +57,17 @@
   <h4>Complaint History:</h4>
   <table class="table" style="width:100%">
   
-      {% for data2 in account3 %}
+      {% for data3 in account3 %}
       <div class="content">
           <tr>
               <br>
-              <b>Complaint Subject:</b>&nbsp;{{ data2['complaint_subject'] }}<br><br>
-              <b>Complaint Against</b>&nbsp;{{data2['complaint_against']}}<br><br>
-              <b>Complaint message:</b>&nbsp;{{ data2['complaint_message'] }}<br><br>
-              <b>Complaint Date Time: </b>&nbsp;{{ data2['complaint_time'] }}<br><br>
-              <b>Reply by {{data2['complaint_against']}}:</b>&nbsp;{{data2['complaint_reply']}}<br><br>
-              <b>Reply by Secretary:</b>&nbsp;{{data2['complaint_reply_closing']}}<br><br>
-              <b>Status: </b>&nbsp;{{data2['complaint_status']}}<br><br>
+              <b>Complaint Subject:</b>&nbsp;{{ data3['complaint_subject'] }}<br><br>
+              <b>Complaint Against</b>&nbsp;{{data3['complaint_against']}}<br><br>
+              <b>Complaint message:</b>&nbsp;{{ data3['complaint_message'] }}<br><br>
+              <b>Complaint Date Time: </b>&nbsp;{{ data3['complaint_time'] }}<br><br>
+              <b>Reply by {{data3['complaint_against']}}:</b>&nbsp;{{data3['complaint_reply']}}<br><br>
+              <b>Reply by Secretary:</b>&nbsp;{{data3['complaint_reply_closing']}}<br><br>
+              <b>Status: </b>&nbsp;{{data3['complaint_status']}}<br><br>
           </tr> 
           <hr>
       </div>

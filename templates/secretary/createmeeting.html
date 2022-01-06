@@ -1,6 +1,6 @@
 {% extends 'secretary/slayout.html' %}
 
-{% block title %}R-Portal - Create Meeting{% endblock %}
+{% block title %}rportal - Create Meeting{% endblock %}
 
 {% block content %}
 <br>
@@ -11,7 +11,8 @@
     <div class="member_complaint">
 
         <h3>Add Meeting Details Below: </h3>
-        <prev><h4><div class="msg"><a href= '{{ msg }}'>{{msg}}</a></div></h4></prev><br>
+        <h4><div class="msg">{{ msg2 }}</div></h4><br>
+        <h4><div class="msg"><a href= '{{ msg }}'>{{msg}}</a><br>
         <h4><div class="msg">{{ msg1 }}</div></h4><br>
 
         <label for="topic">
@@ -23,12 +24,11 @@
           
         </label>
         <input type="date" name="date" placeholder="Enter Date" id="date" required>
-        <br><br>
-        
+    
         <label for="complaint_message">
           
         </label>
-        <input type="time" name="starttime" placeholder="Enter Start Time" id="starttime" required>
+        <input type="time" name="start_time" placeholder="Enter Start Time" id="start_time"  required>
         <br><br>
 
         <label for="complaint_subject">
@@ -43,16 +43,44 @@
         <textarea  type="text" name="agenda" placeholder="Enter Agenda of the meeting" id="agenda" required></textarea>
         <br><br>
 
-        <label for="complaint_message">
-          
-        </label>
-        <input type="password" name="password" placeholder="Enter meeting password" id="password" required>
-        <br><br>
-
         <button type="submit" class="btn btn-primary" value="add">Create Meeting</button>
     
         </div>
     </div>
-</form>
+</form> <br>
+<br>
+
+<div>
+    <h3>Meetings</h3><br>
+{% if account !=0 %}
+{% for data  in account %}
+<table  class="table" style="width:100%">
+  <td>
+      
+     <h2>{{data['topic']}}</h2><br>
+     <label>Meeting Date:</label><h3>{{data['date']}}</h3>
+     <label>Meeting Start Time:</label> <h3>{{data['start_time']}}</h3>
+     <label>Meeting Duration :</label><h3>{{data['duration']}}</h3><br>
+     <label> Agenda :</label>
+    <h4>{{data['agenda']}}</h4><br>
+     <a  href="{{data['url']}}" >{{data['url']}}</a><br>
+  </td>
+</table>
+<br><br>
+{% else %}
+
+
+<b><h4>No Meetings Found.</h4> </b><br>
+{% endfor %} 
+{% endif %} 
+<a href='javascript:self.history.back();'>Go Back</a>
+</div>
+
+</div>
+
+
+
+
+
 
 {% endblock %}

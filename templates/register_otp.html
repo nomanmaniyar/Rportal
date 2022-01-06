@@ -30,11 +30,17 @@
 
                     <div class="msg1">{{ msg1 }}</div>
                     <div class="msg">{{ msg }}</div>
-                    <form class="mb-5" action="/validate" method="post">
+                    <form class="mb-5" action="/rvalidate" method="post">
 
                         <div class="mb-4">
                             <label for="Otp" class="form-label font-weight-bold">Please enter your OTP here</label>
                             <input type="text" class="form-control bg-grey border-0" placeholder="Enter your OTP" id="otp" name="otp" aria-describedby="emailHelp" required>
+                            <input type="hidden"  name="username" value={{ username }}></input>
+                            <input type="hidden"  name="password" value={{ password }}></input>
+                            <input type="hidden"  name="name" value={{ name }}></input>
+                            <input type="hidden"  name="email" value={{ email }}></input>
+                            <input type="hidden"  name="mobile" value={{ mobile }}></input>
+
                         </div>
 
                         <button type="submit" class="btn btn-primary w-100">Verify</button>
