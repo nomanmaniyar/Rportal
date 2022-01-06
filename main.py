@@ -1,3 +1,5 @@
+import socket
+import dns.resolver
 from email import message
 import email
 from json import decoder
@@ -104,12 +106,50 @@ def register():
         elif account1:
             msg = 'Warning! Account already exists!!'
         else:
-            cursor1.execute('INSERT INTO userdetails VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT)', (username , name ,  password , mobile ,  email ,))
-            mysql.connection.commit()
-            msg = 'You have successfully registered!'
-    elif request.method == 'POST':
-            msg = 'elif code!'
+            email_address = email
+            addressToVerify = email_address
+            domain_name = email_address.split('@')[1]
+            records = dns.resolver.query(domain_name, 'MX')
+            mxRecord = records[0].exchange
+            mxRecord = str(mxRecord)
+            host = socket.gethostname()
+            server = smtplib.SMTP()
+            server.set_debuglevel(0)
+            server.connect(mxRecord)
+            server.helo(host)
+            server.mail('me@domain.com')
+            code, message = server.rcpt(str(addressToVerify))
+            server.quit()
+            if code == 250:
+                email = email
+                msg = Message('OTP confirmation for RPortal' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
+                msg.body = part2 + str(otp)+ part3 
+                mail.send(msg)
+                msg1 = 'OTP: ',otp
+                return render_template('register_otp.html', msg1=msg1, name=name, mobile=mobile, email=email, username=username, password=password)
+            else:
+                msg ='Mail adderss not found! Change the address and try again'
+                return render_template('register.html',msg=msg)
+        return render_template('register.html',msg=msg)
     return render_template('register.html',msg=msg)
+
+@app.route('/rvalidate',methods=["POST"])
+def rvalidate(): 
+    form_otp = request.form['otp']  
+    username = request.form['username']
+    password = request.form['password']
+    name = request.form['name']
+    email = request.form['email']
+    mobile = request.form['mobile']
+    if otp == int(form_otp):  
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('INSERT INTO userdetails VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT)', (username , name ,  password , mobile ,  email ,))
+        mysql.connection.commit()
+        msg = 'You have successfully registered!'
+        return render_template('register.html',msg=msg)
+    else: 
+        msg = 'OTP Does not match! Try Again!!'
+        return render_template('register_otp.html', msg=msg)
 
 #   Secretary Registration 
 def invitation():
@@ -463,7 +503,7 @@ def validate():
     if 'user' in session:     
         user_otp = request.form['otp']  
         if otp == int(user_otp):  
-              return redirect(url_for('mainhome')) 
+            return redirect(url_for('mainhome')) 
         else: 
             msg = 'OTP Does not match! Try Again!!'
             return render_template('otp.html', msg=msg)
@@ -477,7 +517,7 @@ def uotp():
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM  userdetails WHERE uid = %s', (session['uid'],))
         account = cursor.fetchone()
-        if account:
+        if account: 
             email = account['email']
             msg = Message('OTP confirmation for RPortal' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
             msg.body = part2 + str(otp)+ part3 
@@ -504,12 +544,30 @@ def forgot_password():
         cursor.execute('SELECT * FROM userdetails WHERE username = %s AND email = %s', (username, email,))
         account = cursor.fetchone()
         if account:
-            email = email
-            msg = Message('OTP confirmation for RPortal' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
-            msg.body = part2 + str(otp)+ part3 
-            mail.send(msg)
-            msg1 = 'OTP: ',otp
-            return render_template('forgot_otp.html', msg1=msg1, username=username, password=password)
+            email_address = email
+            addressToVerify = email_address
+            domain_name = email_address.split('@')[1]
+            records = dns.resolver.query(domain_name, 'MX')
+            mxRecord = records[0].exchange
+            mxRecord = str(mxRecord)
+            host = socket.gethostname()
+            server = smtplib.SMTP()
+            server.set_debuglevel(0)
+            server.connect(mxRecord)
+            server.helo(host)
+            server.mail('me@domain.com')
+            code, message = server.rcpt(str(addressToVerify))
+            server.quit()
+            if code == 250:
+                email = email
+                msg = Message('OTP confirmation for RPortal' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
+                msg.body = part2 + str(otp)+ part3 
+                mail.send(msg)
+                msg1 = 'OTP: ',otp
+                return render_template('forgot_otp.html', msg1=msg1, username=username, password=password)
+            else:
+                msg ='Mail adderss not found! Change the address and try again'
+                return render_template('forgot_password.html',msg=msg)            
         elif request.method == 'POST' and 'username' in request.form:
             username = request.form['username']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1078,11 +1136,12 @@ def createmeeting():
         msg = ''
         msg1 = ''
         msg2 = ''
-        if request.method == 'POST' and 'topic' in request.form and 'starttime' in request.form and 'duration' in request.form and 'agenda' in request.form  :
+        if request.method == 'POST' and 'topic' in request.form and 'start_time' in request.form and 'duration' in request.form and 'agenda' in request.form  :
             topic = request.form['topic']
-            start_time = request.form['starttime']
+            start_time = request.form['start_time']
             duration = request.form['duration']
             agenda = request.form['agenda']
+            date = request.form['date']
             meetingdetails = {
                 "topic":  topic,
                 "type": 2,
@@ -1113,10 +1172,16 @@ def createmeeting():
             msg = link 
             msg1 = "\n Host Key : 528614"
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('INSERT INTO meetings values (NULL , %s, %s, NULL, %s, %s, %s, %s, %s, DEFAULT)', (topic, start_time, duration, link, agenda, session['Scode'], 'live'))
+            cursor.execute('INSERT INTO meetings values (NULL , %s,%s ,%s ,%s, %s, %s, %s,  DEFAULT)', (topic, date, start_time, duration, link, agenda, session['Scode']))
             mysql.connection.commit() 
             msg2 = 'Meeting Scheduled'
-        return render_template('secretary/createmeeting.html', msg = msg , msg1= msg1, msg2=msg2)
+            return render_template('secretary/createmeeting.html', msg = msg , msg1= msg1, msg2=msg2 )
+        else:
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT *  from meetings WHERE society_code = %s  ', (session['Scode'],) ) 
+            account = cursor.fetchall()
+            return render_template('secretary/createmeeting.html', account= account)
+
     elif session.get('secretary') is None:
         return login()
     else:
@@ -1340,6 +1405,18 @@ def docsm():
         cursor.execute('SELECT *  from document WHERE society_code = %s', (session['Mcode'],) ) 
         account = cursor.fetchall() 
         return render_template('member/docsm.html', account=account)
+    elif session.get('member') is None:
+        return login()
+    else:
+        return logout()
+
+@app.route('/rportal/meetings')
+def meetings():
+    if 'member' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT *  from meetings WHERE society_code = %s  ', (session['Mcode'],) ) 
+        account = cursor.fetchall() 
+        return render_template('member/meetings.html', account=account)
     elif session.get('member') is None:
         return login()
     else:
@@ -1688,6 +1765,23 @@ def recentvisitor():
         cursor.execute('SELECT *  from visitor WHERE  society_code = %s AND vstatus = %s', (session['security_code'],'request') ) 
         account = cursor.fetchall() 
         return render_template('security/recentvisitor.html', account=account)
+    elif session.get('security') is None:
+        return login()
+    else:
+        return logout()
+
+@app.route('/rportal/visitorexit',methods=['GET','POST'])
+def visitorexit():
+    if 'security' in session:
+        out_time =''
+        vid =''
+        if request.method == 'POST' and 'vid' in request.form and 'out_time' in request.form:
+            vid = request.form['vid']
+            out_time = request.form['out_time']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE visitor SET out_time = %s , vstatus = %s  WHERE  vid = %s ', (out_time ,'Exit',vid) )
+        mysql.connection.commit()
+        return recentvisitor() 
     elif session.get('security') is None:
         return login()
     else:
