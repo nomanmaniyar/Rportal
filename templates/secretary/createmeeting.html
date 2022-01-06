@@ -1,6 +1,6 @@
 {% extends 'secretary/slayout.html' %}
 
-{% block title %}R-Portal - Create Meeting{% endblock %}
+{% block title %}rportal - Create Meeting{% endblock %}
 
 {% block content %}
 <br>
@@ -11,7 +11,8 @@
     <div class="member_complaint">
 
         <h3>Add Meeting Details Below: </h3>
-        <prev><h4><div class="msg"><a href= '{{ msg }}'>{{msg}}</a></div></h4></prev><br>
+        <h4><div class="msg">{{ msg2 }}</div></h4><br>
+        <h4><div class="msg"><a href= '{{ msg }}'>{{msg}}</a><br>
         <h4><div class="msg">{{ msg1 }}</div></h4><br>
 
         <label for="topic">
@@ -23,8 +24,7 @@
           
         </label>
         <input type="date" name="date" placeholder="Enter Date" id="date" required>
-        <br><br>
-        
+    
         <label for="complaint_message">
           
         </label>
@@ -41,12 +41,6 @@
           
         </label>
         <textarea  type="text" name="agenda" placeholder="Enter Agenda of the meeting" id="agenda" required></textarea>
-        <br><br>
-
-        <label for="complaint_message">
-          
-        </label>
-        <input type="password" name="password" placeholder="Enter meeting password" id="password" required>
         <br><br>
 
         <button type="submit" class="btn btn-primary" value="add">Create Meeting</button>

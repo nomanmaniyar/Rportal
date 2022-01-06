@@ -1,6 +1,6 @@
 {% extends 'admin/admin.html' %}
 
-{% block title %}R-Portal x Ajinfotics!{% endblock %}
+{% block title %}rportal x Ajinfotics!{% endblock %}
 
 {% block content %}	
 <style>
@@ -9,7 +9,7 @@
     }
 </style>
 	
-<h2>All Society under R-Portal</h2>
+<h2>All Society under rportal</h2>
 <div>
     <h4><div class="msg">{{ msg }}</div></h4>
     <table  class="table" style="width:100%">
@@ -45,7 +45,7 @@
                     <b><a>IFSC Code: </a></b>  {{ data['ifsc'] }}</td>
                 <td><a href="/static/upload/{{data['kyc_file']}}" download="/static/upload/{{data['kyc_file']}}" target="blank"><button class='btn btn-primary'>Download</button></a></td>
                 <td>
-                    <form action="/R-Portal/c_sec/{{data.Scode}}" >
+                    <form action="/rportal/c_sec/{{data.Scode}}" >
                     <b> Status: </b>
                         <select onchange='if(this.value !=0 ) { this.form.submit(); }'>
                        <option value='0'>{{ data['secretarty_status'] }}</option>
@@ -54,7 +54,7 @@
                    </form>
                  </td>
                 <td>    
-                    &nbsp;&nbsp;&nbsp;<a href="/R-Portal/r_sec/{{data.Scode}}"><i class="fa fa-trash" aria-hidden="true" onclick="return confirm('Are You Sure For delete ?')" style="color:black"></i></a>
+                    &nbsp;&nbsp;&nbsp;<a href="/rportal/r_sec/{{data.Scode}}"><i class="fa fa-trash" aria-hidden="true" onclick="return confirm('Are You Sure For delete ?')" style="color:black"></i></a>
                  </td>  
             </tr>   
         {% endfor %}

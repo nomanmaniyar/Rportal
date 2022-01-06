@@ -1,6 +1,6 @@
 {% extends 'secretary/slayout.html' %}
 
-{% block title %}R-Portal - Verification{% endblock %}
+{% block title %}rportal - Verification{% endblock %}
 
 {% block content %}
 
@@ -41,7 +41,7 @@
                         </ul>
                       </div>
                       <div class="thumb">
-                      <form action="/R-Portal/a_members/{{data.Mid}}" method="post">
+                      <form action="/rportal/a_members/{{data.Mid}}" method="post">
                       <input type="hidden" name="Memail" value={{ data['Memail'] }}></input>
                       <input type="hidden" name="Mname" value={{ data['Mname'] }}></input>
                       <button class="btn btn-success" type="submit"><i class="fas fa-user-plus" ></i>Allow</button>
@@ -57,7 +57,7 @@
     <div class="modal-content">
       <span class="close">&times;</span>
       <br>
-      <form action ="/R-Portal/r_members" method="post"> <br>
+      <form action ="/rportal/r_members" method="post"> <br>
           <textarea name="message" type="text" placeholder="Give Reason" required></textarea>  <br><br>
           <input type="hidden" name="email"  value="{{ data['Memail'] }}">
           <input type="hidden" name="Mid"  value="{{data['Mid']}}">

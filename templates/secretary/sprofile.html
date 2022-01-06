@@ -1,12 +1,16 @@
 {% extends 'secretary/slayout.html' %}
 
-{% block title %}R-Portal - Secretary Profile{% endblock %}
+{% block title %}rportal - Secretary Profile{% endblock %}
 
 {% block content %}
 <h2>Secretary Profile Page</h2>
 <div>
     <h3>Your account details are below:</h3>
-    <h4>Personal Details:</h4>
+    <h4>Personal Details: <button style=" background-color: Transparent;
+        background-repeat:no-repeat;
+        border: none;
+        cursor:pointer;
+        overflow: hidden;"  onclick="openModal()" ><i class="fas fa-user-edit"></i></button> </h4>
     <table>
         <tr>
             <td>Name:</td>
@@ -79,33 +83,26 @@
             <td>IFSC Code:</td>
             <td>{{ account['ifsc'] }}</td>
         </tr>
-    </table>
-    <h4>Rules Section:</h4>
-    <table>
-        <tr>
-            <td>Society Rules:</td>
-            <td>{{ account['socrule'] }}</td>
-        </tr>
-        <tr>
-            <td>Maintainance Rules:</td>
-            <td>{{ account['mainrule'] }}</td>
-        </tr>
-    </table>
-    <br>    
+    </table>  
     <br>
-    
-    <button class="btn btn-primary" onclick="openModal()" >Update Profile</button>  <br><br>
+
  
     <dialog id="dialog">
     <button alignment="right" onclick="closeModal()"  class="btn-close" aria-label="Close" ></button>
-     <form action="/R-Portal/supdate" method="POST">
-         <br><br>
-         <p>To chnage your password, Go to forgot password page from login page.</p><br>
-        <input type="text" name="name" value="{{ account['Sname'] }}"><br><br>
-        <input type="text" name="flatno" value="{{ account['Sflatno'] }}"><br><br>
-        <input type="text" name="wing" value="{{ account['Swing'] }}"><br><br>
-        <input type="mail" name="email" value="{{ account['Semail'] }}"><br><br>
+    <br><h4>Update Profile</h4><br>
+     <form action="/rportal/supdate" method="POST">
+        <label>Name:</label><br>
+        <input type="text" name="name" value="{{ account['Sname'] }}"><br>
+        <label>Flat Number:</label><br>
+        <input type="text" name="flatno" value="{{ account['Sflatno'] }}"><br>
+        <label>Wing:</label><br>
+        <input type="text" name="wing" value="{{ account['Swing'] }}"><br>
+        <label>E-Mail ID:</label><br>
+        <input type="mail" name="email" value="{{ account['Semail'] }}"><br>
+        <label>Mobile Number:</label><br>
         <input type="text" name="mobile" value="{{ account['Smobile'] }}"><br><br>
+        <a href="{{ url_for('forgot_password') }}" class="d-inline-block mb-0">Change Password</a><br>
+        <p>Note: Save existing details first before changing password</p><br>
         <button class="btn btn-primary" type="submit">Update</button><br>
         <br>
      </form>
@@ -116,33 +113,39 @@
  
     <dialog id="dialog1">
        <button alignment="right" onclick="closeModal1()"  class="btn-close" aria-label="Close" ></button>
-        <form action="/R-Portal/schange" method="POST">
-            <br><br>
-            <label>Select new Scretary:</label>
+       <br><h4>Change Secretary</h4><br>
+        <form action="/rportal/schange" method="POST">
+            <h5>Select new Secretary:</h5>
+            <label>Select Username:</label><br>
             <select name="username" >
-                {% for data in account2 %}
+            {% for data in account1 %}
                <option >{{ data['username'] }}</option>
-               {% endfor %} 
-              </select><br><br>
-              
-              <h4>{{ account2['username'] }} </h4>
-                <input type="text" name="name" value="{{ account['Sname'] }}"><br><br>
-                <input type="text" name="flatno" value="{{ account['Sflatno'] }}"><br><br>
-                <input type="text" name="wing" value="{{ account['Swing'] }}"><br><br>
-                <input type="mail" name="email" value="{{ account['Semail'] }}"><br><br>
-                <input type="text" name="mobile" value="{{ account['Smobile'] }}"><br><br>
-                <p>To chnage your password, Go to forgot password page from login page.</p><br>
-           <button class="btn btn-primary" type="submit">Update</button><br>
+               {% endfor %}
+            </select><br><br>
+                <h5>Enter new secretary details</h5>
+                <label>Name:</label><br>
+                <input type="text" name="name" placeholder="Enter name here"><br>
+                <label>Flat No.:</label><br>
+                <input type="text" name="flatno" placeholder="Enter Flat no here"><br>
+                <label>Wing:</label><br>
+                <input type="text" name="wing" placeholder="Enter Wing here"><br>
+                <label>Email ID:</label><br>
+                <input type="mail" name="email" placeholder="Enter E-Mail here here"><br>
+                <label>Mobile Number:</label><br>
+                <input type="text" name="mobile" placeholder="Enter Mobile number here"><br><br>
+                <a href="{{ url_for('forgot_password') }}" class="d-inline-block mb-0">Change Password</a><br>
+                <p>Note: Save existing details first before changing password</p><br>
+                <button class="btn btn-primary" type="submit">Update</button><br>
            <br>
         </form>
-       
+     
        </dialog>
    
 
 <style>
-    #dialog{width:300px;}
-    #dialog1{width:300px;}
-.right{float:right}
+    #dialog{width:600px;}
+    #dialog1{width:600px;}
+.right{float:left}
 </style>
 
 <script>
@@ -176,7 +179,7 @@ function closeModal1() {
             qr = new QRious({
             element: document.getElementById('qr-code'),
             size: 150,
-            value: "http://127.0.0.1:5000/R-Portal/mcode1/{{account['Scode']}}"
+            value: "http://127.0.0.1:5000/rportal/mcode1/{{account['Scode']}}"
             
         });
         downloadQR(); 
