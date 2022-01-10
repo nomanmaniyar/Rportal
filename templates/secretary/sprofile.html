@@ -3,198 +3,248 @@
 {% block title %}rportal - Secretary Profile{% endblock %}
 
 {% block content %}
-<h2>Secretary Profile Page</h2>
-<div>
-    <h3>Your account details are below:</h3>
-    <h4>Personal Details: <button style=" background-color: Transparent;
-        background-repeat:no-repeat;
-        border: none;
-        cursor:pointer;
-        overflow: hidden;"  onclick="openModal()" ><i class="fas fa-user-edit"></i></button> </h4>
-    <table>
-        <tr>
-            <td>Name:</td>
-            <td>{{ account['Sname'] }}</td>
-        </tr>
-        <tr>    
-            <td>Username:</td>
-            <td>{{ account['username'] }}</td>
-        </tr>
-        <tr>
-            <td>Flat Number:</td>
-            <td>{{ account['Swing'] }} {{ account['Sflatno'] }}</td>
-        </tr>
-        <tr>
-            <td>Email:</td>
-            <td>{{ account['Semail'] }}</td>
-        </tr>
-        <tr>
-            <td>Mobile Number:</td>
-            <td>{{ account['Smobile'] }}</td>
-        </tr>
-      
-       
-       
-    </table>
-    <h3>Your Society details are below:</h3>
-    <h4>Society Location:</h4>
-    <table>
-        <tr>
-        <td>Address :
-        <td>{{ account['name'] }} ,{{ account['road'] }},<br>
-             {{ account['area'] }}, {{ account['city'] }},<br>
-             {{ account['state'] }}, {{ account['pin'] }}.</td>
-             </td>
-        </tr>
-        <tr>
-            <td>Society Code:</td>
-            <td>{{ account['Scode'] }}
-               
-            </td>
-        
-           
-        </tr>
+<div class="container mt-5 pt-3">
+    <div class="d-flex">
+        <a class="bd-highlight" href='javascript:self.history.back();'>
+            <i class="bi bi-arrow-left" style="font-size: x-large;"></i>
+        </a>
+        <div class="mx-3 h2">My Account</div>
+        <button type="button" class="btn btn-primary btn-sm ms-auto" data-bs-toggle="modal"
+            data-bs-target="#changeSecId">Change Secretary</button>
+        <div class="modal fade" id="changeSecId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="changeSecIdLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="changeSecIdLabel">select new secretary</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="/rportal/schange" method="POST">
+                        <div class="modal-body ">
+                            <div class="col-4 mb-4">
+                                <label class="mx-1">Select Username:</label>
+                                <select class="form-select" aria-label="Select Username" name="username">
+                                    {% for data in account1 %}
+                                    <option>{{data['username']}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <h5>Enter new secretary details</h5>
+                            <div class="col-5 form-floating mb-3">
+                                <input type="text" class="form-control" id="SnameId" name="name" value=""
+                                    placeholder="Enter a new secretary name">
+                                <label for="SnameId" class="mx-2">Name</label>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col form-floating mb-3">
+                                    <input type="text" class="form-control" id="flatId" name="flatno" value=""
+                                        placeholder="Enter Flat no ">
+                                    <label for="flatId" class="mx-2">Flat No</label>
+                                </div>
+                                <div class="col form-floating mb-3">
+                                    <input type="text" class="form-control" id="WingId" placeholder="Enter Wing Name/No"
+                                        value="" name="wing">
+                                    <label for="WingId" class="mx-2">Wing Name/No</label>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col form-floating mb-3">
+                                    <input type="tel" maxlength="10" name="mobile" value="" class="form-control "
+                                        id="mobileId" placeholder="Enter Mobile number">
+                                    <label for="mobileId" class="mx-2">Mobile No</label>
+                                </div>
+                                <div class="col form-floating mb-3">
+                                    <input type="email" class="form-control" name="email" value="" id="emailId"
+                                        placeholder="Enter E-Mail">
+                                    <label for="emailId" class="mx-2">Email Id</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button class="btn btn-primary" type="submit" id="changeNS">Done</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <hr>
+        <!-- PERSONAL INFO -->
+        <div class="col">
+            <div class="card-header bg-transparent">
+                <span class="h5">Personal Information</span>
+                <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                    style="font-weight: 500; text-decoration: none;">Edit</button>
+                <!-- <button type="button" class="btn btn-primary " onclick="openModal()"><i
+                        class="fas fa-user-edit"></i></button> -->
+            </div>
+            <!-- PI Edit Modal -->
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Personal Information</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form action="/rportal/supdate" method="POST">
+                            <div class="modal-body">
+                                <div class="row mb-2">
+                                    <div class="col form-floating mb-3">
+                                        <input type="text" class="form-control" id="SnameId" name="name"
+                                            value="{{ account['Sname'] }}" placeholder="{{ account['Sname'] }}">
+                                        <label for="SnameId" class="mx-2">Name</label>
+                                    </div>
+                                    <div class="col form-floating mb-3">
+                                        <input type="text" class="form-control" id="usernameId"
+                                            placeholder="{{ account['username'] }}" value="{{ account['username'] }}"
+                                            disabled>
+                                        <label for="usernameId" class="mx-2">Username</label>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col form-floating mb-3">
+                                        <input type="tel" maxlength="10" name="mobile" value="{{ account['Smobile'] }}"
+                                            class="form-control " id="mobileId" placeholder="{{ account['Smobile'] }}">
+                                        <label for="mobileId" class="mx-2">Mobile No</label>
+                                    </div>
+                                    <div class="col form-floating mb-3">
+                                        <input type="email" class="form-control" name="email"
+                                            value="{{ account['Semail'] }}" id="emailId"
+                                            placeholder="{{ account['Semail'] }}">
+                                        <label for="emailId" class="mx-2">Email Id</label>
+                                    </div>
+                                </div>
+                                <p style="font-size: x-small;">
+                                    <a href="{{ url_for('forgot_password') }}">Change
+                                        Password</a>
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button class="btn btn-primary" type="submit" id="changePI">Done</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- PI -->
+            <div class="card-body ">
+                <div class="row mb-2">
+                    <div class="col form-floating mb-3">
+                        <input type="text" class="form-control" id="SnameId" name="name" value="{{ account['Sname'] }}"
+                            placeholder="{{ account['Sname'] }}" disabled>
+                        <label for="SnameId" class="mx-2">Name</label>
+                    </div>
+                    <div class="col form-floating mb-3">
+                        <input type="text" class="form-control" id="usernameId" placeholder="{{ account['username'] }}"
+                            value="{{ account['username'] }}" disabled>
+                        <label for="usernameId" class="mx-2">Username</label>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col form-floating mb-3">
+                        <input type="tel" maxlength="10" name="mobile" value="{{ account['Smobile'] }}"
+                            class="form-control " id="mobileId" placeholder="{{ account['Smobile'] }}" disabled>
+                        <label for="mobileId" class="mx-2">Mobile No</label>
+                    </div>
+                    <div class="col form-floating mb-3">
+                        <input type="email" class="form-control" name="email" value="{{ account['Semail'] }}"
+                            id="emailId" placeholder="{{ account['Semail'] }}" disabled>
+                        <label for="emailId" class="mx-2">Email Id</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ADDRESS -->
+        <div class="col">
+            <div class="card-header bg-transparent">
+                <span class="h5">Address</span>
+            </div>
+            <div class="card-body ">
+                <div class="row mb-2">
+                    <div class="col form-floating mb-3">
+                        <input type="text" class="form-control" id="SnameId" value="{{ account['name'] }}"
+                            placeholder="{{ account['name']}}" disabled>
+                        <label for="SnameId" class="mx-2">Society Name</label>
+                    </div>
+                    <div class="col form-floating mb-3">
+                        <input type="text" class="form-control" id="addressId"
+                            placeholder="{{ account['road'] }}, {{ account['area'] }}"
+                            value="{{ account['road'] }}, {{ account['area'] }}" disabled>
+                        <label for="addressId" class="mx-2">Address</label>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col form-floating mb-3">
+                        <input type="text" value="{{ account['city'] }}" class="form-control " id="cityId"
+                            placeholder="{{account['city']}}" disabled>
+                        <label for="cityId" class="mx-2">City</label>
+                    </div>
+                    <div class="col form-floating mb-3">
+                        <input type="email" class="form-control" name="email" value="{{ account['state'] }}"
+                            id="stateId" placeholder="{{ account['state'] }}" disabled>
+                        <label for="stateId" class="mx-2">State</label>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-auto form-floating mb-3">
+                        <input type="text" value="{{ account['pin'] }}" class="form-control " id="pincodeId"
+                            placeholder="{{account['pin']}}" disabled>
+                        <label for="pincodeId" class="mx-2">Pin Code</label>
+                    </div>
 
-    </table>
-    <h4>Society Account Details:</h4>
-    <table>
-        <tr>
-            
-            <td>Account Name:</td>
-            <td>{{ account['acname'] }}</td>
-        </tr>
-        <tr>
-            <td>Account Number:</td>
-            <td>{{ account['acno'] }}</td>
-        </tr>
-        <tr>
-            <td>MMID:</td>
-            <td>{{ account['mmid'] }}</td>
-        </tr>
-        <tr>
-            <td>Bank Name:</td>
-            <td>{{ account['bankname'] }}</td>
-        </tr>
-        <tr>
-            <td>Branch:</td>
-            <td>{{ account['branch'] }}</td>
-        </tr>
-        <tr>
-            <td>IFSC Code:</td>
-            <td>{{ account['ifsc'] }}</td>
-        </tr>
-    </table>  
-    <br>
+                </div>
 
- 
-    <dialog id="dialog">
-    <button alignment="right" onclick="closeModal()"  class="btn-close" aria-label="Close" ></button>
-    <br><h4>Update Profile</h4><br>
-     <form action="/rportal/supdate" method="POST">
-        <label>Name:</label><br>
-        <input type="text" name="name" value="{{ account['Sname'] }}"><br>
-        <label>Flat Number:</label><br>
-        <input type="text" name="flatno" value="{{ account['Sflatno'] }}"><br>
-        <label>Wing:</label><br>
-        <input type="text" name="wing" value="{{ account['Swing'] }}"><br>
-        <label>E-Mail ID:</label><br>
-        <input type="mail" name="email" value="{{ account['Semail'] }}"><br>
-        <label>Mobile Number:</label><br>
-        <input type="text" name="mobile" value="{{ account['Smobile'] }}"><br><br>
-        <a href="{{ url_for('forgot_password') }}" class="d-inline-block mb-0">Change Password</a><br>
-        <p>Note: Save existing details first before changing password</p><br>
-        <button class="btn btn-primary" type="submit">Update</button><br>
-        <br>
-     </form>
-    
-    </dialog>
-    
-    <button class="btn btn-primary" onclick="openModal1()" >Change Secretary</button>  <br><br>
- 
-    <dialog id="dialog1">
-       <button alignment="right" onclick="closeModal1()"  class="btn-close" aria-label="Close" ></button>
-       <br><h4>Change Secretary</h4><br>
-        <form action="/rportal/schange" method="POST">
-            <h5>Select new Secretary:</h5>
-            <label>Select Username:</label><br>
-            <select name="username" >
-            {% for data in account1 %}
-               <option >{{ data['username'] }}</option>
-               {% endfor %}
-            </select><br><br>
-                <h5>Enter new secretary details</h5>
-                <label>Name:</label><br>
-                <input type="text" name="name" placeholder="Enter name here"><br>
-                <label>Flat No.:</label><br>
-                <input type="text" name="flatno" placeholder="Enter Flat no here"><br>
-                <label>Wing:</label><br>
-                <input type="text" name="wing" placeholder="Enter Wing here"><br>
-                <label>Email ID:</label><br>
-                <input type="mail" name="email" placeholder="Enter E-Mail here here"><br>
-                <label>Mobile Number:</label><br>
-                <input type="text" name="mobile" placeholder="Enter Mobile number here"><br><br>
-                <a href="{{ url_for('forgot_password') }}" class="d-inline-block mb-0">Change Password</a><br>
-                <p>Note: Save existing details first before changing password</p><br>
-                <button class="btn btn-primary" type="submit">Update</button><br>
-           <br>
-        </form>
-     
-       </dialog>
-   
+            </div>
+        </div>
+        <!-- Account -->
+        <div class="col">
+            <div class="card-header bg-transparent">
+                <span class="h5">Scociety Account </span>
+            </div>
+            <div class="card-body ">
+                <div class="row mb-2">
+                    <div class="col form-floating mb-3">
+                        <input type="text" class="form-control" id="AnameId" value="{{ account['acname'] }}"
+                            placeholder="{{ account['acname']}}" disabled>
+                        <label for="AnameId" class="mx-2">Account Name</label>
+                    </div>
+                    <div class="col form-floating mb-3">
+                        <input type="text" class="form-control" id="acnoId" placeholder="{{ account['acno'] }}"
+                            value="{{ account['acno'] }}" disabled>
+                        <label for="acnoId" class="mx-2">Account Number</label>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col form-floating mb-3">
+                        <input type="text" class="form-control" value="{{ account['bankname'] }}" id="banknameId"
+                            placeholder="{{ account['bankname'] }}" disabled>
+                        <label for="banknameId" class="mx-2">Bank Name</label>
+                    </div>
+                    <div class="col form-floating mb-3">
+                        <input type="text" value="{{ account['mmid'] }}" class="form-control " id="mmidId"
+                            placeholder="{{account['mmid']}}" disabled>
+                        <label for="mmidId" class="mx-2">MMID</label>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col form-floating mb-3">
+                        <input type="text" value="{{ account['ifsc'] }}" class="form-control " id="ifscId"
+                            placeholder="{{account['ifsc']}}" disabled>
+                        <label for="ifscId" class="mx-2">IFSC Code</label>
+                    </div>
+                    <div class="col form-floating mb-3">
+                        <input type="text" value="{{ account['branch'] }}" class="form-control " id="branchId"
+                            placeholder="{{account['branch']}}" disabled>
+                        <label for="branchId" class="mx-2">Branch</label>
+                    </div>
+                </div>
 
-<style>
-    #dialog{width:600px;}
-    #dialog1{width:600px;}
-.right{float:left}
-</style>
-
-<script>
-    var dailog = document.getElementById("dialog"); 
-    var dailog1 = document.getElementById("dialog1"); 
-
-function openModal() { 
-   // dailog.show(); 
-      dailog.showModal();
-} 
-
-function closeModal() { 
-    dailog.close(); 
-} 
-
-function openModal1() { 
-   // dailog.show(); 
-      dailog1.showModal();
-} 
-
-function closeModal1() { 
-    dailog1.close(); 
-} 
-</script>
-    <a href='javascript:self.history.back();'>Go Back</a>
+            </div>
+        </div>
+    </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
-<script>
-    var qr;
-    (function() {
-            qr = new QRious({
-            element: document.getElementById('qr-code'),
-            size: 150,
-            value: "http://127.0.0.1:5000/rportal/mcode1/{{account['Scode']}}"
-            
-        });
-        downloadQR(); 
-
-    })();
-    
-    function downloadQR() {
-        var link = document.createElement('a');
-        link.download = 'Rportal.png';
-        link.href = document.getElementById('qr').toDataURL()
-        
-        link.click();
-    } 
-  
-</script>
-
-
 {% endblock %}
