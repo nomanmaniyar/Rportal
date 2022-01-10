@@ -36,7 +36,7 @@
 
 
 <body>
-    <header class="navbar fixed-top sticky-top bg-light flex-md-nowrap p-0 shadow">
+    <header class="navbar fixed-top bg-light flex-md-nowrap p-0 shadow">
         <a href="#" class="navbar-brand col-md-3 col-lg-2 me-0 mx-3 " id="title">RPortal</a>
         <!-- <h1><a class="navbar-brand px-3" href="#">RPortal</a></h1> -->
         <button class="navbar-toggler d-md-none " type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu"
@@ -51,7 +51,7 @@
                 <div class="position-sticky pt-3">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link " href="{{ url_for('shome') }}">
+                            <a class="nav-link active" href="{{ url_for('shome') }}">
                                 <i class="bi bi-house"></i>
                                 Home
                             </a>
@@ -209,7 +209,7 @@
         color: #333;
     }
 
-    .sidebar .nav-link .feather {
+    .sidebar .nav-link .bi {
         margin-right: 4px;
         color: #727272;
     }
@@ -218,7 +218,8 @@
         color: #2470dc;
     }
 
-    .sidebar .nav-link:hover {
+    .sidebar .nav-link:hover .bi,
+    .sidebar .nav-link.active .bi {
         color: inherit;
     }
 

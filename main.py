@@ -1335,16 +1335,14 @@ def mhome():
             Memail = request.form['Memail']
             username = request.form['username']
             Mid = request.form['Mid']
-            Mflatno = request.form['Mflatno']
-            Mwing = request.form['Mwing']
+     
             session['member'] = True
             session['Mid'] = Mid
             session['Musername'] = username
             session['Mcode'] = Mcode
             session['Memail'] = Memail
             session['Mname'] = Mname
-            session['Mflatno'] = Mflatno
-            session['Mwing'] = Mwing
+     
         if 'member' in session:
                 return render_template('member/mhome.html', Mname=session['Mname'])
         elif 'member' in session:
