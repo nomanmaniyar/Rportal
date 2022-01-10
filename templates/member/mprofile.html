@@ -6,6 +6,7 @@
 <h2>Member Profile Page</h2>
 <div>
     <h3>Your account details are below:</h3>
+    <h4>{{ msg }}</h4>
     <h4>Personal Details:<button style=" background-color: Transparent;
         background-repeat:no-repeat;
         border: none;
@@ -81,7 +82,7 @@
     <dialog id="dialog">
     <button alignment="right" onclick="closeModal()"  class="btn-close" aria-label="Close" ></button>
     <br><h4>Update Profile</h4><br>
-     <form action="/R-Portal/mupdate" method="POST">
+     <form action="/rportal/mupdate" method="POST">
         <label>Name:</label><br>
         <input type="text" name="name" value="{{ account['Mname'] }}"><br>
         <label>Flat Number:</label>

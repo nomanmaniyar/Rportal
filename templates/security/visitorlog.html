@@ -8,12 +8,27 @@
 
     {% if account !=0 %}
          {% for data  in account %}
-         <td>
-             
-           {{data['doc_filename']}}
-         </td>
+         <tr >
+          <td class="title">
+            <div class="thumb">
+            <img  src="/static/upload/vpic/{{data['vpic']}}" height="40%" width="20%" alt="Visitor image">
+            
+            <h6 class="mb-2" ><b>{{ data['vname'] }}</b></h6>
+                    
+                      <b>Contact No: </b>{{ data['vmobile'] }}<br>
+                    
+                        <b>Visited to: </b>{{ data['Mwing'] }} {{ data['Mflatno'] }}<br>
+                        <b>Visited on: </b>{{ data['in_date'] }} / {{ data['in_time'] }}<br>
+                        <b>Left on: </b>{{ data['out_date'] }} / {{ data['out_time'] }}<br>
+                 <b>Status: </b>{{ data['vstatus'] }}<br> 
+            </div>
+          </div>
+        </div>
+      </td>
+      </tr>
         
        </table>
+      
      
    {% else %}
        

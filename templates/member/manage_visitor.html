@@ -1,12 +1,11 @@
-{% extends 'security/security_layout.html' %}
-
-{% block title %}visitorlog{% endblock %}
+{% extends 'member/mlayout.html' %}
+{% block title %}rportal{% endblock %}
 
 {% block content %}
 
-<h3>Recent visitors/ Allowed Visitors/ Declined visitors:</h3>
+<h3>Visitor requests/ Allowed Visitors/ Declined visitors:</h3>
 <div>
-<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo1"><i class="fa fa-warning" aria-hidden="true"></i> Recent visitor</button>
+<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo1"><i class="fa fa-warning" aria-hidden="true"></i>Visitor requests</button>
 <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo2"><i class="fa fa-warning" aria-hidden="true"></i> Allowed visitor</button>
 <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo3"><i class="fa fa-history" aria-hidden="true"></i> Declined visitors</button>
 <br><br>
@@ -14,7 +13,7 @@
 <br>
 <div id="demo1" class="collapse">
   <br>
-  <h4>Recent Visitor:</h4>
+  <h4>Visitor requests</h4>
   <div>
     <table  class="table" style="width:100%">
 
@@ -32,13 +31,14 @@
                         <b>Want to visit: </b>{{ data['Mwing'] }} {{ data['Mflatno'] }}<br>
                         <b>On: </b>{{ data['in_date'] }} / {{ data['in_time'] }}<br>
                  <b>Status: </b>{{ data['vstatus'] }}<br>
-                 <form action="{{ url_for('visitorexit') }}" method="POST">
-                  <input type="hidden" name="vid" value="{{data['vid']}}" required >
-                  <label>Add exit time</label>
-                  <input type="date" name="out_date" required >
-                  <input type="time" name="out_time" required >
-                  <input type="submit" class="btn btn-primary" value="Exit">
-                </form>
+                 <form action="{{ url_for('alvisitor') }}" method="POST">
+                    <input type="hidden" name="vid" value="{{data['vid']}}" required >
+                    <input type="submit" class="btn btn-primary" value="Allow">
+                  </form><br>
+                  <form action="{{ url_for('decvisitor') }}" method="POST">
+                    <input type="hidden" name="vid" value="{{data['vid']}}" required >
+                    <input type="submit" class="btn btn-primary" value="Decline">
+                  </form>
             </div>
       </td>
       </tr>
@@ -72,14 +72,6 @@
                           <b>Visited to: </b>{{ data1['Mwing'] }} {{ data1['Mflatno'] }}<br>
                           <b>Visited on: </b>{{ data1['in_date'] }} / {{ data1['in_time'] }}<br>
                    <b>Status: </b>{{ data1['vstatus'] }}<br>
-                   <form action="{{ url_for('visitorexit') }}" method="POST">
-                    <input type="hidden" name="vid" value="{{data1['vid']}}" required >
-                    <label>Add out Time</label>
-                    <input type="date" name="out_date" required >
-                    <input type="time" name="out_time" required >
-                    <input type="submit" class="btn btn-primary" value="Exit">
-                  </form>
-                  
               </div>
         </td>
         </tr>
