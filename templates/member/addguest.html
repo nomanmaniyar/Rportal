@@ -4,32 +4,74 @@
 {% block content %}
 
 <style>
-    table, th, td {
-      border:1px solid black;
-    }
+  table, th, td {
+    border:1px solid black;
+  }
 </style>
 
 
+<h3>Add/ See guestes:</h3>
 <div>
-    {{msg}}
+<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo1"><i class="fa fa-warning" aria-hidden="true"></i> Add new guest</button>
+<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo2"><i class="fa fa-history" aria-hidden="true"></i> See upcoming guests</button>
+<br><br>
+<a href='javascript:self.history.back();'>Go Back</a>
+<br>
+<div id="demo1" class="collapse">
+<br>
   <h3>Add Guest</h3>
  
    <form action="{{url_for('addguest')}}"  enctype="multipart/form-data" method="POST"><br>
      <input type="text" name="vname" placeholder="Guest Name" required> <br>
-     <input type="tel" name="vmobile" placeholder="Guest Mobile Number" ><br>
+     <input type="tel" name="vmobile" placeholder="Guest Mobile Number" required><br>
       <input type="text" name="vehical_no"placeholder="Vehical Number" ><br>
-      <label>In Time</label>
+      <label>Guest visit schedule:</label><br>
      <input type="time" name="in_time" required><br>
-     <label>Out Time</label>
-     <input type="time" name="out_time" required><br>
-     <input type="text" name="Mwing" placeholder="Wing" >
-     <input type="number" name="Mflatno" placeholder="Flat No"  required><br>
-      <input type="file"  name="vpic" ><br>
-      <input class="btn btn-primary" type="submit" value="ADD"><br>
+     <input type="date" name="in_date" required><br>
+      <input type="file"  name="vpic" required><br>
+      <input class="btn btn-primary" type="submit" value="Add Guest"><br>
 
       <br>
    </form>
-  
+  </div>
+</div>
+<div id="demo2" class="collapse">
+<br>
+<h4>Upcoming Visitors:</h4>
+<div>
+  <table  class="table" style="width:100%">
+
+    {% if account !=0 %}
+         {% for data  in account %}
+         <tr >
+          <td class="title">
+            <div class="thumb">
+            <img  src="/static/upload/vpic/{{data['vpic']}}" height="40%" width="20%" alt="Visitor image">
+            
+            <h6 class="mb-2" ><b>{{ data['vname'] }}</b></h6>
+                    
+                      <b>Contact No: </b>{{ data['vmobile'] }}<br>
+                      <b>Will visit on: </b>{{ data['in_date'] }} / {{ data['in_time'] }}<br>
+            </div>
+          </div>
+        </div>
+      </td>
+      </tr>
+        
+       </table>
+      
+     
+   {% else %}
+       
+      
+       <b><h4>No Data Found.</h4> </b><br>
+       {% endfor %} 
+   {% endif %} 
+   
+   </div>
+  </div> 
+  <br> 
+  <br> 
 
 
 </div>

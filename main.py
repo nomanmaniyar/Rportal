@@ -77,7 +77,28 @@ def index():
     
 @app.route('/rportal/')
 def rportal():
-    return render_template('rportal.html')
+    count1=''
+    count2=''
+    count3=''
+    count4=''
+
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('select count(uid) from userdetails')
+    count1 =  [v for v in cursor.fetchone().values()][0]
+
+    cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor1.execute('select count(Sid) from secretary')
+    count2 =  [v for v in cursor1.fetchone().values()][0]
+
+    cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor2.execute('select count(Mid) from member')
+    count3 =  [v for v in cursor2.fetchone().values()][0]
+
+    cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor3.execute('select count(id) from society')
+    count4 =  [v for v in cursor3.fetchone().values()][0]
+
+    return render_template('rportal.html', count1=count1, count2=count2, count3=count3, count4=count4)
 
 #
 #   Registrations
@@ -1047,18 +1068,66 @@ def sprofile():
     else:
         return logout()
 
+@app.route('/rportal/sprofile/<string:msg>')
+def sprofile1(msg):
+    if 'secretary' in session:
+        msg = msg
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM secretary INNER JOIN society ON secretary.Scode = society.code WHERE Sid = %s', (session['Sid'],))
+        account = cursor.fetchone()
+
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('SELECT username FROM  member where member_status=%s AND Mcode=%s', ('active', session['Scode'], ) )
+        account1 = cursor1.fetchall()
+
+        return render_template('secretary/sprofile.html', msg=msg, account=account, account1=account1)
+    elif session.get('secretary') is None:
+        return login()
+    else:
+        return logout()
+
 @app.route('/rportal/supdate', methods=['GET', 'POST'] )
 def supdate():
     if 'secretary' in session:
+        msg=''
         if request.method == 'POST' and 'flatno' in request.form and 'wing' in request.form:
             email = request.form['email']
             Aname = request.form['name']
             flatno = request.form['flatno']
             wing = request.form['wing']
             mobile = request.form['mobile']
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT username FROM member WHERE Mcode = %s AND Mflatno = %s AND Mwing = %s', (session['Scode'], flatno, wing,))
+            account = cursor.fetchone()
             cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor1.execute('UPDATE secretary SET Sname=%s, Sflatno=%s, Swing=%s, Semail=%s, Smobile=%s WHERE Sid=%s', (Aname , flatno , wing , email, mobile, session['Sid'],))
-            mysql.connection.commit()
+            cursor1.execute('SELECT username FROM secretary WHERE Scode = %s AND Sflatno = %s AND Swing = %s', (session['Scode'], flatno, wing,))
+            account1 = cursor1.fetchone()
+            if account:
+                if account['username'] == session['Susername']:
+                    cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                    cursor2.execute('UPDATE secretary SET Sname=%s, Sflatno=%s, Swing=%s, Semail=%s, Smobile=%s WHERE Sid=%s', (Aname , flatno , wing , email, mobile, session['Sid'],))
+                    mysql.connection.commit()
+                    msg ='Profile updated!'
+                    return sprofile1(msg)
+                else:
+                    msg = 'Warning! User already exists on specified flat no!!'
+                    return sprofile1(msg)
+            elif account1:
+                if account1['username'] == session['Susername']:
+                    cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                    cursor2.execute('UPDATE secretary SET Sname=%s, Sflatno=%s, Swing=%s, Semail=%s, Smobile=%s WHERE Sid=%s', (Aname , flatno , wing , email, mobile, session['Sid'],))
+                    mysql.connection.commit()
+                    msg ='Profile updated!'
+                    return sprofile1(msg)
+                else:
+                    msg = 'Warning! User already exists on specified flat no!!'
+                    return sprofile1(msg)
+            else:
+                cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                cursor2.execute('UPDATE secretary SET Sname=%s, Sflatno=%s, Swing=%s, Semail=%s, Smobile=%s WHERE Sid=%s', (Aname , flatno , wing , email, mobile, session['Sid'],))
+                mysql.connection.commit()
+                msg ='Profile updated!'
+                return sprofile1(msg)
         return sprofile()
     elif session.get('secretary') is None:
         return login()
@@ -1368,6 +1437,19 @@ def mprofile():
     else:
         return logout()
 
+@app.route('/rportal/mprofile/<string:msg>')
+def mprofile1(msg):
+    if 'member' in session:
+        msg = msg
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT username, Memail, Mname, Mflatno, Mwing, Mmobile, code, name, city, road, area, state, pin FROM member INNER JOIN society ON member.Mcode = society.code WHERE Mid = %s;', (session['Mid'],))
+        account = cursor.fetchone()
+        return render_template('member/mprofile.html', msg=msg,account=account)
+    elif session.get('member') is None:
+        return login()
+    else:
+        return logout()
+
 @app.route('/rportal/mupdate', methods=['GET', 'POST'] )
 def mupdate():
     if 'member' in session:
@@ -1377,9 +1459,38 @@ def mupdate():
             flatno = request.form['flatno']
             wing = request.form['wing']
             mobile = request.form['mobile']
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT username FROM member WHERE Mcode = %s AND Mflatno = %s AND Mwing = %s', (session['Mcode'], flatno, wing,))
+            account = cursor.fetchone()
             cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor1.execute('UPDATE member SET Mname=%s, Mflatno=%s, Mwing=%s, Memail=%s, Mmobile=%s, member_status=%s WHERE Mid=%s', (Aname , flatno , wing , email, mobile, 'inactive', session['Mid'],))
-            mysql.connection.commit()
+            cursor1.execute('SELECT username FROM secretary WHERE Scode = %s AND Sflatno = %s AND Swing = %s', (session['Mcode'], flatno, wing,))
+            account1 = cursor1.fetchone()
+            if account:
+                if account['username'] == session['Musername']:
+                    cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                    cursor2.execute('UPDATE member SET Mname=%s, Mflatno=%s, Mwing=%s, Memail=%s, Mmobile=%s WHERE Mid=%s', (Aname , flatno , wing , email, mobile, session['Mid'],))
+                    mysql.connection.commit()
+                    msg ='Profile updated!'
+                    return mprofile1(msg)
+                else:
+                    msg = 'Warning! User already exists on specified flat no!!'
+                    return mprofile1(msg)
+            elif account1:
+                if account1['username'] == session['Musername']:
+                    cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                    cursor2.execute('UPDATE member SET Mname=%s, Mflatno=%s, Mwing=%s, Memail=%s, Mmobile=%s WHERE Mid=%s', (Aname , flatno , wing , email, mobile, session['Mid'],))
+                    mysql.connection.commit()
+                    msg ='Profile updated!'
+                    return mprofile1(msg)
+                else:
+                    msg = 'Warning! User already exists on specified flat no!!'
+                    return mprofile1(msg)
+            else:
+                cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                cursor2.execute('UPDATE member SET Mname=%s, Mflatno=%s, Mwing=%s, Memail=%s, Mmobile=%s WHERE Mid=%s', (Aname , flatno , wing , email, mobile, session['Mid'],))
+                mysql.connection.commit()
+                msg ='Profile updated!'
+                return mprofile1(msg)
         return mprofile()
     elif session.get('member') is None:
         return login()
@@ -1505,18 +1616,18 @@ def addguest():
     if 'member' in session:
         msg = ''
         target2 = os.path.join( '/Rportal/static/upload/vpic/')
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('SELECT *  from visitor WHERE  society_code = %s AND vstatus = %s AND Mflatno = %s AND Mwing = %s', (session['Mcode'],'upcoming', session['Mflatno'], session['Mwing']) ) 
+        account = cursor1.fetchall() 
         if not os.path.isdir(target2):
             os.makedirs(target2)
-        if request.method == 'POST' and 'vname' in request.form  and 'vmobile' in request.form  and 'vehical_no' in request.form and 'in_time' in request.form   and 'out_time' in request.form and 'Mflatno' in request.form and 'Mwing' in request.form  and  'vpic' in request.form:
+        if request.method == 'POST' and 'vname' in request.form  and 'vmobile' in request.form:
             vname = request.form['vname']
             vmobile = request.form['vmobile'] 
             vehical_no = request.form['vehical_no'] 
             in_time = request.form['in_time']
-            out_time = request.form['out_time']
-            username = session['Musername']
-            Mflatno = request.form['Mflatno']
-            Mwing = request.form['Mwing']
-            
+            in_date = request.form['in_date']
+                        
             ...
             file = request.files['vpic']
             file_name = file.filename or ''
@@ -1526,24 +1637,106 @@ def addguest():
             ...
             
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('INSERT INTO visitor VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NULL, DEFAULT )',(vname, vmobile, vehical_no, in_time,out_time, vpic, username, Mflatno, Mwing, 'active', session['Mcode'],))
+            cursor.execute('INSERT INTO visitor VALUES (NULL, %s, %s, %s, %s, %s, NULL, NULL, %s, %s, %s, %s, %s, %s, %s, DEFAULT )',(vname, vmobile, vehical_no, in_time, in_date, vpic, session['Mname'], session['Mflatno'], session['Mwing'], 'upcoming', session['Mcode'], session['Musername']))
+            mysql.connection.commit() 
             msg = "Guest Add successfully!"
-        return render_template('member/addguest.html',msg=msg)
+        return render_template('member/addguest.html',msg=msg, account=account)
     elif session.get('member') is None:
         return login()
     else:
         return logout()
 
+@app.route('/rportal/alvisitor',methods=['GET','POST'])
+def alvisitor():
+    if 'member' in session:
+        if request.method == 'POST' and 'vid' in request.form:
+            vid = request.form['vid']
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('UPDATE visitor SET out_time = DEFAULT, out_date = DEFAULT, vstatus = %s  WHERE  vid = %s', ('allowed', vid,))
+            mysql.connection.commit()
+        return manage_visitor() 
+    elif session.get('member') is None:
+        return login()
+    else:
+        return logout()
               
+@app.route('/rportal/decvisitor',methods=['GET','POST'])
+def decvisitor():
+    if 'member' in session:
+        if request.method == 'POST' and 'vid' in request.form:
+            vid = request.form['vid']
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('UPDATE visitor SET out_time = DEFAULT, out_date = DEFAULT, vstatus = %s  WHERE  vid = %s', ('declined', vid,))
+            mysql.connection.commit()
+        return manage_visitor() 
+    elif session.get('member') is None:
+        return login()
+    else:
+        return logout()
+        
+@app.route('/rportal/manage_visitor')
+def manage_visitor():
+    if 'member' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT *  from visitor WHERE  society_code = %s AND vstatus = %s AND Mflatno = %s AND Mwing = %s', (session['Mcode'],'request', session['Mflatno'], session['Mwing'],) ) 
+        account = cursor.fetchall() 
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('SELECT *  from visitor WHERE  society_code = %s AND vstatus = %s AND Mflatno = %s AND Mwing = %s', (session['Mcode'],'allowed', session['Mflatno'], session['Mwing'],) ) 
+        account1 = cursor1.fetchall() 
+        cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor2.execute('SELECT *  from visitor WHERE  society_code = %s AND vstatus = %s AND Mflatno = %s AND Mwing = %s', (session['Mcode'],'declined', session['Mflatno'], session['Mwing'],) ) 
+        account2 = cursor2.fetchall() 
+        return render_template('member/manage_visitor.html', account=account, account1=account1, account2=account2)
+    elif session.get('member') is None:
+        return login()
+    else:
+        return logout()
+
 #
 #   Admin Part
 #
 @app.route('/rportal/admin_home')
 def admin_home():
     if 'admin' in session:
-        return render_template('admin/admin_home.html', Ausername=session['Ausername'] )
+        c1=''
+        c2=''
+        c3=''
+        c4=''
+        c5=''
+        c6=''
+        c7=''
+        
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('select count(uid) from userdetails')
+        c1 =  [v for v in cursor.fetchone().values()][0]
+    
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('select count(Sid) from secretary where secretarty_status=%s',('active',))
+        c2 =  [v for v in cursor1.fetchone().values()][0]
+
+        cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor2.execute('select count(Mid) from member where member_status=%s',('active',))
+        c3 =  [v for v in cursor2.fetchone().values()][0]
+
+        cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor3.execute('select count(id) from society where society_status=%s',('active',))
+        c4 =  [v for v in cursor3.fetchone().values()][0]
+    
+        cursor4 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor4.execute('select count(Sid) from secretary where secretarty_status=%s',('inactive',))
+        c5 =  [v for v in cursor4.fetchone().values()][0]
+        
+        cursor5 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor5.execute('select count(Mid) from member where member_status=%s',('inactive',))
+        c6 =  [v for v in cursor5.fetchone().values()][0]
+
+        cursor6 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor6.execute('select count(id) from society where society_status=%s',('inactive',))
+        c7 =  [v for v in cursor6.fetchone().values()][0]
+
+        return render_template('admin/admin_home.html', Ausername=session['Ausername'],c1=c1,c2=c2,c3=c3,c4=c4,c5=c5,c6=c6,c7=c7)
     elif session.get('admin') is None:
-        return login()
+        return login(),
     else:
         return logout()
 
@@ -1750,7 +1943,7 @@ def view_contacts():
 def visitorlog():
     if 'security' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT *  from visitor WHERE  society_code = %s AND vstatus = %s', (session['security_code'],'closed') ) 
+        cursor.execute('SELECT *  from visitor WHERE  society_code = %s AND vstatus = %s', (session['security_code'], 'exit',) ) 
         account = cursor.fetchall() 
         return render_template('security/visitorlog.html', account=account)
     elif session.get('security') is None:
@@ -1764,7 +1957,13 @@ def recentvisitor():
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT *  from visitor WHERE  society_code = %s AND vstatus = %s', (session['security_code'],'request') ) 
         account = cursor.fetchall() 
-        return render_template('security/recentvisitor.html', account=account)
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('SELECT *  from visitor WHERE  society_code = %s AND vstatus = %s', (session['security_code'],'allowed') ) 
+        account1 = cursor1.fetchall() 
+        cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor2.execute('SELECT *  from visitor WHERE  society_code = %s AND vstatus = %s', (session['security_code'],'declined') ) 
+        account2 = cursor2.fetchall() 
+        return render_template('security/recentvisitor.html', account=account, account1=account1, account2=account2)
     elif session.get('security') is None:
         return login()
     else:
@@ -1773,15 +1972,28 @@ def recentvisitor():
 @app.route('/rportal/visitorexit',methods=['GET','POST'])
 def visitorexit():
     if 'security' in session:
-        out_time =''
-        vid =''
         if request.method == 'POST' and 'vid' in request.form and 'out_time' in request.form:
             vid = request.form['vid']
+            out_date = request.form['out_date']
             out_time = request.form['out_time']
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('UPDATE visitor SET out_time = %s , vstatus = %s  WHERE  vid = %s ', (out_time ,'Exit',vid) )
-        mysql.connection.commit()
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('UPDATE visitor SET out_time = %s, out_date = %s, vstatus = %s  WHERE  vid = %s', (out_time, out_date, 'exit', vid,))
+            mysql.connection.commit()
         return recentvisitor() 
+    elif session.get('security') is None:
+        return login()
+    else:
+        return logout()
+
+@app.route('/rportal/upvisitor',methods=['GET','POST'])
+def upvisitor():
+    if 'security' in session:
+        if request.method == 'POST' and 'vid' in request.form:
+            vid = request.form['vid']
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('UPDATE visitor SET out_time = DEFAULT, out_date = DEFAULT, vstatus = %s  WHERE  vid = %s', ('allowed', vid,))
+            mysql.connection.commit()
+        return addvisitor() 
     elif session.get('security') is None:
         return login()
     else:
@@ -1792,13 +2004,15 @@ def addvisitor():
     if 'security' in session:
         msg = ''
         target2 = os.path.join( '/Rportal/static/upload/vpic/')
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('SELECT *  from visitor WHERE  society_code = %s AND vstatus = %s', (session['security_code'],'upcoming') ) 
+        account1 = cursor1.fetchall() 
         if not os.path.isdir(target2):
             os.makedirs(target2)
         if request.method == 'POST' and 'vname' in request.form  and 'vmobile' in request.form:
             vname = request.form['vname']
             vmobile = request.form['vmobile'] 
             vehical_no = request.form['vehical_no'] 
-            in_time = request.form['in_time']
             username = request.form['username']   
             Mflatno = request.form['Mflatno']   
             Mwing = request.form['Mwing']  
@@ -1815,12 +2029,12 @@ def addvisitor():
             account = cursor.fetchone()
             if account:
                 cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-                cursor1.execute('INSERT INTO visitor VALUES (NULL, %s, %s, %s, %s, NULL, %s, %s, %s, %s, %s, %s, %s, DEFAULT )',(vname, vmobile, vehical_no, in_time, vpic, username, Mflatno, Mwing, 'request', session['security_code'], session['security_username'],))
+                cursor1.execute('INSERT INTO visitor VALUES (NULL, %s, %s, %s, DEFAULT, DEFAULT, NULL, NULL, %s, %s, %s, %s, %s, %s, %s, DEFAULT )',(vname, vmobile, vehical_no, vpic, username, Mflatno, Mwing, 'request', session['security_code'], session['security_username'],))
                 mysql.connection.commit() 
                 msg = "visitor Add successfully!"
             else:
                 msg = "Member not found! Please check detils and try again."
-        return render_template('security/addvisitor.html',msg=msg)
+        return render_template('security/addvisitor.html',msg=msg, account=account1)
     elif session.get('security') is None:
         return login()
     else:

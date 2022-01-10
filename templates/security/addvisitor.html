@@ -11,15 +11,22 @@
 </style>
 
 
+<h3>Add visitors/ See upcoming visitors:</h3>
+<div>
+<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo1"><i class="fa fa-warning" aria-hidden="true"></i> Add new visitor</button>
+<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo2"><i class="fa fa-history" aria-hidden="true"></i> Upcoming visitors</button>
+<br><br>
+<a href='javascript:self.history.back();'>Go Back</a>
+<br>
+<div id="demo1" class="collapse">
+<br>
+<h4>Add Visitor:</h4>
     <div>
-      {{msg}}
-    <h3>Visitorlog</h3>
-   
+      {{msg}}   
      <form action="{{url_for('addvisitor')}}"  enctype="multipart/form-data" method="POST"><br>
        <input type="text" name="vname" placeholder="Visitor Name" required> <br>
        <input type="tel" name="vmobile" placeholder="Visitor Mobile Number" ><br>
         <input type="text" name="vehical_no"placeholder="Vehical Number" ><br>
-       <input type="time" name="in_time" required><br>
        <input type="text" name="username" placeholder="Member Name" >
        <input type="text" name="Mwing" placeholder="Wing" >
         <input type="number" name="Mflatno" placeholder="Flat No"  required><br>
@@ -28,9 +35,52 @@
 
         <br>
      </form>
-    
+    </div>
+  </div>
+  <br>    
   
-
-</div>
-
+<div id="demo2" class="collapse">
+<br>
+  <h4>Upcoming Visitors:</h4>
+  <div>
+    <table  class="table" style="width:100%">
+  
+      {% if account !=0 %}
+           {% for data  in account %}
+           <tr >
+            <td class="title">
+              <div class="thumb">
+              <img  src="/static/upload/vpic/{{data['vpic']}}" height="40%" width="20%" alt="Visitor image">
+              
+              <h6 class="mb-2" ><b>{{ data['vname'] }}</b></h6>
+                      
+                        <b>Contact No: </b>{{ data['vmobile'] }}<br>
+                      
+                          <b>Will visit to: </b>{{ data['Mwing'] }} {{ data['Mflatno'] }}<br>
+                          <b>Will visit on: </b>{{ data['in_date'] }} / {{ data['in_time'] }}<br>
+                   <form action="{{ url_for('upvisitor') }}" method="POST">
+                      <input type="hidden" name="vid" value="{{data['vid']}}" required >
+                      <input type="submit" class="btn btn-primary" value="Allow">
+                    </form>
+                    
+              </div>
+            </div>
+          </div>
+        </td>
+        </tr>
+          
+         </table>
+        
+       
+     {% else %}
+         
+        
+         <b><h4>No Data Found.</h4> </b><br>
+         {% endfor %} 
+     {% endif %} 
+     
+     </div>
+    </div> 
+    <br> 
+    <br>
 {% endblock %}
