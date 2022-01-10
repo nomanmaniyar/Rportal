@@ -1090,44 +1090,15 @@ def sprofile1(msg):
 def supdate():
     if 'secretary' in session:
         msg=''
-        if request.method == 'POST' and 'flatno' in request.form and 'wing' in request.form:
+        if request.method == 'POST' and 'email' in request.form and 'mobile' in request.form:
             email = request.form['email']
             Aname = request.form['name']
-            flatno = request.form['flatno']
-            wing = request.form['wing']
             mobile = request.form['mobile']
-            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('SELECT username FROM member WHERE Mcode = %s AND Mflatno = %s AND Mwing = %s', (session['Scode'], flatno, wing,))
-            account = cursor.fetchone()
-            cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor1.execute('SELECT username FROM secretary WHERE Scode = %s AND Sflatno = %s AND Swing = %s', (session['Scode'], flatno, wing,))
-            account1 = cursor1.fetchone()
-            if account:
-                if account['username'] == session['Susername']:
-                    cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-                    cursor2.execute('UPDATE secretary SET Sname=%s, Sflatno=%s, Swing=%s, Semail=%s, Smobile=%s WHERE Sid=%s', (Aname , flatno , wing , email, mobile, session['Sid'],))
-                    mysql.connection.commit()
-                    msg ='Profile updated!'
-                    return sprofile1(msg)
-                else:
-                    msg = 'Warning! User already exists on specified flat no!!'
-                    return sprofile1(msg)
-            elif account1:
-                if account1['username'] == session['Susername']:
-                    cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-                    cursor2.execute('UPDATE secretary SET Sname=%s, Sflatno=%s, Swing=%s, Semail=%s, Smobile=%s WHERE Sid=%s', (Aname , flatno , wing , email, mobile, session['Sid'],))
-                    mysql.connection.commit()
-                    msg ='Profile updated!'
-                    return sprofile1(msg)
-                else:
-                    msg = 'Warning! User already exists on specified flat no!!'
-                    return sprofile1(msg)
-            else:
-                cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-                cursor2.execute('UPDATE secretary SET Sname=%s, Sflatno=%s, Swing=%s, Semail=%s, Smobile=%s WHERE Sid=%s', (Aname , flatno , wing , email, mobile, session['Sid'],))
-                mysql.connection.commit()
-                msg ='Profile updated!'
-                return sprofile1(msg)
+            cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor2.execute('UPDATE secretary SET Sname=%s, Semail=%s, Smobile=%s WHERE Sid=%s', (Aname, email, mobile, session['Sid'],))
+            mysql.connection.commit()
+            msg ='Profile updated!'
+            return sprofile1(msg)
         return sprofile()
     elif session.get('secretary') is None:
         return login()
@@ -1141,13 +1112,37 @@ def schange():
             email = request.form['email']
             username = request.form['username']
             Aname = request.form['name']
-            flatno = request.form['Sflatno']
-            wing = request.form['Swing']
+            flatno = request.form['flatno']
+            wing = request.form['wing']
             mobile = request.form['mobile']
-            cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor2.execute('UPDATE secretary SET username=%s, Sname = %s, Sflatno=%s, Swing=%s, Semail=%s, Smobile=%s WHERE Sid=%s', (username, Aname , flatno , wing , email, mobile, session['Sid']))
-            mysql.connection.commit()
-        return sprofile()
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT username FROM member WHERE Mcode = %s AND Mflatno = %s AND Mwing = %s', (session['Scode'], flatno, wing,))
+            account = cursor.fetchone()
+            cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor1.execute('SELECT username FROM secretary WHERE Scode = %s AND Sflatno = %s AND Swing = %s', (session['Scode'], flatno, wing,))
+            account1 = cursor1.fetchone()
+            if account:
+                if account['username'] == username:
+                    cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                    cursor2.execute('UPDATE secretary SET Sname=%s, Sflatno=%s, Swing=%s, Semail=%s, Smobile=%s WHERE Sid=%s', (Aname , flatno , wing , email, mobile, session['Sid'],))
+                    mysql.connection.commit()
+                    msg ='Secretary Changed!'
+                    return sprofile1(msg)
+                else:
+                    msg= 'Please enter valid flat no or wing'
+                    return sprofile1(msg)
+            elif account1:
+                if account1['username'] == username:
+                    cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                    cursor2.execute('UPDATE secretary SET Sname=%s, Sflatno=%s, Swing=%s, Semail=%s, Smobile=%s WHERE Sid=%s', (Aname , flatno , wing , email, mobile, session['Sid'],))
+                    mysql.connection.commit()
+                    msg ='Secretary Changed!'
+                    return sprofile1(msg)
+                else:
+                    msg= 'Please enter valid flat no or wing'
+                    return sprofile1(msg)
+            msg= 'Please enter valid flat no or wing'
+        return sprofile1(msg)
     elif session.get('secretary') is None:
         return login()
     else:
