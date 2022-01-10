@@ -1129,7 +1129,7 @@ def schange():
                     msg ='Secretary Changed!'
                     return sprofile1(msg)
                 else:
-                    msg= 'Please enter valid flat no or wing'
+                    msg= 'Please enter valid flat number or wing and try again!'
                     return sprofile1(msg)
             elif account1:
                 if account1['username'] == username:
@@ -1139,9 +1139,9 @@ def schange():
                     msg ='Secretary Changed!'
                     return sprofile1(msg)
                 else:
-                    msg= 'Please enter valid flat no or wing'
+                    msg= 'Please enter valid flat number or wing and try again!'
                     return sprofile1(msg)
-            msg= 'Please enter valid flat no or wing'
+        msg= 'Please enter valid flat number or wing and try again!'
         return sprofile1(msg)
     elif session.get('secretary') is None:
         return login()
