@@ -46,7 +46,7 @@
              <h6 class="mb-2" ><b>{{ data['subject'] }}</b></h6>
                       <br><br>
             <b>Date/Time: </b>{{ data['per_time'] }}<br>
-            <b>Name: </b>{{ data['name'] }}<br>
+            <b>Name: </b>{{ data['username'] }}<br>
             <b>Subject: </b>{{ data['subject'] }}<br>
             <b>Description: </b>{{ data['text'] }}<br>
         </td>
@@ -59,8 +59,8 @@
          {% endfor %} 
      {% endif %} 
      
-     </div>
-    </div> 
+  </div>
+</div> 
     <br> 
     <br>
    
@@ -71,13 +71,13 @@
       <table  class="table" style="width:100%">
     
         {% if account1 !=0 %}
-             {% for data1  in account1 %}
+            {% for data1  in account1 %}
              <tr>
                <td>
                <h6 class="mb-2" ><b>{{ data1['subject'] }}</b></h6>
                         <br><br>
               <b>Date/Time: </b>{{ data1['per_time'] }}<br>
-              <b>Name: </b>{{ data1['name'] }}<br>
+              <b>Name: </b>{{ data1['username'] }}<br>
               <b>Subject: </b>{{ data1['subject'] }}<br>
               <b>Description: </b>{{ data1['text'] }}<br>
           </td>
@@ -87,11 +87,11 @@
            
           
            <b><h4>No Data Found.</h4> </b><br>
-           {% endfor %} 
+          {% endfor %} 
        {% endif %} 
        
-       </div>
-      </div> 
+  </div>
+</div> 
       <br> 
       <br>
        
@@ -108,21 +108,22 @@
                <h6 class="mb-2" ><b>{{ data2['subject'] }}</b></h6>
                         <br><br>
               <b>Date/Time: </b>{{ data2['per_time'] }}<br>
-              <b>Name: </b>{{ data2['name'] }}<br>
+              <b>Name: </b>{{ data2['username'] }}<br>
               <b>Subject: </b>{{ data2['subject'] }}<br>
               <b>Description: </b>{{ data2['text'] }}<br>
+            
           </td>
           </tr>
            </table>       
-       {% else %}
+        {% else %}
            
           
            <b><h4>No Data Found.</h4> </b><br>
            {% endfor %} 
        {% endif %} 
        
-       </div>
-      </div> 
+  </div>
+</div> 
       <br> 
       <br>
 {% endblock %}
