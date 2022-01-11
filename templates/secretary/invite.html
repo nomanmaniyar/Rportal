@@ -3,57 +3,66 @@
 {% block title %}rportal - Docs{% endblock %}
 
 {% block content %}
-<button class="share-btn">
-    <i class="fas fa-share-alt"></i>
-</button>
-<div class="share-options">
-    <p class="title">share</p>
-    <canvas id="qr-code"></canvas>
-    <div class="social-media">
-        <a class="social-media-btn" href="" id="qr"  onClick="downloadQR()" ><i class="far fa-save"></i></a >
-        <a class="social-media-btn"  href="whatsapp://send?text=http://127.0.0.1:5000/rportal/mcode/{{account}}"  data-action="share/whatsapp/share"  
-        target="_blank"><i class="fab fa-whatsapp"></i></a>
-        <button class="social-media-btn"><i class="fab fa-instagram"></i></button>
-        <button class="social-media-btn"><i class="fab fa-twitter"></i></button>
-        <button class="social-media-btn"><i class="fab fa-facebook-f"></i></button>
-        <button class="social-media-btn"><i class="fab fa-linkedin-in"></i></button>
+
+<div class="container mt-5 pt-3">
+    <div class="row row-cols-auto">
+        <a class="col" href='javascript:self.history.back();'>
+            <i class="bi bi-arrow-left" style="font-size: x-large;"></i>
+        </a>
+        <h2 class="col">Invite </h2>
     </div>
-    
-    <div class="link-container">
-       
-        <p class="link" id="link"></p>
-        <button class="copy-btn">copy</button>
-        
+    <hr>
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4">
+            <div class="col-lg-4">
+                <div class="border bg-transparent m-lg-3"><canvas id="qr-code" class="card-img-top"></canvas></div>
+            </div>
+            <div class="col-lg-4 m-3">
+                <h5 class="card-title">Invite Using</h5>
+                <div class="">
+                    <a class="btn btn-primary" href="" id="qr" onClick="downloadQR()">
+                        <i class="far fa-save"></i>
+                    </a>
+                    <a class="btn btn-primary" style="background-color: #25d366;"
+                        href="whatsapp://send?text=http://127.0.0.1:5000/rportal/mcode/{{account}}"
+                        data-action="share/whatsapp/share" target="_blank" role="button">
+                        <i class="fab fa-whatsapp"></i></a>
+                </div>
+                <h5 class="card-title mt-3">Invite link</h5>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control link" placeholder="Invite Link" aria-label="Invite Link"
+                        aria-describedby="button-addon" id="link">
+                    <button class="btn btn-outline-primary" type="button" id="button-addon"
+                        onclick="Hello()">Copy</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 <script>
     const link = "http://127.0.0.1:5000/rportal/mcode1/{{account}}"
     let text = link.replace(/\s+/g, '');
-    
     document.getElementById("link").innerHTML = text;
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 <script>
     var qr;
-    (function() {
-            qr = new QRious({
+    (function () {
+        qr = new QRious({
             element: document.getElementById('qr-code'),
             size: 150,
             value: ("http://127.0.0.1:5000/rportal/mcode1/{{account}}".replace(/\s+/g, ''))
-            
         });
-        downloadQR(); 
+        downloadQR();
 
     })();
-    
     function downloadQR() {
         var link = document.createElement('a');
         link.download = 'Rportal.png';
         link.href = document.getElementById('qr').toDataURL()
-        
         link.click();
-    } 
-  
+    }
 </script>
 
 {% endblock %}
