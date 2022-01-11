@@ -1,0 +1,44 @@
+{% extends 'secretary/slayout.html' %}
+
+{% block title %}rportal{% endblock %}
+
+{% block content %}
+
+<style>
+    table, th, td {
+      border:1px solid black;
+    }
+</style>
+
+<div>
+
+   <h1>permissions Request</h1>
+{% if account !=0 %}
+    {% for data in account %}
+    <table  class="table" style="width:100%">
+      <td>
+          <label>Subject : {{data['subject']}} </label><br>
+            <h6>{{data['text']}}</h6>
+            <h6>{{data['pstatus']}}</h6>
+          <small>{{data['per_time']}}</small><br>
+    
+      <form action="{{ url_for('grantpermisson') }}" method="POST">
+        <input type="hidden" name="pid" value="{{data['pid']}}" required >
+        <input type="submit" class="btn btn-success" value="Grant">
+      </form>
+      <form action="{{ url_for('denypermisson') }}" method="POST">
+        <input type="hidden" name="pid" value="{{data['pid']}}" required >
+        <input type="submit" class="btn btn-danger" value="Deny">
+      </form>
+    </td>
+    </table>
+  
+{% else %}
+    <b><h4>No Permissions Request Found</h4> </b><br>
+
+    {% endfor %} 
+{% endif %} 
+</div>
+
+
+{% endblock %}

@@ -1386,7 +1386,47 @@ def add_chats():
         return login()
     else:
         return logout()
-             
+
+@app.route('/rportal/permissions')
+def permissions():
+    if 'secretary' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT *  from permission WHERE pstatus = %s AND society_code = %s', ('request',session['Scode'],) ) 
+        account = cursor.fetchall() 
+        return render_template('secretary/permissions.html', account=account)
+    elif session.get('secretary') is None:
+        return login()
+    else:
+        return logout() 
+
+@app.route('/rportal/grantpermisson',methods=['GET','POST'])
+def grantpermisson():
+    if 'secretary' in session:
+        if request.method == 'POST' and 'pid' in request.form:
+            pid = request.form['pid']
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('UPDATE permission SET pstatus = %s  WHERE  pid = %s', ('grant', pid,))
+            mysql.connection.commit()
+        return  permissions()
+    elif session.get('member') is None:
+        return login()
+    else:
+        return logout()  
+
+@app.route('/rportal/denypermisson',methods=['GET','POST'])
+def  denypermisson():
+    if 'secretary' in session:
+        if request.method == 'POST' and 'pid' in request.form:
+            pid = request.form['pid']
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('UPDATE permission SET pstatus = %s  WHERE  pid = %s', ('deny', pid,))
+            mysql.connection.commit()
+        return  permissions()
+    elif session.get('member') is None:
+        return login()
+    else:
+        return logout()  
+
 #
 #   Member Part
 #
@@ -1684,6 +1724,26 @@ def manage_visitor():
         return login()
     else:
         return logout()
+
+@app.route('/rportal/askpermission', methods=['GET', 'POST'] )
+def askpermission():
+    if 'member' in session:
+        msg = ''
+        if request.method == 'POST'and 'subject' in request.form :
+            subject = request.form['subject']
+            text = request.form['text']
+            username = session['Mname'] 
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('INSERT INTO permission values (NULL , %s, %s,%s, %s, %s, DEFAULT )', ( username, subject, text ,'request', session['Mcode']))
+            mysql.connection.commit() 
+            msg="successfully request submit"
+        return render_template('member/askpermission.html',msg=msg)
+    elif session.get('member') is None:
+        return login()
+    else:
+        return logout()
+
+
 
 #
 #   Admin Part

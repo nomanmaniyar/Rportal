@@ -222,25 +222,26 @@ CREATE TABLE IF NOT EXISTS `chat` (
   	PRIMARY KEY (`msg_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `visitor` (
-  `vid` int NOT NULL AUTO_INCREMENT,
-  `vname` varchar(255) NOT NULL,
-  `vmobile` varchar(255) NOT NULL,
-  `vehical_no` varchar(255) DEFAULT NULL,
-  `in_time` time DEFAULT (curtime()),
-  `in_date` date DEFAULT (curdate()),
-  `out_date` date DEFAULT NULL,
-  `out_time` time DEFAULT NULL,
-  `vpic` varchar(255) NOT NULL,
-  `Mname` varchar(255) NOT NULL,
-  `Mflatno` varchar(255) NOT NULL,
-  `Mwing` varchar(255) NOT NULL,
-  `vstatus` varchar(255) NOT NULL,
-  `society_code` varchar(255) NOT NULL,
-  `added_by` varchar(255) NOT NULL,
-  `entry_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+
+CREATE TABLE IF NOT EXISTS `visitor` (
+  `vid` INT NOT NULL AUTO_INCREMENT,
+  `vname` VARCHAR(255) NOT NULL,
+  `vmobile` VARCHAR(255) NOT NULL,
+  `vehical_no` VARCHAR(255) DEFAULT NULL,
+  `in_time` TIME DEFAULT (CURRENT_TIME()),
+  `in_date` DATE DEFAULT (CURRENT_DATE()),
+  `out_date` DATE DEFAULT NULL,
+  `out_time` TIME DEFAULT NULL,
+  `vpic` VARCHAR(255) NOT NULL,
+  `Mname` VARCHAR(255) NOT NULL,
+  `Mflatno` VARCHAR(255) NOT NULL,
+  `Mwing` VARCHAR(255) NOT NULL,
+  `vstatus` VARCHAR(255) NOT NULL,
+  `society_code` VARCHAR(255) NOT NULL,
+  `added_by` VARCHAR(255) NOT NULL,
+  `entry_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`vid`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3
+)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 select * from visitor;
 
 CREATE TABLE `meetings` (
@@ -271,3 +272,14 @@ CREATE TABLE IF NOT EXISTS `maintenance` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 select * from maintenance;
 
+
+CREATE TABLE IF NOT EXISTS `permission` (
+	`pid` int(11) NOT NULL AUTO_INCREMENT,
+	`username` varchar(255) NOT NULL,
+	`subject` varchar(255) NOT NULL,
+	`text` varchar(355) NOT NULL,
+	`pstatus` varchar(255) NOT NULL,
+	`society_code` varchar(255) NOT NULL,
+	`per_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  	PRIMARY KEY (`pid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

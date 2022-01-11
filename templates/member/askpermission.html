@@ -1,0 +1,28 @@
+{% extends 'member/mlayout.html' %}
+{% block title %}rportal{% endblock %}
+
+{% block content %}
+
+<style>
+    table, th, td {
+      border:1px solid black;
+    }
+</style>
+<div>
+    <h2>Ask Permission</h2><br>
+    {{msg}}
+<div>
+ <form action="{{ url_for('askpermission') }}" method="post">
+    <input type="text" name="subject" id="subject" placeholder="Subject" required></br></br>
+    <textarea type="text" name="text" id="text" placeholder="Text..." required rows="6" cols="60" ></textarea></br>
+    <input type="submit" class="btn btn-primary" name="submit" value="Submit"></br>
+
+ </form>
+
+<a href='javascript:self.history.back();'>Go Back</a>
+</div>
+
+</div>
+
+ 
+{% endblock %}
