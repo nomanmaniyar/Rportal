@@ -271,3 +271,15 @@ CREATE TABLE IF NOT EXISTS `maintenance` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 select * from maintenance;
 
+CREATE TABLE IF NOT EXISTS `permission` (
+	`pid` int(11) NOT NULL AUTO_INCREMENT,
+	`name` varchar(255) NOT NULL,
+	`subject` varchar(255) NOT NULL,
+	`text` varchar(355) NOT NULL,
+	`pstatus` varchar(255) NOT NULL,
+	`society_code` varchar(255) NOT NULL,
+	`per_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  	PRIMARY KEY (`pid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+select * from permission;
+
