@@ -1393,36 +1393,45 @@ def permissions():
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT *  from permission WHERE pstatus = %s AND society_code = %s', ('request',session['Scode'],) ) 
         account = cursor.fetchall() 
-        return render_template('secretary/permissions.html', account=account)
+
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('SELECT *  from permission WHERE pstatus = %s AND society_code = %s', ('granted',session['Scode'],) ) 
+        account1 = cursor1.fetchall() 
+
+        cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor2.execute('SELECT *  from permission WHERE pstatus = %s AND society_code = %s', ('denied',session['Scode'],) ) 
+        account2 = cursor2.fetchall() 
+
+        return render_template('secretary/permissions.html', account=account, account1=account1, account2=account2)
     elif session.get('secretary') is None:
         return login()
     else:
         return logout() 
 
-@app.route('/rportal/grantpermisson',methods=['GET','POST'])
-def grantpermisson():
+@app.route('/rportal/grantpermission',methods=['GET','POST'])
+def grantpermission():
     if 'secretary' in session:
         if request.method == 'POST' and 'pid' in request.form:
             pid = request.form['pid']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('UPDATE permission SET pstatus = %s  WHERE  pid = %s', ('grant', pid,))
+            cursor.execute('UPDATE permission SET pstatus = %s WHERE pid = %s', ('granted', pid,))
             mysql.connection.commit()
         return  permissions()
-    elif session.get('member') is None:
+    elif session.get('secretary') is None:
         return login()
     else:
         return logout()  
 
-@app.route('/rportal/denypermisson',methods=['GET','POST'])
-def  denypermisson():
+@app.route('/rportal/denypermission',methods=['GET','POST'])
+def  denypermission():
     if 'secretary' in session:
         if request.method == 'POST' and 'pid' in request.form:
             pid = request.form['pid']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('UPDATE permission SET pstatus = %s  WHERE  pid = %s', ('deny', pid,))
+            cursor.execute('UPDATE permission SET pstatus = %s  WHERE  pid = %s', ('denied', pid,))
             mysql.connection.commit()
         return  permissions()
-    elif session.get('member') is None:
+    elif session.get('secretary') is None:
         return login()
     else:
         return logout()  
@@ -1439,6 +1448,8 @@ def mhome():
             Memail = request.form['Memail']
             username = request.form['username']
             Mid = request.form['Mid']
+            Mflatno = request.form['Mflatno']
+            Mwing = request.form['Mwing']
      
             session['member'] = True
             session['Mid'] = Mid
@@ -1446,6 +1457,8 @@ def mhome():
             session['Mcode'] = Mcode
             session['Memail'] = Memail
             session['Mname'] = Mname
+            session['Mflatno'] = Mflatno
+            session['Mwing'] = Mwing
      
         if 'member' in session:
                 return render_template('member/mhome.html', Mname=session['Mname'])
@@ -1648,9 +1661,9 @@ def add_chat():
 def addguest():
     if 'member' in session:
         msg = ''
-        target2 = os.path.join( '/Rportal/static/upload/vpic/')
+        target2 = os.path.join('/Rportal/static/upload/vpic/')
         cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor1.execute('SELECT *  from visitor WHERE  society_code = %s AND vstatus = %s AND Mflatno = %s AND Mwing = %s', (session['Mcode'],'upcoming', session['Mflatno'], session['Mwing']) ) 
+        cursor1.execute('SELECT *  from visitor WHERE  society_code = %s AND vstatus = %s AND Mflatno = %s AND Mwing = %s', (session['Mcode'],'upcoming', session['Mflatno'], session['Mwing'],) ) 
         account = cursor1.fetchall() 
         if not os.path.isdir(target2):
             os.makedirs(target2)
@@ -1729,21 +1742,32 @@ def manage_visitor():
 def askpermission():
     if 'member' in session:
         msg = ''
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT *  from permission WHERE pstatus = %s AND society_code = %s', ('request',session['Mcode'],) ) 
+        account = cursor.fetchall() 
+
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('SELECT *  from permission WHERE pstatus = %s AND society_code = %s', ('granted',session['Mcode'],) ) 
+        account1 = cursor1.fetchall() 
+
+        cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor2.execute('SELECT *  from permission WHERE pstatus = %s AND society_code = %s', ('denied',session['Mcode'],) ) 
+        account2 = cursor2.fetchall() 
+
         if request.method == 'POST'and 'subject' in request.form :
             subject = request.form['subject']
             text = request.form['text']
-            username = session['Mname'] 
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('INSERT INTO permission values (NULL , %s, %s,%s, %s, %s, DEFAULT )', ( username, subject, text ,'request', session['Mcode']))
+            cursor.execute('INSERT INTO permission values (NULL , %s, %s,%s, %s, %s, DEFAULT )', (session['Mname'],subject, text ,'request', session['Mcode']))
             mysql.connection.commit() 
             msg="successfully request submit"
-        return render_template('member/askpermission.html',msg=msg)
+            return render_template('member/askpermission.html',msg=msg)
+
+        return render_template('member/askpermission.html',account=account, account1=account1,account2=account2,)
     elif session.get('member') is None:
         return login()
     else:
         return logout()
-
-
 
 #
 #   Admin Part

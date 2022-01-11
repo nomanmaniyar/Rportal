@@ -1,44 +1,154 @@
 {% extends 'secretary/slayout.html' %}
 
-{% block title %}rportal{% endblock %}
+{% block title %}R-Portal - Permissions{% endblock %}
 
 {% block content %}
+<div class="container mt-5 pt-3">
+    <div class="row row-cols-auto">
+        <a class="col" href='javascript:self.history.back();'>
+            <i class="bi bi-arrow-left" style="font-size: x-large;"></i>
+        </a>
+        <h2 class="col">Manage Permissions</h2>
+    </div>
+    <!-- TABS -->
+    <ul class="nav nav-tabs justify-content-lg-evenly mt-3" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button"
+                role="tab" aria-controls="home" aria-selected="true"><i class="bi bi-exclamation-diamond"></i>
+                Permission requests</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button"
+                role="tab" aria-controls="profile" aria-selected="false"> <i class="bi bi-check2-all"></i>
+                Granted permissions</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button"
+                role="tab" aria-controls="contact" aria-selected="false"> <i class="bi bi-clock-history"></i>
+                Rejected permissions</button>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div class="accordion accordion-flush my-3" id="accordionFlush{{data}}">
+                {% if (account[0]|length)==0 %}
+                <div class="container">
+                    <p class="h3 m-5 text-muted text-center">No new requests pending</p>
+                </div>
+                {% else %}
+                {% for data in range(account|length) %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-heading{{data}}">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapse{{data}}" aria-expanded="false"
+                            aria-controls="flush-collapse{{data}}">
+                            <strong>{{account[data]['subject']}}</strong>
+                            <span class="badge rounded-pill bg-primary mx-2" style="font-size: x-small;">NEW</span>
+                        </button>
+                    </h2>
+                    <div id="flush-collapse{{data}}" class="accordion-collapse collapse"
+                        aria-labelledby="flush-heading{{data}}" data-bs-parent="#accordionFlush{{data}}">
+                        <div class="accordion-body ">
+                            <label style="font-weight:600;">Date/Time:</label>
+                            <span class="mx-1">{{ account[data]['per_time']}}</span><br>
+                            <label style="font-weight:600;">Name:</label>
+                            <span class="mx-1">{{ account[data]['name']}}</span><br>
+                            <label style="font-weight:600;">Subject:</label>
+                            <span class="mx-1">{{ account[data]['subject']}}</span><br>
+                            <label style="font-weight:600;">Description:</label>
+                            <span class="mx-1  text-break">{{ account[data]['text']}}</span><br>
+                            <form action="{{ url_for('grantpermission') }}" method="POST">
+                                <input type="hidden" name="pid" value="{{account[data]['pid']}}" required >
+                                <input type="submit" class="btn btn-primary mt-3" value="Grant Permission">
+                            </form>
+                            <form action="{{ url_for('denypermission') }}" method="POST">
+                                <input type="hidden" name="pid" value="{{account[data]['pid']}}" required >
+                                <input type="submit" class="btn btn-primary mt-3" value="Deny Permission">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            <div class="accordion accordion-flush my-3" id="accordionFlush{{data1}}">
+                {% if (account1[0]|length)==0 %}
+                <div class="container">
+                    <p class="h3 m-5 text-muted text-center">No permissions allowed</p>
+                </div>
+                {% else %}
+                {% for data1 in range(account1|length) %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-heading{{data1}}">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapse{{data1}}" aria-expanded="false"
+                            aria-controls="flush-collapse{{data1}}">
+                            <strong>{{account1[data1]['subject']}}</strong>
+                            <span class="badge rounded-pill bg-success mx-2" style="font-size: x-small;">Allowd</span>
 
-<style>
-    table, th, td {
-      border:1px solid black;
-    }
-</style>
-
-<div>
-
-   <h1>permissions Request</h1>
-{% if account !=0 %}
-    {% for data in account %}
-    <table  class="table" style="width:100%">
-      <td>
-          <label>Subject : {{data['subject']}} </label><br>
-            <h6>{{data['text']}}</h6>
-            <h6>{{data['pstatus']}}</h6>
-          <small>{{data['per_time']}}</small><br>
-    
-      <form action="{{ url_for('grantpermisson') }}" method="POST">
-        <input type="hidden" name="pid" value="{{data['pid']}}" required >
-        <input type="submit" class="btn btn-success" value="Grant">
-      </form>
-      <form action="{{ url_for('denypermisson') }}" method="POST">
-        <input type="hidden" name="pid" value="{{data['pid']}}" required >
-        <input type="submit" class="btn btn-danger" value="Deny">
-      </form>
-    </td>
-    </table>
-  
-{% else %}
-    <b><h4>No Permissions Request Found</h4> </b><br>
-
-    {% endfor %} 
-{% endif %} 
+                        </button>
+                    </h2>
+                    <div id="flush-collapse{{data1}}" class="accordion-collapse collapse"
+                        aria-labelledby="flush-heading{{data1}}" data-bs-parent="#accordionFlush{{data1}}">
+                        <div class="accordion-body ">
+                            <label style="font-weight:600;">Date/Time:</label>
+                            <span class="mx-1">{{ account1[data1]['per_time']}}</span><br>
+                            <label style="font-weight:600;">Name:</label>
+                            <span class="mx-1">{{ account1[data1]['name']}}</span><br>
+                            <label style="font-weight:600;">Subject:</label>
+                            <span class="mx-1">{{ account1[data1]['subject']}}</span><br>
+                            <label style="font-weight:600;">Description:</label>
+                            <span class="mx-1  text-break">{{ account1[data1]['text']}}</span><br>
+                            <label style="font-weight:600;">Status:</label>
+                            <span class="mx-1 text-uppercase "
+                                style="font-weight: 900;">{{account1[data1]['pstatus']}}</span><br>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+            <div class="accordion accordion-flush my-3" id="accordionFlush{{data2}}">
+                {% if (account2[0]|length)==0 %}
+                <div class="container">
+                    <p class="h3 m-5 text-muted text-center">No permissions denied</p>
+                </div>
+                {% else %}
+                {% for data2 in range(account2|length) %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-heading{{data2}}">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapse{{data2}}" aria-expanded="false"
+                            aria-controls="flush-collapse{{data2}}">
+                            <strong>{{account2[data2]['subject']}}</strong>
+                            <span class="badge rounded-pill bg-danger mx-2" style="font-size: x-small;">Denied</span>
+                        </button>
+                    </h2>
+                    <div id="flush-collapse{{data2}}" class="accordion-collapse collapse"
+                        aria-labelledby="flush-heading{{data2}}" data-bs-parent="#accordionFlush{{data2}}">
+                        <div class="accordion-body ">
+                            <label style="font-weight:600;">Date/Time:</label>
+                            <span class="mx-1">{{ account2[data2]['per_time']}}</span><br>
+                            <label style="font-weight:600;">Name:</label>
+                            <span class="mx-1">{{ account2[data2]['name']}}</span><br>
+                            <label style="font-weight:600;">Subject:</label>
+                            <span class="mx-1">{{ account2[data2]['subject']}}</span><br>
+                            <label style="font-weight:600;">Description:</label>
+                            <span class="mx-1  text-break">{{ account2[data2]['text']}}</span><br>
+                            <label style="font-weight:600;">Status:</label>
+                            <span class="mx-1 text-uppercase "
+                                style="font-weight: 900;">{{account2[data2]['pstatus']}}</span><br>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </div>
-
-
 {% endblock %}

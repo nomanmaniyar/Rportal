@@ -2,27 +2,127 @@
 {% block title %}rportal{% endblock %}
 
 {% block content %}
-
 <style>
     table, th, td {
       border:1px solid black;
     }
 </style>
-<div>
-    <h2>Ask Permission</h2><br>
-    {{msg}}
-<div>
- <form action="{{ url_for('askpermission') }}" method="post">
-    <input type="text" name="subject" id="subject" placeholder="Subject" required></br></br>
-    <textarea type="text" name="text" id="text" placeholder="Text..." required rows="6" cols="60" ></textarea></br>
-    <input type="submit" class="btn btn-primary" name="submit" value="Submit"></br>
 
- </form>
 
+<h3>Ask permission:</h3>
+<div>
+<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo1"><i class="fa fa-warning" aria-hidden="true"></i> Ask permission</button>
+<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo2"><i class="fa fa-history" aria-hidden="true"></i> View requests</button>
+<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo3"><i class="fa fa-history" aria-hidden="true"></i> View approved</button>
+<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo4"><i class="fa fa-history" aria-hidden="true"></i> View rejected</button>
+<br><br>
 <a href='javascript:self.history.back();'>Go Back</a>
-</div>
+<br>
 
-</div>
-
- 
+<div id="demo1" class="collapse">
+<br>
+<h4>Ask permission:</h4>
+    <div>
+      {{msg}}
+       <form action="{{ url_for('askpermission') }}" method="post">
+          <input type="text" name="subject" id="subject" placeholder="Subject" required></br></br>
+          <textarea type="text" name="text" id="text" placeholder="Text..." required rows="6" cols="60" ></textarea></br>
+          <input type="submit" class="btn btn-primary" name="submit" value="Submit"></br>
+       </form>      
+    </div>
+  </div>
+  <br>    
+  
+<div id="demo2" class="collapse">
+<br>
+  <h4>View requests:</h4>
+  <div>
+    <table  class="table" style="width:100%">
+  
+      {% if account !=0 %}
+           {% for data  in account %}
+           <tr>
+             <td>
+             <h6 class="mb-2" ><b>{{ data['subject'] }}</b></h6>
+                      <br><br>
+            <b>Date/Time: </b>{{ data['per_time'] }}<br>
+            <b>Name: </b>{{ data['name'] }}<br>
+            <b>Subject: </b>{{ data['subject'] }}<br>
+            <b>Description: </b>{{ data['text'] }}<br>
+        </td>
+        </tr>
+         </table>       
+     {% else %}
+         
+        
+         <b><h4>No Data Found.</h4> </b><br>
+         {% endfor %} 
+     {% endif %} 
+     
+     </div>
+    </div> 
+    <br> 
+    <br>
+   
+<div id="demo3" class="collapse">
+  <br>
+    <h4>View approved:</h4>
+    <div>
+      <table  class="table" style="width:100%">
+    
+        {% if account1 !=0 %}
+             {% for data1  in account1 %}
+             <tr>
+               <td>
+               <h6 class="mb-2" ><b>{{ data1['subject'] }}</b></h6>
+                        <br><br>
+              <b>Date/Time: </b>{{ data1['per_time'] }}<br>
+              <b>Name: </b>{{ data1['name'] }}<br>
+              <b>Subject: </b>{{ data1['subject'] }}<br>
+              <b>Description: </b>{{ data1['text'] }}<br>
+          </td>
+          </tr>
+           </table>       
+       {% else %}
+           
+          
+           <b><h4>No Data Found.</h4> </b><br>
+           {% endfor %} 
+       {% endif %} 
+       
+       </div>
+      </div> 
+      <br> 
+      <br>
+       
+<div id="demo4" class="collapse">
+  <br>
+    <h4>View rejected:</h4>
+    <div>
+      <table  class="table" style="width:100%">
+    
+        {% if account2 !=0 %}
+             {% for data2  in account2 %}
+             <tr>
+               <td>
+               <h6 class="mb-2" ><b>{{ data2['subject'] }}</b></h6>
+                        <br><br>
+              <b>Date/Time: </b>{{ data2['per_time'] }}<br>
+              <b>Name: </b>{{ data2['name'] }}<br>
+              <b>Subject: </b>{{ data2['subject'] }}<br>
+              <b>Description: </b>{{ data2['text'] }}<br>
+          </td>
+          </tr>
+           </table>       
+       {% else %}
+           
+          
+           <b><h4>No Data Found.</h4> </b><br>
+           {% endfor %} 
+       {% endif %} 
+       
+       </div>
+      </div> 
+      <br> 
+      <br>
 {% endblock %}
