@@ -1,5 +1,5 @@
 import socket
-import dns.resolver
+import dns.resolver;
 from email import message
 import email
 from json import decoder
@@ -54,6 +54,7 @@ app.config["MAIL_USERNAME"] = 'noreply.rportal@gmail.com'
 app.config['MAIL_PASSWORD'] = 'Ajinfo@1234'  
 #app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
+
 part2 ="Your One Time Password for logging into rportal is\n\n" 
 part3="""\n\nIf you did not Initiated this request,please ignore this mail.
 
@@ -105,7 +106,7 @@ def rportal():
 #
 #   User Registration
 @app.route('/rportal/register', methods=['GET','POST'])
-def register():
+def  register():
     msg = ''
     if request.method == 'POST'and 'name' in request.form and 'username' in request.form and 'mobile' in request.form and 'email' in request.form and 'password' in request.form :
         name = request.form['name']
@@ -130,26 +131,30 @@ def register():
             email_address = email
             addressToVerify = email_address
             domain_name = email_address.split('@')[1]
-            records = dns.resolver.query(domain_name, 'MX')
-            mxRecord = records[0].exchange
-            mxRecord = str(mxRecord)
-            host = socket.gethostname()
-            server = smtplib.SMTP()
-            server.set_debuglevel(0)
-            server.connect(mxRecord)
-            server.helo(host)
-            server.mail('me@domain.com')
-            code, message = server.rcpt(str(addressToVerify))
-            server.quit()
-            if code == 250:
-                email = email
-                msg = Message('OTP confirmation for RPortal' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
-                msg.body = part2 + str(otp)+ part3 
-                mail.send(msg)
-                msg1 = 'OTP: ',otp
-                return render_template('register_otp.html', msg1=msg1, name=name, mobile=mobile, email=email, username=username, password=password)
-            else:
-                msg ='Mail adderss not found! Change the address and try again'
+            try:
+                records = dns.resolver.query(domain_name, 'MX')
+                mxRecord = records[0].exchange
+                mxRecord = str(mxRecord)
+                host = socket.gethostname()
+                server = smtplib.SMTP()
+                server.set_debuglevel(0)
+                server.connect(mxRecord)
+                server.helo(host)
+                server.mail('me@domain.com')
+                code, message = server.rcpt(str(addressToVerify))
+                server.quit()
+                if code == 250:
+                    email = email
+                    msg = Message('OTP confirmation for RPortal' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
+                    msg.body = part2 + str(otp)+ part3 
+                    mail.send(msg)
+                    msg1 = 'OTP: ',otp
+                    return render_template('register_otp.html', msg1=msg1, name=name, mobile=mobile, email=email, username=username, password=password)
+                else:
+                    msg ='Mail adderss not found! Change the address and try again'
+                    return render_template('register.html',msg=msg)
+            except:
+                msg ='Invalid Email address, change address and try again'
                 return render_template('register.html',msg=msg)
         return render_template('register.html',msg=msg)
     return render_template('register.html',msg=msg)
@@ -542,7 +547,7 @@ def uotp():
             email = account['email']
             msg = Message('OTP confirmation for RPortal' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
             msg.body = part2 + str(otp)+ part3 
-            mail.send(msg) 
+            mail.send(msg)
             msg1 = 'OTP: ',otp
             return render_template('otp.html', msg1=msg1)
         else:
@@ -568,27 +573,31 @@ def forgot_password():
             email_address = email
             addressToVerify = email_address
             domain_name = email_address.split('@')[1]
-            records = dns.resolver.query(domain_name, 'MX')
-            mxRecord = records[0].exchange
-            mxRecord = str(mxRecord)
-            host = socket.gethostname()
-            server = smtplib.SMTP()
-            server.set_debuglevel(0)
-            server.connect(mxRecord)
-            server.helo(host)
-            server.mail('me@domain.com')
-            code, message = server.rcpt(str(addressToVerify))
-            server.quit()
-            if code == 250:
-                email = email
-                msg = Message('OTP confirmation for RPortal' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
-                msg.body = part2 + str(otp)+ part3 
-                mail.send(msg)
-                msg1 = 'OTP: ',otp
-                return render_template('forgot_otp.html', msg1=msg1, username=username, password=password)
-            else:
-                msg ='Mail adderss not found! Change the address and try again'
-                return render_template('forgot_password.html',msg=msg)            
+            try:
+                records = dns.resolver.query(domain_name, 'MX')
+                mxRecord = records[0].exchange
+                mxRecord = str(mxRecord)
+                host = socket.gethostname()
+                server = smtplib.SMTP()
+                server.set_debuglevel(0)
+                server.connect(mxRecord)
+                server.helo(host)
+                server.mail('me@domain.com')
+                code, message = server.rcpt(str(addressToVerify))
+                server.quit()
+                if code == 250:
+                    email = email
+                    msg = Message('OTP confirmation for RPortal' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
+                    msg.body = part2 + str(otp)+ part3 
+                    mail.send(msg)
+                    msg1 = 'OTP: ',otp
+                    return render_template('forgot_otp.html', msg1=msg1, username=username, password=password)
+                else:
+                    msg ='Mail adderss not found! Change the address and try again'
+                    return render_template('forgot_password.html',msg=msg)   
+            except:
+                msg ='Invalid Email address, change address and try again'  
+                return render_template('forgot_password.html',msg=msg)   
         elif request.method == 'POST' and 'username' in request.form:
             username = request.form['username']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
