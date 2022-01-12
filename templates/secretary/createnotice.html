@@ -3,32 +3,47 @@
 {% block title %}Create Notice{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<div class="container mt-3 mb-4">
-  
-  <h4><div class="msg">{{ msg }}</div></h4>
-<form class="mb-5" action="{{ url_for('createnotice') }}" method="post"  >
+<div class="container mt-5 pt-3">
+  <div class="row row-cols-auto">
+    <a class="col" href='javascript:self.history.back();'>
+      <i class="bi bi-arrow-left" style="font-size: x-large;"></i>
+    </a>
+    <h2 class="col">Create Notice</h2>
+  </div>
+  <hr>
+  <div class="card shadow">
+    <form class="" action="{{ url_for('createnotice') }}" method="post">
+      <!--<textarea  name="editor1"></textarea>-->
+      <div class="d-flex card-header bg-transparent">
+        <div class="p-2 col "><input type="text" class="form-control" id="subjectId" aria-describedby="subjectHelp"
+            placeholder="Subject" name="subject" required></div>
 
-  <!--<textarea  name="editor1"></textarea>-->
-  <br><br>
-  <input class="w3-input" type="text" placeholder="Subject" name="subject"  required> 
-  <br><br>
-  <textarea id="editor" name="editor" ></textarea>
-  <br><br>
-  <button type="submit" class="btn btn-primary" >Publish</button>
-  </form>
+        <div class="ms-auto p-2"> <button type="submit" class="btn btn-primary">Publish</button></div>
+      </div>
+      <div class="">
 
+
+      </div>
+      <div class="card-body">
+        <textarea class="form-control h-50" placeholder="Write your Notice" id="editor" name="editor">
+        </textarea>
+      </div>
+      <div class=" bg-transparent">
+
+      </div>
+    </form>
+  </div>
 </div>
 <script src="https://cdn.ckeditor.com/ckeditor5/31.0.0/classic/ckeditor.js"></script>
 <script>
   ClassicEditor
-          .create( document.querySelector( '#editor' ) )
-          .then( editor => {
-                  console.log( editor );
-          } )
-          .catch( error => {
-                  console.error( error );
-          } );
+    .create(document.querySelector('#editor'))
+    .then(editor => {
+      console.log(editor);
+    })
+    .catch(error => {
+      console.error(error);
+    });
 </script>
 <style>
   :root {
@@ -136,7 +151,6 @@
     /* -- Overrides the default colors used by the ckeditor5-link package. ---------------------- */
 
     --ck-color-link-default: hsl(190, 100%, 75%);
-}
-
+  }
 </style>
 {% endblock %}
