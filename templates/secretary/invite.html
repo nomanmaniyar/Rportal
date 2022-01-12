@@ -1,6 +1,6 @@
 {% extends 'secretary/slayout.html' %}
 
-{% block title %}rportal - Docs{% endblock %}
+{% block title %}rportal{% endblock %}
 
 {% block content %}
 
@@ -14,55 +14,99 @@
     <hr>
     <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4">
-            <div class="col-lg-4">
-                <div class="border bg-transparent m-lg-3"><canvas id="qr-code" class="card-img-top"></canvas></div>
+            <div class="col-lg-4" id="print">
+            
+                <div id="qrcode" ></div>
+                <!-- <label>http://127.0.0.1:5000/rportal/mcode/{{account}}</label> -->
             </div>
             <div class="col-lg-4 m-3">
                 <h5 class="card-title">Invite Using</h5>
                 <div class="">
-                    <a class="btn btn-primary" href="" id="qr" onClick="downloadQR()">
+              
+                       
+                        <a  class="btn btn-primary" id='qrdl'>
+                        
                         <i class="far fa-save"></i>
-                    </a>
+                    </a> 
                     <a class="btn btn-primary" style="background-color: #25d366;"
                         href="whatsapp://send?text=http://127.0.0.1:5000/rportal/mcode/{{account}}"
                         data-action="share/whatsapp/share" target="_blank" role="button">
                         <i class="fab fa-whatsapp"></i></a>
+                        <a type="button" class="btn btn-outline-secondary" onclick="printDiv('print')" ><i class="fa fa-print" aria-hidden="true"></i>
+                        </a>
                 </div>
                 <h5 class="card-title mt-3">Invite link</h5>
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control link" placeholder="Invite Link" aria-label="Invite Link"
-                        aria-describedby="button-addon" id="link">
-                    <button class="btn btn-outline-primary" type="button" id="button-addon"
-                        onclick="Hello()">Copy</button>
+                    <input type="text" id="text" value="http://127.0.0.1:5000/rportal/mcode/{{account}}" style="width: 100%;" class="form-control link" placeholder="Invite Link" aria-label="Invite Link"
+                        aria-describedby="button-addon" id="link"><button class="btn btn-outline-primary" type="button" id="button-addon"
+                    onclick="myFunction()">Copy</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
-<script>
-    const link = "http://127.0.0.1:5000/rportal/mcode1/{{account}}"
-    let text = link.replace(/\s+/g, '');
-    document.getElementById("link").innerHTML = text;
-</script>
-<script>
-    var qr;
-    (function () {
-        qr = new QRious({
-            element: document.getElementById('qr-code'),
-            size: 150,
-            value: ("http://127.0.0.1:5000/rportal/mcode1/{{account}}".replace(/\s+/g, ''))
-        });
-        downloadQR();
 
-    })();
-    function downloadQR() {
-        var link = document.createElement('a');
-        link.download = 'Rportal.png';
-        link.href = document.getElementById('qr').toDataURL()
-        link.click();
-    }
+
+<style>
+    #qrcode {
+  width: 160px;
+  height: 160px;
+  margin-top: 15px;
+  
+
+}
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/davidshimjs-qrcodejs@0.0.2/qrcode.min.js"></script>
+<script>
+const makeQR = (url, filename) => {
+    var qrcode = new QRCode("qrcode", {
+      text: "http://127.0.0.1:5000/rportal/mcode1/{{account}}",
+      width: 128,
+      height: 128,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H
+    });
+    qrcode.makeCode(url);
+  
+    setTimeout(() => {
+      let qelem = document.querySelector('#qrcode img')
+      let dlink = document.querySelector('#qrdl')
+      let qr = qelem.getAttribute('src');
+      dlink.setAttribute('href', qr);
+      dlink.setAttribute('download', 'Rportal');
+      dlink.removeAttribute('hidden');
+    }, 500);
+  }
+  
+  makeQR(document.querySelector('#text').value, 'qr-code.png')
+
 </script>
+<script>
+    function myFunction() {
+ 
+  var copyText = document.getElementById("text");
+  copyText.select();
+  copyText.setSelectionRange(0, 99999); 
+  navigator.clipboard.writeText(copyText.value);
+  alert("Copied the text: " + copyText.value);
+}
+</script>
+
+<script>
+    function printDiv(divName) {
+     var printContents = document.getElementById(divName).innerHTML;
+     var originalContents = document.body.innerHTML;
+
+     document.body.innerHTML = printContents;
+
+     window.print();
+
+     document.body.innerHTML = originalContents;
+}
+</script>
+
 
 {% endblock %}
