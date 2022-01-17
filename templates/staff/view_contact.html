@@ -11,20 +11,21 @@
       <div class="mx-3 h2">Important Contacts</div>    
   </div>
   <div>
+    <hr>
     {% if account !=0 %}
     {% for contact in account %}
-    <hr>
+    
     <div class="row">
       <div class="col-sm-3">
          <p><h6>{{contact['contact_label']}} :{{contact['contact_no']}}</h6></p>
       </div>  
       <div class="col-sm-6">
-         <button class="bi bi-telephone btn btn-secondary" href="tel:+101"> call {{contact['contact_no']}}</button>
+         <button class="bi bi-telephone btn btn-primary" href="tel:+101"> call</button>
       </div>
     </div>
     {% else %}
     <div>
-    <hr>
+    
     <div class="col">
       <div class="card-herader bg-transparent">
         <span class="h5">Emergency Helpline Numbers</span>
@@ -38,7 +39,7 @@
              <p><h6>Emergency Number:  112</h6></p>
           </div>  
           <div class="col-sm-6">
-             <button class="bi bi-telephone btn btn-primary" href="tel:+122"> call 112</button>
+             <button class="bi bi-telephone btn btn-primary" href="tel:+112"> call 112</button>
           </div>
         </div>
         <div class="row">
