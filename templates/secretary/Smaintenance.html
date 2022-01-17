@@ -1,0 +1,165 @@
+{% extends 'secretary/slayout.html' %}
+
+{% block title %}R-Portal - Secretary Maintenance{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-3">
+    <div class="row row-cols-auto">
+        <a class="col" href='javascript:self.history.back();'>
+            <i class="bi bi-arrow-left" style="font-size: x-large;"></i>
+        </a>
+        <h2 class="col">Maintenance</h2>
+    </div>
+    {% if (account[0]|length)==0 %}
+    <div>
+        <h5>Maintenance Rules:</h5>
+        <h6>{{ msg }}</h6>
+        <div>
+            <p>Note: You can accept the Maintenance <b>yearly</b> only.<br>So please enter the maintainance calculated for the rest of year.</p>
+            <form action="/rportal/maintenance_add" method="post">
+                <label>Enter society bank account balance:</label>
+                <input type="number" step="0.01" name="balance" placeholder="Balance" required><br>
+                <label>Enter society yearly maintenance amount:</label>
+                <input type="number" name="amount" placeholder="Amount" required><br>
+                <input type="submit" value="Submit"></input>
+            </form>
+        </div>
+    </div>
+    {% else %}
+    <div>
+        <h5>Maintenance Rules:</h5>
+        <button class="btn btn-primary" onclick="openModal()" >Update Maintainance</button>  <br>
+        <h6>{{ msg }}</h6>
+        Society account balence: {{ account3['soc_bal'] }}  
+        <br><br>
+        {% for data in account %}
+            <p>
+                Yearly maintenance amount: {{ data['amount'] }}
+                <br>
+                Last date to pay maintenance: {{ data['due_date'] }}
+                <br>
+            </p>   
+        {% endfor %} 
+        <dialog id="dialog">
+            <button alignment="right" onclick="closeModal()"  class="btn-close" aria-label="Close" ></button>
+            <div>
+                <p>Note: Updating maintenance will add maintenance as new maintenance.<br>It is reccomended to update maintenance only after a year.</p>
+                <form action="/rportal/maintenance_add" method="post">
+                    <label>Enter society bank account balance:</label>
+                    <input type="number" step="0.01" name="balance" placeholder="Balance" required><br>
+                    <label>Enter society yearly maintenance amount:</label>
+                    <input type="number" name="amount" placeholder="Amount" required><br>
+                    <input type="submit" value="Submit"></input>
+                </form>
+            </div>
+        </dialog>
+        <ul class="nav nav-tabs justify-content-lg-evenly mt-3" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button"
+                    role="tab" aria-controls="profile" aria-selected="true"> <i class="bi bi-check2-all"></i>
+                    Payment pending</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button"
+                    role="tab" aria-controls="home" aria-selected="false"><i class="bi bi-exclamation-diamond"></i>
+                    Paid History</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div class="accordion accordion-flush my-3" id="accordionFlush{{data1}}">
+                    {% if (account1[0]|length)==0 %}
+                    <div class="container">
+                        <p class="h3 m-5 text-muted text-center">No one paid maintenance yet<p>
+                    </div>
+                    {% else %}
+                    {% for data1 in range(account1|length) %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-heading{{data1}}">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#flush-collapse{{data1}}" aria-expanded="false"
+                                aria-controls="flush-collapse{{data1}}">
+                                <strong>{{account1[data1]['Mname']}}</strong>
+                                <span class="badge rounded-pill bg-success mx-2" style="font-size: x-small;">paid</span>
+                            </button>
+                        </h2>
+                        <div id="flush-collapse{{data1}}" class="accordion-collapse collapse"
+                            aria-labelledby="flush-heading{{data1}}" data-bs-parent="#accordionFlush{{data1}}">
+                            <div class="accordion-body ">
+                                <label style="font-weight:600;">Name:</label>
+                                <span class="mx-1">{{ account1[data1]['Mname']}}</span><br>
+                                <label style="font-weight:600;">Added on:</label>
+                                <span class="mx-1">{{ account1[data1]['bill_date']}}</span><br>
+                                <label style="font-weight:600;">Amount:</label>
+                                <span class="mx-1">{{ account1[data1]['amount']}}</span><br>
+                                <label style="font-weight:600;">Paid on:</label>
+                                <span class="mx-1">{{ account1[data1]['paid_date']}}</span><br>
+                                <label style="font-weight:600;">Due Date:</label>
+                                <span class="mx-1  text-break">{{ account1[data1]['due_date']}}</span><br>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <div class="accordion accordion-flush my-3" id="accordionFlush{{data2}}">
+                    {% if (account2[0]|length)==0 %}
+                    <div class="container">
+                        <p class="h3 m-5 text-muted text-center">No data found</p>
+                    </div>
+                    {% else %}
+                    {% for data2 in range(account2|length) %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-heading{{data2}}">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#flush-collapse{{data2}}" aria-expanded="false"
+                                aria-controls="flush-collapse{{data2}}">
+                                <strong>{{account2[data2]['Mname']}}</strong>
+                                <span class="badge rounded-pill bg-warning mx-2" style="font-size: x-small;">unpaid</span>
+                            </button>
+                        </h2>
+                        <div id="flush-collapse{{data2}}" class="accordion-collapse collapse"
+                            aria-labelledby="flush-heading{{data2}}" data-bs-parent="#accordionFlush{{data2}}">
+                            <div class="accordion-body ">
+                                <label style="font-weight:600;">Name:</label>
+                                <span class="mx-1">{{ account2[data2]['Mname']}}</span><br>
+                                <label style="font-weight:600;">Added on:</label>
+                                <span class="mx-1">{{ account2[data2]['bill_date']}}</span><br>
+                                <label style="font-weight:600;">Amount:</label>
+                                <span class="mx-1">{{ account2[data2]['amount']}}</span><br>
+                                <label style="font-weight:600;">Due Date:</label>
+                                <span class="mx-1  text-break">{{ account2[data2]['due_date']}}</span><br>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    #dialog{width:300px;}
+    .right{float:right}
+</style>
+
+<script>
+    var dailog = document.getElementById("dialog"); 
+
+    function openModal() 
+    {  
+        dailog.showModal();
+    } 
+
+    function closeModal() 
+    { 
+        dailog.close(); 
+    } 
+</script>
+{% endblock %}
