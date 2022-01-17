@@ -47,22 +47,23 @@
        </div>    
     </div>
     <div>
+      <hr>
         {% if account !=0 %}
         {% for contact in account %}
-        <hr>
+        
         <div class="row">
           <div class="col-sm-3">
              <p><h6>{{contact['contact_label']}} :{{contact['contact_no']}}</h6></p>
           </div>  
           <div class="col-sm-4">
-             <button class="bi bi-telephone btn btn-secondary" href="{{contact['contact_no']}}"> call {{contact['contact_no']}}</button>&nbsp;&nbsp;
+             <button class="bi bi-telephone btn btn-primary" href="{{contact['contact_no']}}"> call </button>&nbsp;&nbsp;
              <a href="/rportal/d_contact/{{contact['contact_id']}}"  aria-hidden="true"  style="border: none;outline: none;background: none;" onclick="return confirm('Are you sure you want to delete this contact?');">
                 <button class="bi bi-trash btn btn-danger"> delete</button> </a>   
           </div>
         </div>
         {% else %}
         <div>
-        <hr>
+        
         <div class="col">
           <div class="card-herader bg-transparent">
             <span class="h5">Emergency Helpline Numbers</span>
