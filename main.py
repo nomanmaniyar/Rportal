@@ -1831,7 +1831,7 @@ def maintenance_pay():
             main_id = request.form['id']
             soc_bal = request.form['soc_bal']
             amount = request.form['amount']
-            new_bal = soc_bal + amount
+            new_bal = float(soc_bal )+ float( amount)
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('UPDATE society SET soc_bal = %s  WHERE  code = %s', (new_bal, session['Mcode'],))
             mysql.connection.commit()
@@ -1867,7 +1867,7 @@ def Mmaintenance():
         cursor3.execute('SELECT soc_bal FROM society WHERE code = %s',(session['Mcode'],))
         account3 = cursor3.fetchone()
 
-        return render_template('member/Mmaintenance.html', account=account,account1=account1,account2=account2, soc_bal=account3)
+        return render_template('member/Mmaintenance.html', account=account,account1=account1,account2=account2, account3 =account3)
     elif session.get('member') is None:
         return login()
     else:
@@ -1890,7 +1890,7 @@ def Mmaintenance1(msg):
         cursor3.execute('SELECT soc_bal FROM society WHERE code = %s',(session['Mcode'],))
         account3 = cursor3.fetchall()
 
-        return render_template('member/Mmaintenance.html', msg=msg, account=account,account1=account1,account2=account2, soc_bal=account3)
+        return render_template('member/Mmaintenance.html', msg=msg, account=account,account1=account1,account2=account2, account3 =account3)
     elif session.get('member') is None:
         return login()
     else:
