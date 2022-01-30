@@ -1,568 +1,359 @@
 {% extends 'secretary/slayout.html' %}
-
 {% block title %}rportal - Society Member Details{% endblock %}
-
 {% block content %}
-<link rel="stylesheet" href="/static/styles.css">
-<!----<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">-->
-  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-  <script src="static/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous" />
-<div class="container mt-3 mb-4">
-<div class="col-lg-9 mt-4 mt-lg-0">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="user-dashboard-info-box table-responsive mb-0 bg-white p-4 shadow-sm">
-          <table class="table manage-candidates-top mb-0">
-            <thead>
-              <tr>
-                <th>Secretary</th>
-                </tr>
-            </thead>
-            <tbody>
-              <tr class="candidates-list">
-                <td class="title">
-                  <div class="thumb">
-                    <i class="fas fa-user-circle fa-2x" style="color:#3a8bf5"></i>
+<div class="container mt-5 pt-3">
+  <div class="row row-cols-auto">
+    <a class="col" href='javascript:self.history.back();'>
+      <i class="bi bi-arrow-left" style="font-size: x-large;"></i>
+    </a>
+    <h2 class="col">Active Peoples</h2>
+  </div>
+  <hr>
+  <div class="container">
+    <div class="d-flex bd-highlight mb-3">
+      <ul class="nav nav-pills" id="pills-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="pills-sec-tab" data-bs-toggle="pill" data-bs-target="#pills-sec"
+            type="button" role="tab" aria-controls="pills-sec" aria-selected="true">Secretary</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="pills-member-tab" data-bs-toggle="pill" data-bs-target="#pills-member"
+            type="button" role="tab" aria-controls="pills-member" aria-selected="true">Member</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="pills-staff-tab" data-bs-toggle="pill" data-bs-target="#pills-staff"
+            type="button" role="tab" aria-controls="pills-staff" aria-selected="false">Staff</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="pills-security-tab" data-bs-toggle="pill" data-bs-target="#pills-security"
+            type="button" role="tab" aria-controls="pills-security" aria-selected="false">Security</button>
+        </li>
+      </ul>
+    </div>
+    <hr>
+    <div class="tab-content" id="pills-tabContent">
+      <div class="tab-pane fade show active" id="pills-sec" role="tabpanel" aria-labelledby="pills-sec-tab">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+          <div class="col">
+            <div class="card ">
+              <div class="card-body">
+                <h5 class="card-title">
+                  <!-- <div class="row">
+                    <div class="col">
+                      <i class="bi bi-person"></i> -->
+                  {{account1['Sname']}}
+                  <!-- </div>
+                  </div> -->
+                </h5>
+                <div class="row">
+                  <div class="col">
+                    <i class="bi bi-building"></i>
+                    <span class="mx-1">
+                      {{ account1['Swing'] }}, {{ account1['Sflatno'] }}
+                    </span>
                   </div>
-                  <div class="candidate-list-details">
-                    <div class="candidate-list-info">
-                      <div class="candidate-list-title">
-                        {% if account1 %}
-                      <h6 class="mb-0" style="color:#3a8bf5;">{{ account1['Sname'] }}</h6>
-                      </div>
-                      <div class="candidate-list-option">
-                        <ul class="list-unstyled">
-                          <li><i class="fas fa-mobile"></i> <b>Contact No.: </b>{{ account1['Smobile'] }}</li>
-                          <li><b> Status:</b> {{ account1['secretarty_status'] }}</li>
-                          {% else %}
-                          <b><h5>No data found.</h5></b>
-                          {% endif %}
-                          
-                        
-                        </ul>
-                      </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <i class="bi bi-telephone"></i>
+                    <span class="mx-1 text-uppercase">
+                      {{ account1['Smobile']}}
+                    </span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <i class="bi bi-toggle-on"></i>
+                    <span class="mx-1 text-uppercase" style="font-weight: 500;">
+                      {{ account1['secretarty_status']}}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade show " id="pills-member" role="tabpanel" aria-labelledby="pills-member-tab">
+        {% if (account|length)==0 %}
+        <div class="container">
+          <p class="h3 m-5 text-muted text-center">no new request</p>
+        </div>
+        {% else %}
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+          {% for data in account %}
+          <div class="col">
+            <div class="card ">
+              <div class="card-body">
+                <h5 class="card-title">
+                  <!-- <div class="row">
+                    <div class="col">
+                      <i class="bi bi-person"></i> -->
+                  {{data['Mname']}}
+                  <!-- </div>
+                  </div> -->
+                </h5>
+                <div class="row">
+                  <div class="col">
+                    <i class="bi bi-building"></i>
+                    <span class="mx-1">
+                      {{ data['Mwing'] }}, {{ data['Mflatno'] }}</span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <i class="bi bi-telephone"></i>
+                    <span class="mx-1 text-uppercase">
+                      {{ data['Mmobile']}}
+                    </span>
+                  </div>
+                </div>
+                <div class="d-flex flex-row">
+                  <div class="col">
+                    <span style="font-weight: 500;">Status</span>
+                  </div>
+                  <div class="col">
+                    <form action="/rportal/i_members/{{data.Mid}}" method="post">
+                      <input type="hidden" name="Mname" value={{ data['Mname'] }}></input>
+                      <input type="hidden" name="Memail" value={{ data['Memail'] }}></input>
+                      <select class="" onchange='if(this.value !=0 ) { this.form.submit(); }'>
+                        <option class="text-uppercase" style="font-weight: 500;" value='0'>{{ data['member_status'] }}
+                        </option>
+                        <option class="text-uppercase" style="font-weight: 500;" value='1'>inactive</option>
+                      </select>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer d-flex flex-row-reverse">
+                <form action="/rportal/d_members/{{data.Mid}}" method="post">
+                  <button aria-hidden="true" class="btn btn-outline-secondary btn-sm mx-1" type="submit">
+                    <i class="bi bi-trash" aria-hidden="true"></i></button>
+                  <input type="hidden" name="Mname" value={{ data['Mname'] }}></input>
+                  <input type="hidden" name="Memail" value={{ data['Memail'] }}></input>
+                </form>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      <div class="tab-pane fade" id="pills-staff" role="tabpanel" aria-labelledby="pills-profile-tab">
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-sm btn-outline-primary float-end mx-1" data-bs-toggle="modal"
+          data-bs-target="#staffModal">
+          <i class="bi bi-person-plus-fill"></i>
+        </button>
+        <!-- Modal -->
+        <div class="modal fade" id="staffModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+          aria-labelledby="staffModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <form action="{{ url_for('staff') }}" method="POST" autocomplete="on">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="staffModalLabel">Staff Registration</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="row mb-2">
+                    <div class="col form-floating mb-3">
+                      <input type="text" class="form-control" id="staff_name" name="staff_name"
+                        placeholder="Staff Name">
+                      <label for="SnameId" class="mx-2">Name</label>
+                    </div>
+                    <div class="col form-floating mb-3">
+                      <input type="text" class="form-control" id="staff_username" placeholder="Enter Username"
+                        name="staff_username">
+                      <label for="staff_username" class="mx-2">Username</label>
                     </div>
                   </div>
-                </td>
-                </tr>                  
-              </tbody>
-    
-              <thead>
-                <tr>
-                  <th>Members</th>
-                  </tr>
-              </thead>
-              
-            <tbody>
-         {% if account %}
-              {% for data in account %}
-              <tr class="candidates-list">
-                <td class="title">
-                  <div class="thumb">
-                    <i class="fas fa-user-circle fa-2x" style="color:#3a8bf5"></i>
+                  <div class="row mb-2">
+                    <div class="col form-floating mb-3">
+                      <input type="tel" maxlength="10" name="staff_mobile" class="form-control " id="staff_mobile"
+                        placeholder="Mobile No">
+                      <label for="staff_mobile" class="mx-2">Mobile No</label>
+                    </div>
+                    <div class="col form-floating mb-3">
+                      <input type="text" class="form-control" name="post" id="post" placeholder="Post">
+                      <label for="post" class="mx-2">Staff Role</label>
+                    </div>
                   </div>
-                  <div class="candidate-list-details">
-                    <div class="candidate-list-info">
-                      <div class="candidate-list-title">
-                       
-                        <h6 class="mb-0" ><b>{{ data['Mname'] }}</b></h6>
-                      </div>
-                      <div class="candidate-list-option">
-                        <ul class="list-unstyled">
-                          <li> <b>Flat No: </b>{{ data['Mwing'] }},{{ data['Mflatno'] }}</li>
-                          <li><i class="fas fa-mobile"></i> <b>Contact No: </b>{{ data['Mmobile'] }}</li>
-                          <li><i class="fas fa-email"></i> <b>Email ID : </b>{{ data['Memail'] }}</li>
-                          <form action="/rportal/i_members/{{data.Mid}}" method="post">
-                        <li><b> Status: </b>
-                          <input type="hidden"  name="Mname" value={{ data['Mname'] }}></input>
-                          <input type="hidden"  name="Memail" value={{ data['Memail'] }}></input>
-                            <select onchange='if(this.value !=0 ) { this.form.submit(); }'>
-                           <option value='0'>{{ data['member_status'] }}</option>
-                           <option value='1'>inactive</option>
-                          </select>
-                        </form> 
-                        <form action="/rportal/d_members/{{data.Mid}}" method="post">
-                       <li> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<button  aria-hidden="true"  style="border: none;outline: none;background: none;" type="submit"><i class="fa fa-trash" aria-hidden="true"  style="color:black"></i></button>
-                        <input type="hidden"  name="Mname" value={{ data['Mname'] }}></input>
-                        <input type="hidden"  name="Memail" value={{ data['Memail'] }}></input>
+                  <div class="col-4 mb-4 form-floating">
+                    <input type="password" class="form-control" name="staff_password" id="staff_password"
+                      placeholder="Password">
+                    <label for="staff_password" class="mx-2">Password</label>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <input type="submit" class="btn btn-primary" value="Register"></input>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        {% if (account3|length)==0 %}
+        <div class="container">
+          <p class="h3 m-5 text-muted text-center">no staff</p>
+        </div>
+        {% else %}
+        <div class="container">
+          <div class="row row-cols-1 mt-1 row-cols-md-3 g-4">
+            {% for data in account3 %}
+            <div class="col">
+              <div class="card ">
+                <div class="card-body">
+                  <h5 class="card-title">
+                    {{data['staff_name']}}
+                  </h5>
+                  <div class="row">
+                    <div class="col">
+                      <i class="bi bi-telephone"></i>
+                      <span class="mx-1 text-uppercase">
+                        {{ data['staff_mobile']}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <i class="bi bi-rainbow"></i>
+                      <span class="mx-1 text-uppercase">
+                        {{ data['post']}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="d-flex flex-row">
+                    <div class="col">
+                      <span style="font-weight: 500;">Status</span>
+                    </div>
+                    <div class="col">
+                      <form action="/rportal/i_staff/{{data.staff_id}}" method="post">
+                        <select class="" onchange='if(this.value !=0 ) { this.form.submit(); }'>
+                          <option class="text-uppercase" style="font-weight: 500;" value='0'>{{ data['staff_status'] }}
+                          </option>
+                          <option class="text-uppercase" style="font-weight: 500;" value='1'>inactive</option>
+                        </select>
                       </form>
-                      </li>
-                        </li>
-                      
-                       {% else %}
-                          <b><h5>No data found.</h5></b>
-                     
-                        </ul>
-                      </div>
                     </div>
                   </div>
-                </td>
-                </tr>
-                {% endfor %}
-                {% endif %}
-                
-              </tbody>
-
-              <thead>
-                <tr>
-                  <th>Security Guards</th>
-                  <th><a class="myBtn" ><i class="fas fa-user-plus"></i></a></th>
-                  </tr>
-              </thead>
-              <!-- The Modal -->
-<div id="myModal" class="modal">
-
-  <!-- Modal content -->
-  <div class="modal-content">
-    <div class="modal-header">
-      <span class="close">×</span>
-      <h2>Security Guards Registeration</h2>
-    </div>
-    <div class="modal-body">
-      
-	<form action="{{ url_for('security') }}"  enctype = "multipart/form-data" method="POST" autocomplete="on">
-		
-		<div class="security">
-
-			<h4><div class="msg">{{ msg }}</div></h4>
-
-			<label for="security_name">
-				<i class="fas fa-heart"></i>
-			</label>
-			<input type="text" name="security_name" placeholder="Enter Name" id="security_name" required>
-			<br><br>
-			
-			<label for="security_username">
-				<i class="fas fa-user"></i>
-			</label>
-			<input type="text" name="security_username" placeholder="Username" id="security_username" required>
-			<br><br>
-				
-			<label for="security_mobile">
-				<i class="fas fa-mobile"></i>
-			</label>
-			<input type="text" name="security_mobile" placeholder="Mobile Number" id="security_mobile" required>
-			<br><br>
-
-			<label for="security_password">
-				<i class="fas fa-lock"></i>
-			</label>
-			<input type="password" name="security_password" placeholder="Password" id="security_password" required>
-			<br><br>
-
-       
-
-			<input class="btn btn-primary" type="submit" value="Register"/>
-			
-
-		</div>
-	</form>
-    </div>
-    <div class="modal-footer">
-      <h3></h3>
-    </div>
-  </div>
-
-</div>
-   
-              
-            <tbody>
-              {% for data1 in account2 %}
-              <tr class="candidates-list">
-                <td class="title">
-                  <div class="thumb">
-                    <i class="fas fa-user-circle fa-2x" style="color:#3a8bf5"></i>
-                  </div>
-                  <div class="candidate-list-details">
-                    <div class="candidate-list-info">
-                      <div class="candidate-list-title">
-                        <h6 class="mb-0" ><b>{{ data1['security_name'] }}</b></h6>
-                      </div>
-                      <div class="candidate-list-option">
-                        <ul class="list-unstyled">
-                          <li><i class="fas fa-mobile"></i> <b>Contact No: </b>{{ data1['security_mobile'] }} </li>
-                          
-                            <form action="/rportal/i_security/{{data1.security_id}}" >
-                            <li> <b> Status: </b>
-                                 <select onchange='if(this.value !=0 ) { this.form.submit(); }'>
-                                <option value='0'>{{ data1['security_status'] }}</option>
-                                <option value='1'>inactive</option>
-                               </select>
-                             </form> 
-                           <li>  &nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;<a href="/rportal/d_security/{{data1.security_id}}"><i class="fa fa-trash" aria-hidden="true" onclick="return confirm('Are You Sure For Delete ?')" style="color:black"></i></a>
-                           </li>
-                          </li>
-                          
-                        </ul>
-                      </div>
+                </div>
+                <div class="card-footer d-flex flex-row-reverse">
+                  <a href="/rportal/d_staff/{{data.staff_id}}" class="btn btn-outline-secondary btn-sm mx-1"
+                    aria-hidden="true" onclick="return confirm('Are You Sure For Delete ?')">
+                    <i class="bi bi-trash" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      <div class="tab-pane fade" id="pills-security" role="tabpanel" aria-labelledby="pills-security-tab">
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-sm btn-outline-primary float-end mx-1" data-bs-toggle="modal"
+          data-bs-target="#securityModal">
+          <i class="bi bi-person-plus-fill"></i>
+        </button>
+        <!-- Modal -->
+        <div class="modal fade" id="securityModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+          aria-labelledby="securityModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <form action="{{ url_for('security') }}" method="POST" autocomplete="on">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="securityModalLabel">Security Gaurd Registration</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="row mb-2">
+                    <div class="col form-floating mb-3">
+                      <input type="text" class="form-control" id="security_name" name="security_name"
+                        placeholder="Gaurd Name">
+                      <label for="security_name" class="mx-2">Name</label>
+                    </div>
+                    <div class="col form-floating mb-3">
+                      <input type="text" class="form-control" id="security_username" placeholder="Enter Username"
+                        name="security_username">
+                      <label for="security_username" class="mx-2">Username</label>
                     </div>
                   </div>
-                </td>
-                </tr>
-         {% endfor %}  
-              </tbody>
-
-              <thead>
-                <tr>
-                  <th>Staff Members</th>
-                  <th><a class="myBtn"><i class="fas fa-user-plus"></i></a></th>
-                  </tr>
-              </thead>
-              <!-- The Modal -->
-<div id="myModal2" class="modal">
-
-  <!-- Modal content -->
-  <div class="modal2-content">
-    <div class="modal-header">
-      <span class="close">×</span>
-      <h2>Staff Registeration</h2>
-    </div>
-    <div class="modal-body">
-     
-    	<form action="{{ url_for('staff') }}"  enctype = "multipart/form-data" method="POST" autocomplete="on">
-		
-		<div class="staff">
-
-			<h4><div class="msg">{{ msg }}</div></h4>
-
-			<label for="staff_name">
-				<i class="fas fa-heart"></i>
-			</label>
-			<input type="text" name="staff_name" placeholder="Enter Name" id="staff_name" required>
-			<br><br>
-			
-			<label for="staff_username">
-				<i class="fas fa-user"></i>
-			</label>
-			<input type="text" name="staff_username" placeholder="Username" id="staff_username" required>
-			<br><br>
-      <label for="staff_post">
-				<i class="fas fa-user"></i>
-			</label>
-			<input type="text" name="post" placeholder="Post" id="post" required>
-			<br><br>
-			<label for="staff_mobile">
-				<i class="fas fa-mobile"></i>
-			</label>
-			<input type="text" name="staff_mobile" placeholder="Mobile Number" id="staff_mobile" required>
-			<br><br>
-
-			<label for="staff_password">
-				<i class="fas fa-lock"></i>
-			</label>
-			<input type="password" name="staff_password" placeholder="Password" id="staff_password" required>
-			<br><br>
-
-           
-			<input clas="btn btn-primary" type="submit" value="Register"/>
-			
-		</div>
-	</form>
-    </div>
-    <div class="modal-footer">
-      <h3></h3>
-    </div>
-  </div>
-
-</div>
-
-            <tbody>
-              {% for data2 in account3 %}
-              <tr class="candidates-list">
-                <td class="title">
-                  <div class="thumb">
-                    <i class="fas fa-user-circle fa-2x" style="color:#3a8bf5"></i>
-                  </div>
-                  <div class="candidate-list-details">
-                    <div class="candidate-list-info">
-                      <div class="candidate-list-title">
-                        <h6 class="mb-0" ><b>{{ data2['staff_name'] }}</b></h6>
-                      </div>
-                      <div class="candidate-list-option">
-                        <ul class="list-unstyled">
-                          <li><i class="fas fa-mobile"></i><b>Contact No:</b> {{ data2['staff_mobile'] }}</li>
-                          <form action="/rportal/i_staff/{{data2.staff_id}}" >
-                            <li> <b> Status: </b>
-                                 <select onchange='if(this.value !=0 ) { this.form.submit(); }'>
-                                <option value='0'>{{ data2['staff_status'] }}</option>
-                                <option value='1'>inactive</option>
-                               </select>
-                             </form> 
-                           <li>  &nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;<a href="/rportal/d_staff/{{data2.staff_id}}"><i class="fa fa-trash" aria-hidden="true" onclick="return confirm('Are You Sure For Delete ?')" style="color:black"></i></a>
-                           </li>
-                          </li>
-                      </div>
+                  <div class="row mb-2">
+                    <div class="col form-floating mb-3">
+                      <input type="tel" maxlength="10" name="security_mobile" class="form-control " id="security_mobile"
+                        placeholder="Mobile No">
+                      <label for="security_mobile" class="mx-2">Mobile No</label>
+                    </div>
+                    <div class="col form-floating mb-3">
+                      <input type="password" class="form-control" name="security_password" id="security_password"
+                        placeholder="Password">
+                      <label for="security_password" class="mx-2">Password</label>
                     </div>
                   </div>
-                </td>
-                </tr>
-         {% endfor %}
-              </tbody>
 
-          </table>
-         </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <input type="submit" class="btn btn-primary" value="Register"></input>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        {% if (account2|length)==0 %}
+        <div class="container">
+          <p class="h3 m-5 text-muted text-center">no Security Gaurds</p>
+        </div>
+        {% else %}
+        <div class="container">
+          <div class="row row-cols-1 mt-1 row-cols-md-3 g-4">
+            {% for data in account2 %}
+            <div class="col">
+              <div class="card ">
+                <div class="card-body">
+                  <h5 class="card-title">
+                    {{data['security_name']}}
+                  </h5>
+                  <div class="row">
+                    <div class="col">
+                      <i class="bi bi-telephone"></i>
+                      <span class="mx-1 text-uppercase">
+                        {{ data['security_mobile']}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="d-flex flex-row">
+                    <div class="col">
+                      <span style="font-weight: 500;">Status</span>
+                    </div>
+                    <div class="col">
+                      <form action="/rportal/i_security/{{data.security_id}}" method="post">
+                        <select class="" onchange='if(this.value !=0 ) { this.form.submit(); }'>
+                          <option class="text-uppercase" style="font-weight: 500;" value='0'>{{ data['security_status']
+                            }}
+                          </option>
+                          <option class="text-uppercase" style="font-weight: 500;" value='1'>inactive</option>
+                        </select>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer d-flex flex-row-reverse">
+                  <a href="/rportal/d_security/{{data.security_id}}" class="btn btn-outline-secondary btn-sm mx-1"
+                    aria-hidden="true" onclick="return confirm('Are You Sure For Delete ?')">
+                    <i class="bi bi-trash" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
       </div>
     </div>
   </div>
 </div>
-
-<style >
- /* Modal Header */
- .modal-header {
-  padding: 2px 16px;
-  background-color: #5cb85c;
-  color: white;
-  text-align: center;
-}
-
-/* Modal Body */
-.modal-body {padding: 2px 16px;}
-
-/* Modal Footer */
-.modal-footer {
-  padding: 2px 16px;
-  background-color: #5cb85c;
-  color: white;
-}
-
-/* Modal Content */
-.modal-content {
-  position: relative;
-  background-color: #fefefe;
-  margin: auto;
-  padding: 0;
-  border: 1px solid rgb(247, 247, 247);
-  width: 80%;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
-  animation-name: animatetop;
-  animation-duration: 0.4s
-}
-
-/* Add Animation */
-@keyframes animatetop {
-  from {top: -300px; opacity: 0}
-  to {top: 0; opacity: 1}
-} 
-
-body{
-    background-color: #f8f9fa!important
-}
-.p-4 {
-    padding: 1.5rem!important;
-}
-.mb-0, .my-0 {
-    margin-bottom: 0!important;
-}
-.shadow-sm {
-    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
-}    
-
-/* user-dashboard-info-box */
-.user-dashboard-info-box .candidates-list .thumb {
-    margin-right: 20px;
-}
-.user-dashboard-info-box .candidates-list .thumb img {
-    width: 80px;
-    height: 80px;
-    -o-object-fit: cover;
-    object-fit: cover;
-    overflow: hidden;
-    border-radius: 50%;
-}
-
-.user-dashboard-info-box .title {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    padding: 30px 0;
-}
-
-.user-dashboard-info-box .candidates-list td {
-    vertical-align: middle;
-}
-
-.user-dashboard-info-box td li {
-    margin: 0 4px;
-}
-
-.user-dashboard-info-box .table thead th {
-    border-bottom: none;
-}
-
-.table.manage-candidates-top th {
-    border: 0;
-}
-
-.user-dashboard-info-box .candidate-list-favourite-time .candidate-list-favourite {
-    margin-bottom: 10px;
-}
-
-.table.manage-candidates-top {
-    min-width: 650px;
-}
-
-.user-dashboard-info-box .candidate-list-details ul {
-    color: #969696;
-}
-
-/* Candidate List */
-.candidate-list {
-    background: #ffffff;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    border-bottom: 1px solid #eeeeee;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    padding: 20px;
-    -webkit-transition: all 0.3s ease-in-out;
-    transition: all 0.3s ease-in-out;
-}
-.candidate-list:hover {
-    -webkit-box-shadow: 0px 0px 34px 4px rgba(33, 37, 41, 0.06);
-    box-shadow: 0px 0px 34px 4px rgba(33, 37, 41, 0.06);
-    position: relative;
-    z-index: 99;
-}
-.candidate-list:hover a.candidate-list-favourite {
-    color: #e74c3c;
-    -webkit-box-shadow: -1px 4px 10px 1px rgba(24, 111, 201, 0.1);
-    box-shadow: -1px 4px 10px 1px rgba(24, 111, 201, 0.1);
-}
-
-.candidate-list .candidate-list-image {
-    margin-right: 25px;
-    -webkit-box-flex: 0;
-    -ms-flex: 0 0 80px;
-    flex: 0 0 80px;
-    border: none;
-}
-.candidate-list .candidate-list-image img {
-    width: 80px;
-    height: 80px;
-    -o-object-fit: cover;
-    object-fit: cover;
-}
-
-.candidate-list-title {
-    margin-bottom: 5px;
-}
-
-.candidate-list-details ul {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    margin-bottom: 0px;
-}
-.candidate-list-details ul li {
-    margin: 5px 10px 5px 0px;
-    font-size: 13px;
-}
-
-.candidate-list .candidate-list-favourite-time {
-    margin-left: auto;
-    text-align: center;
-    font-size: 13px;
-    -webkit-box-flex: 0;
-    -ms-flex: 0 0 90px;
-    flex: 0 0 90px;
-}
-.candidate-list .candidate-list-favourite-time span {
-    display: block;
-    margin: 0 auto;
-}
-.candidate-list .candidate-list-favourite-time .candidate-list-favourite {
-    display: inline-block;
-    position: relative;
-    height: 40px;
-    width: 40px;
-    line-height: 40px;
-    border: 1px solid #eeeeee;
-    border-radius: 100%;
-    text-align: center;
-    -webkit-transition: all 0.3s ease-in-out;
-    transition: all 0.3s ease-in-out;
-    margin-bottom: 20px;
-    font-size: 16px;
-    color: #646f79;
-}
-.candidate-list .candidate-list-favourite-time .candidate-list-favourite:hover {
-    background: #ffffff;
-    color: #e74c3c;
-}
-
-.candidate-banner .candidate-list:hover {
-    position: inherit;
-    -webkit-box-shadow: inherit;
-    box-shadow: inherit;
-    z-index: inherit;
-}
-
-.bg-white {
-    background-color: #ffffff !important;
-}
-.p-4 {
-    padding: 1.5rem!important;
-}
-.mb-0, .my-0 {
-    margin-bottom: 0!important;
-}
-.shadow-sm {
-    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
-}
-
-.user-dashboard-info-box .candidates-list .thumb {
-    margin-right: 20px;
-}
-
-
-
-</style>
-
-<script type="text/javascript">
-// Get the modal
-var modal = document.getElementsByClassName('modal');
-
-// Get the button that opens the modal
-var btn = document.getElementsByClassName("myBtn");
-
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close");
-
-// When the user clicks the button, open the modal 
-btn[0].onclick = function() {
-    modal[0].style.display = "block";
-}
-
-btn[1].onclick = function() {
-    modal[1].style.display = "block";
-}
-// When the user clicks on <span> (x), close the modal
-span[0].onclick = function() {
-    modal[0].style.display = "none";
-}
-
-span[1].onclick = function() {
-    modal[1].style.display = "none";
-}
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-    if (event.target == modal[0]) {
-         modal[0].style.display = "none";
-     }
-    if (event.target == modal[1]) {
-         modal[1].style.display = "none";
-     }  
-}
-
-</script>
-
 {% endblock %}

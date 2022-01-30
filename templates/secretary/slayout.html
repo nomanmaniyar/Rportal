@@ -36,15 +36,24 @@
 
 
 <body>
-    <header class="navbar fixed-top bg-light flex-md-nowrap p-0 shadow">
-        <a href="#" class="navbar-brand col-md-3 col-lg-2 me-0 mx-3 " id="title">RPortal</a>
-        <!-- <h1><a class="navbar-brand px-3" href="#">RPortal</a></h1> -->
-        <button class="navbar-toggler d-md-none " type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu"
-            aria-controls="sidebarMenu" aria-expanded="true" aria-label="Toggle navigation">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow">
+
+        <a href="#" class="navbar-brand mx-5 " id="title">rportal</a>
+        <button class="navbar-toggler d-md-none mx-5 " type="button" data-bs-toggle="collapse"
+            data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="true"
+            aria-label="Toggle navigation">
             <i class="bi bi-list"></i>
         </button>
 
-    </header>
+    </nav>
+    <!-- <header class="navbar fixed-top bg-light flex-md-nowrap p-0 shadow">
+        <a href="#" class="navbar-brand col-md-3 col-lg-2 me-0 mx-3 " id="title">RPortal</a>
+         <h1><a class="navbar-brand px-3" href="#">RPortal</a></h1>
+    <button class="navbar-toggler d-md-none " type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu"
+        aria-controls="sidebarMenu" aria-expanded="true" aria-label="Toggle navigation">
+        <i class="bi bi-list"></i>
+    </button>
+    </header> -->
     <div class="container-fluid">
         <div class="row">
             <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse mx-1">
@@ -177,7 +186,7 @@
  */
 
     .sidebar {
-        overflow-y: scroll;
+        overflow-y: auto;
         position: fixed;
         top: 0;
         /* rtl:raw:
