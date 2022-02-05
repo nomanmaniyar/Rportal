@@ -1,86 +1,195 @@
 {% extends 'secretary/slayout.html' %}
-
 {% block title %}rportal - Create Meeting{% endblock %}
-
 {% block content %}
-<br>
-<h3>Create Scheduled Meeting</h3>
+<div class="container mt-5 pt-3">
+    <div class="d-flex">
+        <a class="bd-highlight" href='javascript:self.history.back();'>
+            <i class="bi bi-arrow-left" style="font-size: x-large;"></i>
+        </a>
+        <div class="mx-3 h2">Meetings</div>
+        <button type="button" class="btn btn-primary btn-sm ms-auto mx-4" data-bs-toggle="modal"
+            data-bs-target="#changeSecId">Schedule Meeting</button>
+        <div class="modal fade" id="changeSecId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="changeSecIdLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="changeSecIdLabel">Schedule New Meeting</h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{ url_for('createmeeting') }}" method="post" autocomplete="on">
+                        <div class="modal-body ">
+                            <div class="col mb-4">
+                                <label class="h5">Meeting Title</label>
+                                <input type="text" class="form-control form-control-lg" id="topic" name="topic"
+                                    placeholder="Meeting Title">
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col mb-3">
+                                    <label class="mx-2 h5">Date</label>
+                                    <input type="date" class="form-control form-control-lg" id="date" name="date"
+                                        value="">
+                                </div>
+                                <div class="col mb-3">
+                                    <label class="mx-2 h5">Time</label>
+                                    <input type="time" class="form-control form-control-lg" id="start_time"
+                                        name="start_time">
+                                </div>
+                            </div>
 
-<form action="{{ url_for('createmeeting') }}" method="post" autocomplete="on">
-		
-    <div class="member_complaint">
-
-        <h3>Add Meeting Details Below: </h3>
-        <h4><div class="msg">{{ msg2 }}</div></h4><br>
-        <h4><div class="msg"><a href= '{{ msg }}'>{{msg}}</a><br>
-        <h4><div class="msg">{{ msg1 }}</div></h4><br>
-
-        <label for="topic">
-   
-        </label>
-        <input type="text" name="topic" placeholder="Topic of the Meeting" id="topic" required>
-        <br><br>
-        <label for="complaint_message">
-          
-        </label>
-        <input type="date" name="date" placeholder="Enter Date" id="date" required>
-    
-        <label for="complaint_message">
-          
-        </label>
-        <input type="time" name="start_time" placeholder="Enter Start Time" id="start_time"  required>
-        <br><br>
-
-        <label for="complaint_subject">
-           
-        </label>
-        <input type="text" name="duration" placeholder="Meeting Duration" id="duration" required>
-        <br><br>
-        
-        <label for="complaint_message">
-          
-        </label>
-        <textarea  type="text" name="agenda" placeholder="Enter Agenda of the meeting" id="agenda" required></textarea>
-        <br><br>
-
-        <button type="submit" class="btn btn-primary" value="add">Create Meeting</button>
-    
+                            <div class="col-5 mb-3">
+                                <label class="mx-2 h5">Meeting Duration</label>
+                                <input type="text" class="form-control form-control-lg" id="duration"
+                                    placeholder="Meeting Duration" name="duration">
+                            </div>
+                            <div class="col mb-4">
+                                <label class="mx-2 h5">Meeting Agenda</label>
+                                <textarea class="form-control" placeholder="Enter Agenda of the meeting" name="agenda"
+                                    id="agenda" style="height: 100px"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button class="btn btn-primary" type="submit" value="add" id="changeNS">Create
+                                Meeting</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
+    <div class="container">
+        <hr>
+        {% if (account|length)==0 %}
+        <div class="container">
+            <p class="h3 m-5 text-muted text-center">no files to download</p>
+        </div>
+        {% else %}
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            {% for data in account %}
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                        <h3 class="card-title text-uppercase">{{data['topic']}}</h3>
+                        
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <span style="font-weight: 500;">
+                                Start
+                            </span>
+                            <span>
+                                {{data['date']}}, {{data['start_time']}}
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span style="font-weight: 500;">
+                                Duration
+                            </span>
+                            <span>
+                                {{data['duration']}} min
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span style="font-weight: 500;">
+                                Zoom Meeting
+                            </span>
+                            <a href="{{data['url']}}" class="text-wrap" style="text-decoration: none;">
+                                <span>Join</span>
+                                <i class="bi bi-camera-video-fill"></i>
+                            </a>
+                        </div>
+                        <span style="font-weight: 500;">
+                            Agenda
+                        </span>
+                        <br>
+                        <p class="text-wrap">
+                            {{data['agenda']}}
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+<!-- <br>
+<h3>Create Scheduled Meeting</h3> -->
+<!-- <form action="{{ url_for('createmeeting') }}" method="post" autocomplete="on">
+    <div class="member_complaint">
+        <h3>Add Meeting Details Below: </h3>
+        <h4>
+            <div class="msg">{{ msg2 }}</div>
+        </h4><br>
+        <h4>
+            <div class="msg"><a href='{{ msg }}'>{{msg}}</a><br>
+                <h4>
+                    <div class="msg">{{ msg1 }}</div>
+                </h4><br>
+                <label for="topic">
+                </label>
+                <input type="text" name="topic" placeholder="Topic of the Meeting" id="topic" required>
+                <br><br>
+                <label for="complaint_message">
+
+                </label>
+                <input type="date" name="date" placeholder="Enter Date" id="date" required>
+
+                <label for="complaint_message">
+
+                </label>
+                <input type="time" name="start_time" placeholder="Enter Start Time" id="start_time" required>
+                <br><br>
+
+                <label for="complaint_subject">
+
+                </label>
+                <input type="text" name="duration" placeholder="Meeting Duration" id="duration" required>
+                <br><br>
+
+                <label for="complaint_message">
+
+                </label>
+                <textarea type="text" name="agenda" placeholder="Enter Agenda of the meeting" id="agenda"
+                    required></textarea>
+                <br><br>
+
+                <button type="submit" class="btn btn-primary" value="add">Create Meeting</button>
+
+            </div>
+    </div>
 </form> <br>
-<br>
-
-<div>
+<br> -->
+<!-- <div>
     <h3>Meetings</h3><br>
-{% if account !=0 %}
-{% for data  in account %}
-<table  class="table" style="width:100%">
-  <td>
-      
-     <h2>{{data['topic']}}</h2><br>
-     <label>Meeting Date:</label><h3>{{data['date']}}</h3>
-     <label>Meeting Start Time:</label> <h3>{{data['start_time']}}</h3>
-     <label>Meeting Duration :</label><h3>{{data['duration']}}</h3><br>
-     <label> Agenda :</label>
-    <h4>{{data['agenda']}}</h4><br>
-     <a  href="{{data['url']}}" >{{data['url']}}</a><br>
-  </td>
-</table>
-<br><br>
-{% else %}
+    {% if account !=0 %}
+    {% for data in account %}
+    <table class="table" style="width:100%">
+        <td>
 
-
-<b><h4>No Meetings Found.</h4> </b><br>
-{% endfor %} 
-{% endif %} 
-<a href='javascript:self.history.back();'>Go Back</a>
+            <h2>{{data['topic']}}</h2><br>
+            <label>Meeting Date:</label>
+            <h3>{{data['date']}}</h3>
+            <label>Meeting Start Time:</label>
+            <h3>{{data['start_time']}}</h3>
+            <label>Meeting Duration :</label>
+            <h3> {{data['duration']}}</h3><br>
+            <label> Agenda :</label>
+            <h4>{{data['agenda']}}</h4><br>
+            <a href="{{data['url']}}">{{data['url']}}</a><br>
+        </td>
+    </table>
+    <br><br>
+    {% else %}
+    <b>
+        <h4>No Meetings Found.</h4>
+    </b><br>
+    {% endfor %}
+    {% endif %}
+    <a href='javascript:self.history.back();'>Go Back</a>
+</div> -->
 </div>
-
-</div>
-
-
-
-
-
-
 {% endblock %}

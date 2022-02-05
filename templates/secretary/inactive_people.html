@@ -1,354 +1,212 @@
 {% extends 'secretary/slayout.html' %}
-
 {% block title %}rportal - Society Member Details{% endblock %}
-
 {% block content %}
-<link rel="stylesheet" href="/static/styles.css">
-<!----<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">-->
-  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-  <script src="static/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous" />
-<div class="container mt-3 mb-4">
-<div class="col-lg-9 mt-4 mt-lg-0">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="user-dashboard-info-box table-responsive mb-0 bg-white p-4 shadow-sm">
-          <table class="table manage-candidates-top mb-0">
-           
-    
-              <thead>
-                <tr>
-                  <th>Members</th>
-                  </tr>
-              </thead>
-              
-            <tbody>
-             
-              {% for data in account %}
-             
-              <tr class="candidates-list">
-                <td class="title">
-                  <div class="thumb">
-                    <i class="fas fa-user-circle fa-2x" style="color:#3a8bf5"></i>
+<div class="container mt-5 pt-3">
+  <div class="row row-cols-auto">
+    <a class="col" href='javascript:self.history.back();'>
+      <i class="bi bi-arrow-left" style="font-size: x-large;"></i>
+    </a>
+    <h2 class="col">InActive Peoples</h2>
+  </div>
+  <hr>
+  <div class="container">
+    <div class="d-flex bd-highlight mb-3">
+      <ul class="nav nav-pills" id="pills-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="pills-member-tab" data-bs-toggle="pill" data-bs-target="#pills-member"
+            type="button" role="tab" aria-controls="pills-member" aria-selected="true">Member</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="pills-staff-tab" data-bs-toggle="pill" data-bs-target="#pills-staff"
+            type="button" role="tab" aria-controls="pills-staff" aria-selected="false">Staff</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="pills-security-tab" data-bs-toggle="pill" data-bs-target="#pills-security"
+            type="button" role="tab" aria-controls="pills-security" aria-selected="false">Security</button>
+        </li>
+      </ul>
+    </div>
+    <hr>
+    <div class="tab-content" id="pills-tabContent">
+      <div class="tab-pane fade show active" id="pills-member" role="tabpanel" aria-labelledby="pills-member-tab">
+        {% if (account|length)==0 %}
+        <div class="container">
+          <p class="h3 m-5 text-muted text-center">no inactive member</p>
+        </div>
+        {% else %}
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+          {% for data in account %}
+          <div class="col">
+            <div class="card ">
+              <div class="card-body">
+                <h5 class="card-title">
+                  <!-- <div class="row">
+                    <div class="col">
+                      <i class="bi bi-person"></i> -->
+                  {{data['Mname']}}
+                  <!-- </div>
+                  </div> -->
+                </h5>
+                <div class="row">
+                  <div class="col">
+                    <i class="bi bi-building"></i>
+                    <span class="mx-1">
+                      {{ data['Mwing'] }}, {{ data['Mflatno'] }}</span>
                   </div>
-                  <div class="candidate-list-details">
-                    <div class="candidate-list-info">
-                      <div class="candidate-list-title">
-                   
-                        <h6 class="mb-0" ><b>{{ data['Mname'] }}</b></h6>
-                      </div>
-                      <div class="candidate-list-option">
-                        <ul class="list-unstyled">
-                          <li> <b>Flat No: </b>{{ data['Mwing'] }},{{ data['Mflatno'] }}</li>
-                          <li><i class="fas fa-mobile"></i><b>Contact No:</b>{{ data['Mmobile'] }}</li>
-                          <li><i class="fas fa-email"></i><b>Email ID:</b>{{ data['Memail'] }}</li>
-                             <form action="/rportal/ac_members/{{data.Mid}}" method="post">
-                              <input type="hidden"  name="Mname" value={{ data['Mname'] }}></input><input type="hidden"  name="Memail" value={{ data['Memail'] }}></input>
-                           <li>Status: 
-                              <select onchange='if(this.value !=0 ) { this.form.submit(); }'>
-                             <option value='0'>{{ data['member_status'] }}</option>
-                             <option value='1'>active</option>
-                            </select>
-                          </form>
-                          <form action="/rportal/d_members/{{data.Mid}}" method="post">
-                            <li><button type="submit"   style="border: none;outline: none;background: none;"> <i class="fa fa-trash" aria-hidden="true"  style="color:black"></i></button>
-                             <input type="hidden"  name="Mname" value={{ data['Mname'] }}></input>
-                             <input type="hidden"  name="Memail" value={{ data['Memail'] }}></input>
-                           </form>
-                         </li>
-                          </li>
-                          </ul>
-                      </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <i class="bi bi-telephone"></i>
+                    <span class="mx-1 text-uppercase">
+                      {{ data['Mmobile']}}
+                    </span>
+                  </div>
+                </div>
+                <div class="d-flex flex-row">
+                  <div class="col">
+                    <span style="font-weight: 500;">Status</span>
+                  </div>
+                  <div class="col">
+                    <form action="/rportal/ac_members/{{data.Mid}}" method="post">
+                      <input type="hidden" name="Mname" value={{ data['Mname'] }}></input>
+                      <input type="hidden" name="Memail" value={{ data['Memail'] }}></input>
+                      <select class="" onchange='if(this.value !=0 ) { this.form.submit(); }'>
+                        <option class="text-uppercase" style="font-weight: 500;" value='0'>{{ data['member_status'] }}
+                        </option>
+                        <option class="text-uppercase" style="font-weight: 500;" value='1'>active</option>
+                      </select>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer d-flex flex-row-reverse">
+                <form action="/rportal/d_members/{{data.Mid}}" method="post">
+                  <button aria-hidden="true" class="btn btn-outline-secondary btn-sm mx-1" type="submit">
+                    <i class="bi bi-trash" aria-hidden="true"></i></button>
+                  <input type="hidden" name="Mname" value={{ data['Mname'] }}></input>
+                  <input type="hidden" name="Memail" value={{ data['Memail'] }}></input>
+                </form>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      <div class="tab-pane fade" id="pills-staff" role="tabpanel" aria-labelledby="pills-profile-tab">
+
+        {% if (account3|length)==0 %}
+        <div class="container">
+          <p class="h3 m-5 text-muted text-center">no staff</p>
+        </div>
+        {% else %}
+        <div class="container">
+          <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for data in account3 %}
+            <div class="col">
+              <div class="card ">
+                <div class="card-body">
+                  <h5 class="card-title">
+                    {{data['staff_name']}}
+                  </h5>
+                  <div class="row">
+                    <div class="col">
+                      <i class="bi bi-telephone"></i>
+                      <span class="mx-1 text-uppercase">
+                        {{ data['staff_mobile']}}
+                      </span>
                     </div>
                   </div>
-                 
-                </td>
-                </tr>
-                {% endfor %} 
- 
-              </tbody>
-              
-
-              <thead>
-                <tr>
-                  <th>Security Guards</th>
-                  <th></th>
-                  </tr>
-              </thead>
-    
-              
-            <tbody>
-                
-              {% for data1 in account2 %}
-            
-              <tr class="candidates-list">
-                <td class="title">
-                  <div class="thumb">
-                    <i class="fas fa-user-circle fa-2x" style="color:#3a8bf5"></i>
-                  </div>
-                  <div class="candidate-list-details">
-                    <div class="candidate-list-info">
-                      <div class="candidate-list-title">
-                       
-                        <h6 class="mb-0" ><b>{{ data1['security_name'] }}</b></h6>
-                      </div>
-                      <div class="candidate-list-option">
-                        <ul class="list-unstyled">
-                          <li><i class="fas fa-mobile"></i><b>Contact No:</b>{{ data1['security_mobile'] }}</li>
-                        
-                          <form action="/rportal/a_security/{{data1.security_id}}" >
-                            <li>
-                            <b> Status: </b>
-                               <select onchange='if(this.value !=0 ) { this.form.submit(); }'>
-                              <option value='0'>{{ data1['security_status'] }}</option>
-                              <option value='1'>active</option>
-                             </select>
-                           </form> 
-                         <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/rportal/d_security/{{data1.security_id}}"><i class="fa fa-trash" aria-hidden="true" onclick="return confirm('Are You Sure For Delete ?')" style="color:black"></i></a>
-                         </li>  
-                        </li>  
-                         
-                          
-                        </ul>
-                         </div>
-                        </div>
-                    </div>
-                     </td>
-                         </tr>
-                         {% endfor %}  
-         
-              </tbody>
-
-              <thead>
-                <tr>
-                  <th>Staff Members</th>
-                  <th></th>
-                  </tr>
-              </thead>
-            
-            <tbody>
-              {% for data2 in account3 %}
-              <tr class="candidates-list">
-                <td class="title">
-                  <div class="thumb">
-                    <i class="fas fa-user-circle fa-2x" style="color:#3a8bf5"></i>
-                  </div>
-                  <div class="candidate-list-details">
-                    <div class="candidate-list-info">
-                      <div class="candidate-list-title">
-                        <h6 class="mb-0" ><b>{{ data2['staff_name'] }}</b></h6>
-                      </div>
-                      <div class="candidate-list-option">
-                        <ul class="list-unstyled">
-                          <li><i class="fas fa-mobile"></i><b>Contact No:</b>{{ data2['staff_mobile'] }}</li>
-                          <form action="/rportal/a_staff/{{data2.staff_id}}" >
-                            <li> <b> Status: </b>
-                                 <select onchange='if(this.value !=0 ) { this.form.submit(); }'>
-                                <option value='0'>{{ data2['staff_status'] }}</option>
-                                <option value='1'>active</option>
-                               </select>
-                             </form> 
-                           <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/rportal/din_staff/{{data2.staff_id}}"><i class="fa fa-trash" aria-hidden="true" onclick="return confirm('Are You Sure For Delete ?')" style="color:black"></i></a>
-                           </li>
-                          </li>
-                        </ul>
-                      </div>
+                  <div class="row">
+                    <div class="col">
+                      <i class="bi bi-rainbow"></i>
+                      <span class="mx-1 text-uppercase">
+                        {{ data['post']}}
+                      </span>
                     </div>
                   </div>
-                </td>
-                </tr>
-         {% endfor %}
-              </tbody>
+                  <div class="d-flex flex-row">
+                    <div class="col">
+                      <span style="font-weight: 500;">Status</span>
+                    </div>
+                    <div class="col">
+                      <form action="/rportal/a_staff/{{data2.staff_id}}" method="post">
+                        <select class="" onchange='if(this.value !=0 ) { this.form.submit(); }'>
+                          <option class="text-uppercase" style="font-weight: 500;" value='0'>{{ data['staff_status'] }}
+                          </option>
+                          <option class="text-uppercase" style="font-weight: 500;" value='1'>active</option>
+                        </select>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer d-flex flex-row-reverse">
+                  <a href="/rportal/d_staff/{{data.staff_id}}" class="btn btn-outline-secondary btn-sm mx-1"
+                    aria-hidden="true" onclick="return confirm('Are You Sure For Delete ?')">
+                    <i class="bi bi-trash" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      <div class="tab-pane fade" id="pills-security" role="tabpanel" aria-labelledby="pills-security-tab">
 
-          </table>
-         </div>
+        {% if (account2|length)==0 %}
+        <div class="container">
+          <p class="h3 m-5 text-muted text-center">no Security Gaurds</p>
+        </div>
+        {% else %}
+        <div class="container">
+          <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for data in account2 %}
+            <div class="col">
+              <div class="card ">
+                <div class="card-body">
+                  <h5 class="card-title">
+                    {{data['security_name']}}
+                  </h5>
+                  <div class="row">
+                    <div class="col">
+                      <i class="bi bi-telephone"></i>
+                      <span class="mx-1 text-uppercase">
+                        {{ data['security_mobile']}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="d-flex flex-row">
+                    <div class="col">
+                      <span style="font-weight: 500;">Status</span>
+                    </div>
+                    <div class="col">
+                      <form action="/rportal/a_security/{{data.security_id}}">
+                        <select class="" onchange='if(this.value !=0 ) { this.form.submit(); }'>
+                          <option class="text-uppercase" style="font-weight: 500;" value='0'>{{ data['security_status']
+                            }}
+                          </option>
+                          <option class="text-uppercase" style="font-weight: 500;" value='1'>active</option>
+                        </select>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer d-flex flex-row-reverse">
+                  <a href="/rportal/d_security/{{data.security_id}}" class="btn btn-outline-secondary btn-sm mx-1"
+                    aria-hidden="true" onclick="return confirm('Are You Sure For Delete ?')">
+                    <i class="bi bi-trash" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
       </div>
     </div>
   </div>
 </div>
-
-<style >
-
-body{
-    background-color: #f8f9fa!important
-}
-.p-4 {
-    padding: 1.5rem!important;
-}
-.mb-0, .my-0 {
-    margin-bottom: 0!important;
-}
-.shadow-sm {
-    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
-}    
-
-/* user-dashboard-info-box */
-.user-dashboard-info-box .candidates-list .thumb {
-    margin-right: 20px;
-}
-.user-dashboard-info-box .candidates-list .thumb img {
-    width: 80px;
-    height: 80px;
-    -o-object-fit: cover;
-    object-fit: cover;
-    overflow: hidden;
-    border-radius: 50%;
-}
-
-.user-dashboard-info-box .title {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    padding: 30px 0;
-}
-
-.user-dashboard-info-box .candidates-list td {
-    vertical-align: middle;
-}
-
-.user-dashboard-info-box td li {
-    margin: 0 4px;
-}
-
-.user-dashboard-info-box .table thead th {
-    border-bottom: none;
-}
-
-.table.manage-candidates-top th {
-    border: 0;
-}
-
-.user-dashboard-info-box .candidate-list-favourite-time .candidate-list-favourite {
-    margin-bottom: 10px;
-}
-
-.table.manage-candidates-top {
-    min-width: 650px;
-}
-
-.user-dashboard-info-box .candidate-list-details ul {
-    color: #969696;
-}
-
-/* Candidate List */
-.candidate-list {
-    background: #ffffff;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    border-bottom: 1px solid #eeeeee;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    padding: 20px;
-    -webkit-transition: all 0.3s ease-in-out;
-    transition: all 0.3s ease-in-out;
-}
-.candidate-list:hover {
-    -webkit-box-shadow: 0px 0px 34px 4px rgba(33, 37, 41, 0.06);
-    box-shadow: 0px 0px 34px 4px rgba(33, 37, 41, 0.06);
-    position: relative;
-    z-index: 99;
-}
-.candidate-list:hover a.candidate-list-favourite {
-    color: #e74c3c;
-    -webkit-box-shadow: -1px 4px 10px 1px rgba(24, 111, 201, 0.1);
-    box-shadow: -1px 4px 10px 1px rgba(24, 111, 201, 0.1);
-}
-
-.candidate-list .candidate-list-image {
-    margin-right: 25px;
-    -webkit-box-flex: 0;
-    -ms-flex: 0 0 80px;
-    flex: 0 0 80px;
-    border: none;
-}
-.candidate-list .candidate-list-image img {
-    width: 80px;
-    height: 80px;
-    -o-object-fit: cover;
-    object-fit: cover;
-}
-
-.candidate-list-title {
-    margin-bottom: 5px;
-}
-
-.candidate-list-details ul {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    margin-bottom: 0px;
-}
-.candidate-list-details ul li {
-    margin: 5px 10px 5px 0px;
-    font-size: 13px;
-}
-
-.candidate-list .candidate-list-favourite-time {
-    margin-left: auto;
-    text-align: center;
-    font-size: 13px;
-    -webkit-box-flex: 0;
-    -ms-flex: 0 0 90px;
-    flex: 0 0 90px;
-}
-.candidate-list .candidate-list-favourite-time span {
-    display: block;
-    margin: 0 auto;
-}
-.candidate-list .candidate-list-favourite-time .candidate-list-favourite {
-    display: inline-block;
-    position: relative;
-    height: 40px;
-    width: 40px;
-    line-height: 40px;
-    border: 1px solid #eeeeee;
-    border-radius: 100%;
-    text-align: center;
-    -webkit-transition: all 0.3s ease-in-out;
-    transition: all 0.3s ease-in-out;
-    margin-bottom: 20px;
-    font-size: 16px;
-    color: #646f79;
-}
-.candidate-list .candidate-list-favourite-time .candidate-list-favourite:hover {
-    background: #ffffff;
-    color: #e74c3c;
-}
-
-.candidate-banner .candidate-list:hover {
-    position: inherit;
-    -webkit-box-shadow: inherit;
-    box-shadow: inherit;
-    z-index: inherit;
-}
-
-.bg-white {
-    background-color: #ffffff !important;
-}
-.p-4 {
-    padding: 1.5rem!important;
-}
-.mb-0, .my-0 {
-    margin-bottom: 0!important;
-}
-.shadow-sm {
-    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
-}
-
-.user-dashboard-info-box .candidates-list .thumb {
-    margin-right: 20px;
-}
-
-
-
-</style>
-
-
 {% endblock %}

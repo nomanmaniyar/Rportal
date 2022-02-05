@@ -2,128 +2,161 @@
 {% block title %}rportal{% endblock %}
 
 {% block content %}
-<style>
-    table, th, td {
-      border:1px solid black;
-    }
-</style>
-
-
-<h3>Ask permission:</h3>
-<div>
-<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo1"><i class="fa fa-warning" aria-hidden="true"></i> Ask permission</button>
-<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo2"><i class="fa fa-history" aria-hidden="true"></i> View requests</button>
-<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo3"><i class="fa fa-history" aria-hidden="true"></i> View approved</button>
-<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo4"><i class="fa fa-history" aria-hidden="true"></i> View rejected</button>
-<br><br>
-<a href='javascript:self.history.back();'>Go Back</a>
-<br>
-
-<div id="demo1" class="collapse">
-<br>
-<h4>Ask permission:</h4>
-    <div>
-      {{msg}}
-       <form action="{{ url_for('askpermission') }}" method="post">
-          <input type="text" name="subject" id="subject" placeholder="Subject" required></br></br>
-          <textarea type="text" name="text" id="text" placeholder="Text..." required rows="6" cols="60" ></textarea></br>
-          <input type="submit" class="btn btn-primary" name="submit" value="Submit"></br>
-       </form>      
+<div class="container mt-5 pt-3">
+  <div class="d-flex">
+    <a class="bd-highlight" href='javascript:self.history.back();'>
+      <i class="bi bi-arrow-left" style="font-size: x-large;"></i>
+    </a>
+    <div class="mx-3 h2">Permissions</div>
+    <button type="button" class="btn btn-primary btn-sm ms-auto mx-4" data-bs-toggle="modal"
+      data-bs-target="#changeSecId">Ask Permission</button>
+    <div class="modal fade" id="changeSecId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+      aria-labelledby="changeSecIdLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title" id="changeSecIdLabel">Ask Permission</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form action="{{ url_for('askpermission') }}" method="post">
+            <div class="modal-body ">
+              <div class="col form-floating mb-3">
+                <input type="text" class="form-control" id="subject" name="subject" value=""
+                  placeholder="Enter subject for permission" required>
+                <label for="subject" class="mx-2">Subject</label>
+              </div>
+              <div class="col form-floating mb-3">
+                <textarea class="form-control" placeholder="Write detail about permission" id="text" name="text"
+                  style="height: 100px"></textarea>
+                <label for="floatingTextarea2">Comments</label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button class="btn btn-primary" type="submit" name="submit" id="submit">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
-  <br>    
-  
-<div id="demo2" class="collapse">
-<br>
-  <h4>View requests:</h4>
-  <div>
-    <table  class="table" style="width:100%">
-  
-      {% if account !=0 %}
-           {% for data  in account %}
-           <tr>
-             <td>
-             <h6 class="mb-2" ><b>{{ data['subject'] }}</b></h6>
-                      <br><br>
+  <hr>
+</div>
+<style>
+  table,
+  th,
+  td {
+    border: 1px solid black;
+  }
+</style>
+<h3>Ask permission:</h3>
+<div>
+  <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo1"><i class="fa fa-warning"
+      aria-hidden="true"></i> Ask permission</button>
+  <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo2"><i class="fa fa-history"
+      aria-hidden="true"></i> View requests</button>
+  <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo3"><i class="fa fa-history"
+      aria-hidden="true"></i> View approved</button>
+  <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo4"><i class="fa fa-history"
+      aria-hidden="true"></i> View rejected</button>
+  <br><br>
+  <a href='javascript:self.history.back();'>Go Back</a>
+  <br>
+  <div id="demo1" class="collapse">
+    <br>
+    <h4>Ask permission:</h4>
+    <div>
+      {{msg}}
+      <form action="{{ url_for('askpermission') }}" method="post">
+        <input type="text" name="subject" id="subject" placeholder="subject" required></br></br>
+        <textarea type="text" name="text" id="text" placeholder="Text..." required rows="6" cols="60"></textarea></br>
+        <input type="submit" class="btn btn-primary" name="submit" value="Submit"></br>
+      </form>
+    </div>
+  </div>
+  <br>
+  <div id="demo2" class="collapse">
+    <br>
+    <h4>View requests:</h4>
+    <div>
+      <table class="table" style="width:100%">
+        {% if account !=0 %}
+        {% for data in account %}
+        <tr>
+          <td>
+            <h6 class="mb-2"><b>{{ data['subject'] }}</b></h6>
+            <br><br>
             <b>Date/Time: </b>{{ data['per_time'] }}<br>
             <b>Name: </b>{{ data['username'] }}<br>
             <b>Subject: </b>{{ data['subject'] }}<br>
             <b>Description: </b>{{ data['text'] }}<br>
-        </td>
+          </td>
         </tr>
-         </table>       
-     {% else %}
-         
-        
-         <b><h4>No Data Found.</h4> </b><br>
-         {% endfor %} 
-     {% endif %} 
-     
+      </table>
+      {% else %}
+      <b>
+        <h4>No Data Found.</h4>
+      </b><br>
+      {% endfor %}
+      {% endif %}
+    </div>
   </div>
-</div> 
-    <br> 
-    <br>
-   
-<div id="demo3" class="collapse">
   <br>
+  <br>
+  <div id="demo3" class="collapse">
+    <br>
     <h4>View approved:</h4>
     <div>
-      <table  class="table" style="width:100%">
-    
+      <table class="table" style="width:100%">
         {% if account1 !=0 %}
-            {% for data1  in account1 %}
-             <tr>
-               <td>
-               <h6 class="mb-2" ><b>{{ data1['subject'] }}</b></h6>
-                        <br><br>
-              <b>Date/Time: </b>{{ data1['per_time'] }}<br>
-              <b>Name: </b>{{ data1['username'] }}<br>
-              <b>Subject: </b>{{ data1['subject'] }}<br>
-              <b>Description: </b>{{ data1['text'] }}<br>
+        {% for data1 in account1 %}
+        <tr>
+          <td>
+            <h6 class="mb-2"><b>{{ data1['subject'] }}</b></h6>
+            <br><br>
+            <b>Date/Time: </b>{{ data1['per_time'] }}<br>
+            <b>Name: </b>{{ data1['username'] }}<br>
+            <b>Subject: </b>{{ data1['subject'] }}<br>
+            <b>Description: </b>{{ data1['text'] }}<br>
           </td>
-          </tr>
-           </table>       
-       {% else %}
-           
-          
-           <b><h4>No Data Found.</h4> </b><br>
-          {% endfor %} 
-       {% endif %} 
-       
+        </tr>
+      </table>
+      {% else %}
+      <b>
+        <h4>No Data Found.</h4>
+      </b><br>
+      {% endfor %}
+      {% endif %}
+    </div>
   </div>
-</div> 
-      <br> 
-      <br>
-       
-<div id="demo4" class="collapse">
   <br>
+  <br>
+  <div id="demo4" class="collapse">
+    <br>
     <h4>View rejected:</h4>
     <div>
-      <table  class="table" style="width:100%">
-    
+      <table class="table" style="width:100%">
         {% if account2 !=0 %}
-             {% for data2  in account2 %}
-             <tr>
-               <td>
-               <h6 class="mb-2" ><b>{{ data2['subject'] }}</b></h6>
-                        <br><br>
-              <b>Date/Time: </b>{{ data2['per_time'] }}<br>
-              <b>Name: </b>{{ data2['username'] }}<br>
-              <b>Subject: </b>{{ data2['subject'] }}<br>
-              <b>Description: </b>{{ data2['text'] }}<br>
-            
+        {% for data2 in account2 %}
+        <tr>
+          <td>
+            <h6 class="mb-2"><b>{{ data2['subject'] }}</b></h6>
+            <br><br>
+            <b>Date/Time: </b>{{ data2['per_time'] }}<br>
+            <b>Name: </b>{{ data2['username'] }}<br>
+            <b>Subject: </b>{{ data2['subject'] }}<br>
+            <b>Description: </b>{{ data2['text'] }}<br>
           </td>
-          </tr>
-           </table>       
-        {% else %}
-           
-          
-           <b><h4>No Data Found.</h4> </b><br>
-           {% endfor %} 
-       {% endif %} 
-       
+        </tr>
+      </table>
+      {% else %}
+      <b>
+        <h4>No Data Found.</h4>
+      </b><br>
+      {% endfor %}
+      {% endif %}
+    </div>
   </div>
-</div> 
-      <br> 
-      <br>
-{% endblock %}
+  <br>
+  <br>
+  {% endblock %}
