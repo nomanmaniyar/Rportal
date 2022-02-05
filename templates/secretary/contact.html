@@ -3,6 +3,125 @@
 {% block title %}rportal - Contacts{% endblock %}
 
 {% block content %}
+<div class="container mt-5 pt-3">
+    <div class="d-flex">
+        <a class="bd-highlight" href='javascript:self.history.back();'>
+            <i class="bi bi-arrow-left" style="font-size: x-large;"></i>
+        </a>
+        <div class="mx-3 h2">Contacts</div>
+        <button type="button" class="btn btn-primary btn-sm ms-auto" data-bs-toggle="modal"
+            data-bs-target="#AddcontactId">Add Contact</button>
+
+            <div  class="modal fade" id="AddcontactId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="AddcontactIdLabel" aria-hidden="true">
+           <div class="modal-dialog modal-dialog-centered">
+               <div class="modal-content">
+                   <div class="modal-header">
+                       <h5 class="modal-title" id="AddcontactIdLabel">Add New Contact</h5>
+                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                   </div>
+                   <form action="/rportal/add_contact" method="POST">
+                           <div class="modal-body">
+                               <div class="row mb-2">
+                                   <div class="col form-floating mb-3">
+                                        <input type="text" class="form-control" id="SecnameId" name="contact_label"
+                                            placeholder="Enter contact Name">
+                                       <label for="SecnameId" class="mx-2">Name</label>
+                                   </div>
+                                </div>
+                               <div class="row mb-2">
+                                   <div class="col form-floating mb-3">
+                                       <input type="text" class="form-control" id="SecusernameId" name="contact_no"
+                                            placeholder="Enter Contact Number +91">
+                                       <label for="SecusernameId" class="mx-2">Number</label>
+                                   </div>
+                                </div>
+                            </div>
+                           <div class="modal-footer">
+                               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                               <button class="btn btn-primary" type="submit" id="changeSec">Done</button>
+                           </div>
+                   </form>
+               </div>
+           </div>
+       </div>    
+    </div>
+    <div>
+      <hr>
+        {% if account !=0 %}
+        {% for contact in account %}
+        
+        <div class="row">
+          <div class="col-sm-3">
+             <p><h6>{{contact['contact_label']}} :{{contact['contact_no']}}</h6></p>
+          </div>  
+          <div class="col-sm-4">
+             <button class="bi bi-telephone btn btn-primary" href="{{contact['contact_no']}}"> call </button>&nbsp;&nbsp;
+             <a href="/rportal/d_contact/{{contact['contact_id']}}"  aria-hidden="true"  style="border: none;outline: none;background: none;" onclick="return confirm('Are you sure you want to delete this contact?');">
+                <button class="bi bi-trash btn btn-danger"> delete</button> </a>   
+          </div>
+        </div>
+        {% else %}
+        <div>
+        
+        <div class="col">
+          <div class="card-herader bg-transparent">
+            <span class="h5">Emergency Helpline Numbers</span>
+          </div>
+        </div>  
+        <hr>
+        <div>
+          <div>
+            <div class="row">
+              <div class="col-sm-3">
+                 <p><h6>Emergency Number:  112</h6></p>
+              </div>  
+              <div class="col-sm-6">
+                 <button class="bi bi-telephone btn btn-primary" href="tel:+122"> call 112</button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-3">
+                 <p><h6>Police: 100</h6></p>
+              </div>  
+              <div class="col-sm-6">
+                 <button class="bi bi-telephone btn btn-info" href="tel:+100"> call 100</button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-3">
+                 <p><h6>Fire:  101</h6></p>
+              </div>  
+              <div class="col-sm-6">
+                 <button class="bi bi-telephone btn btn-danger" href="tel:+101"> call 101</button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-3">
+                 <p><h6>Ambulance :  102</h6></p>
+              </div>  
+              <div class="col-sm-6">
+                 <button class="bi bi-telephone btn btn-success" href="tel:+102"> call 102</button>
+              </div>
+            </div>             
+            </div>
+        </div>
+    </div> 
+    {% endfor %} 
+    {% endif %}
+    </div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<!--
 
 <style>
     table, th, td {
@@ -16,7 +135,7 @@
 <button class="btn btn-primary" onclick="openModal()" >Add New Contact</button>  <br><br>
  
  <dialog id="dialog">
-    <button align="right" onclick="closeModal()"  class="btn-close" aria-label="Close" ></button>
+    <button alin="right" onclick="closeModal()"  class="btn-close" aria-label="Close" ></button>
      <form action="/rportal/add_contact" method="POST">
          <br><br>
         <input type="txt" name="contact_label" placeholder="Enter Contact Name"><br><br>
@@ -45,33 +164,8 @@ function closeModal() {
     dailog.close(); 
 } 
 </script>
+-->
 
-{% if account !=0 %}
-    {% for contact in account %}
-    <table  class="table" style="width:100%">
-      <td>
-          <label>{{contact['contact_label']}} :</label>
-          <a  href="tel:+{{account['contact_no']}}" >{{contact['contact_no']}}</a>&nbsp;&nbsp;<a href="/rportal/d_contact/{{contact['contact_id']}}"  aria-hidden="true"  style="border: none;outline: none;background: none;" onclick="return confirm('Are you sure you want to delete this contact?');"><i class="fa fa-trash" aria-hidden="true"  style="color:black"></i></a>
-      </td>
-     
-    </table>
-  
-{% else %}
-    <b><h5>Emergency Helpline Numbers</h5>
-    </b>
-    <label>National Emergency Number:</label><a  href="tel:+112" >112</a><br>
-    <label>Police:</label><a  href="tel:+100" >100</a><br>
-   <label>Fire:</label> <a  href="tel:+101" >101</a>
-    <br> 
-    <label>Ambulance:</label><a  href="tel:+102" >102</a>
-    <br>
-    <b><h4>Note: please add your valid contact number.</h4> </b><br>
-    {% endfor %} 
-{% endif %} 
-    <a href='javascript:self.history.back();'>Go Back</a>
-</div>
-
-</div>
 
  
 {% endblock %}

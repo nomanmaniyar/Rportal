@@ -1354,7 +1354,7 @@ def d_docs(doc_id):
 @app.route('/rportal/invite')
 def invite():
     if 'secretary' in session:
-        account = session['Scode'];
+        account = session['Scode']
         return render_template('secretary/invite.html', account=account)
     elif session.get('secretary') is None:
         return login()
@@ -1440,6 +1440,49 @@ def  denypermission():
             cursor.execute('UPDATE permission SET pstatus = %s  WHERE  pid = %s', ('denied', pid,))
             mysql.connection.commit()
         return  permissions()
+    elif session.get('secretary') is None:
+        return login()
+    else:
+        return logout()  
+
+@app.route('/rportal/maintenance_add',methods=['GET','POST'])
+def maintenance_add():
+    if 'secretary' in session:
+        if request.method == 'POST' and 'balance' in request.form:
+            balance = request.form['balance']
+            amount = request.form['amount']
+
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('UPDATE society SET soc_bal = %s  WHERE  code = %s', (balance, session['Scode'],))
+            mysql.connection.commit()
+        
+            cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor1.execute('INSERT INTO maintenance (Musername, Mname, code, amount, pending_amount) SELECT username, Mname, Mcode, %s, %s FROM member WHERE Mcode = %s and member_status=%s', (amount, amount,session['Scode'],'active',))
+            mysql.connection.commit()
+            
+        return Smaintenance()
+    elif session.get('secretary') is None:
+        return login()
+    else:
+        return logout()
+
+@app.route('/rportal/secretary_maintenance',methods=['GET','POST'])
+def Smaintenance():
+    if 'secretary' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM maintenance WHERE code = %s GROUP BY due_date',(session['Scode'],))
+        account = cursor.fetchall()
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('SELECT * FROM maintenance WHERE code = %s and payment_status=%s',(session['Scode'],'paid',))
+        account1 = cursor1.fetchall()
+        cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor2.execute('SELECT * FROM maintenance WHERE code = %s and payment_status=%s',(session['Scode'],'unpaid',))
+        account2 = cursor2.fetchall()
+        cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor3.execute('SELECT soc_bal FROM society WHERE code = %s',(session['Scode'],))
+        account3 = cursor3.fetchone()
+
+        return render_template('secretary/Smaintenance.html', account=account,account1=account1,account2=account2, account3=account3)
     elif session.get('secretary') is None:
         return login()
     else:
@@ -1777,6 +1820,81 @@ def askpermission():
         return login()
     else:
         return logout()
+
+@app.route('/rportal/maintenance_pay',methods=['GET','POST'])
+def maintenance_pay():
+    if 'member' in session:
+        msg = ''
+        new_bal = ''
+        paid_date =''
+        if request.method == 'POST' and 'id' in request.form:
+            main_id = request.form['id']
+            soc_bal = request.form['soc_bal']
+            amount = request.form['amount']
+            new_bal = float(soc_bal )+ float( amount)
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('UPDATE society SET soc_bal = %s  WHERE  code = %s', (new_bal, session['Mcode'],))
+            mysql.connection.commit()
+
+            cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor1.execute('select CURRENT_TIMESTAMP as time')
+            account1 = cursor1.fetchone()
+            paid_date = account1['time']
+            cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor2.execute('update maintenance set pending_amount=%s, paid_date=%s, payment_status=%s where main_id = %s', ('0', paid_date, 'paid',main_id,))
+            mysql.connection.commit()
+
+            msg = 'Payment Sucsessful!'
+        return Mmaintenance1(msg)
+    elif session.get('member') is None:
+        return login()
+    else:
+        return logout()
+
+@app.route('/rportal/member_maintenance')
+def Mmaintenance():
+    if 'member' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM maintenance WHERE code = %s GROUP BY due_date',(session['Mcode'],))
+        account = cursor.fetchall()
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('SELECT * FROM maintenance WHERE code = %s and payment_status=%s',(session['Mcode'],'paid',))
+        account1 = cursor1.fetchall()
+        cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor2.execute('SELECT * FROM maintenance WHERE code = %s and payment_status=%s',(session['Mcode'],'unpaid',))
+        account2 = cursor2.fetchall()
+        cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor3.execute('SELECT soc_bal FROM society WHERE code = %s',(session['Mcode'],))
+        account3 = cursor3.fetchone()
+
+        return render_template('member/Mmaintenance.html', account=account,account1=account1,account2=account2, account3 =account3)
+    elif session.get('member') is None:
+        return login()
+    else:
+        return logout() 
+
+@app.route('/rportal/member_maintenance/<string:msg>')
+def Mmaintenance1(msg):
+    if 'member' in session:
+        msg=msg
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM maintenance WHERE code = %s GROUP BY due_date',(session['Mcode'],))
+        account = cursor.fetchall()
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('SELECT * FROM maintenance WHERE code = %s and payment_status=%s',(session['Mcode'],'paid',))
+        account1 = cursor1.fetchall()
+        cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor2.execute('SELECT * FROM maintenance WHERE code = %s and payment_status=%s',(session['Mcode'],'unpaid',))
+        account2 = cursor2.fetchall()
+        cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor3.execute('SELECT soc_bal FROM society WHERE code = %s',(session['Mcode'],))
+        account3 = cursor3.fetchall()
+
+        return render_template('member/Mmaintenance.html', msg=msg, account=account,account1=account1,account2=account2, account3 =account3)
+    elif session.get('member') is None:
+        return login()
+    else:
+        return logout() 
 
 #
 #   Admin Part

@@ -3,6 +3,127 @@
 {% block title %}rportal - Staff Profile{% endblock %}
 
 {% block content %}
+<div class="container mt-5 pt-3">
+    <div class="d-flex">
+        <a class="bd-highlight" href='javascript:self.history.back();'>
+            <i class="bi bi-arrow-left" style="font-size: x-large;"></i>
+        </a>
+        <div class="mx-3 h2">Staff Profile</div>    
+    </div>
+    <div>
+        <hr>
+        <!-- Staff  Personal Information-->
+        <div class="col">
+            <div class="card-herader bg-transparent">
+                <span class="h5">Personal Information</span>
+                <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                    style="font-weight: 500; text-decoration: none;">Edit</button>
+              
+            </div>
+            <!-- Security Personal Information  Edit Modal-->
+            <div  class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">Personal Information</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form action="/rportal/staff_update" method="POST">
+                                    <div class="modal-body">
+                                        <div class="row mb-2">
+                                            <div class="col form-floating mb-3">
+                                                <input type="text" class="form-control" id="SecnameId" name="name"
+                                                    value="{{ account['staff_name'] }}" placeholder="{{ account['staff_name'] }}">
+                                                <label for="SecnameId" class="mx-2">Name</label>
+                                            </div>
+                                            <div class="col form-floating mb-3">
+                                                <input type="text" class="form-control" id="SecmobileId"name="mobile"
+                                                value="{{ account['staff_mobile'] }}"placeholder="{{ account['staff_mobile'] }}" >
+                                                <label for="SecmobileId" class="mx-2">Mobile No</label>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <div class="col form-floating mb-3">
+                                                <input type="text" class="form-control" id="SecusernameId" name="name"
+                                                    value="{{ account['staff_username'] }}" placeholder="{{ account['staff_username'] }}"disabled>
+                                                <label for="SecusernameId" class="mx-2">Username</label>
+                                            </div>
+                                            <div class="col form-floating mb-3">
+                                                <input type="text" class="form-control" id="SeccodeId"
+                                                    placeholder="{{ account['staff_code'] }}" value="{{ account['staff_code'] }}"
+                                                    disabled>
+                                                <label for="SeccodeId" class="mx-2">Society Code</label>
+                                            </div>
+                                        </div>
+
+                                        <p style="font-size: x-small;">
+                                            <a href="{{ url_for('forgot_password') }}">Change
+                                                Password</a>
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button class="btn btn-primary" type="submit" id="changeSec">Done</button>
+                                    </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+        </div>
+
+        <div class="card-body">
+            <div class="row mb-2">
+                <div class="col form-floating mb-3">
+                    <input type="text" class="form-control" id="SnameId" name="name" value="{{ account['staff_name'] }}"
+                        placeholder="{{ account['staff_name'] }}" disabled>
+                        <label for="SnameId" class="mx-2">Name</label>
+                </div>
+                <div class="col form-floating mb-3">
+                    <input type="text" class="form-control" id="SecusernameId" placeholder="{{ account['staff_username'] }}"
+                        value="{{ account['staff_username'] }}" disabled>
+                    <label for="SecusernameId" class="mx-2">Username</label>
+                </div>
+
+            </div>
+            <div class="row mb-2">
+                <div class="col form-floating mb-3">
+                    <input type="text" class="form-control" id="SeccodeId" value="{{ account['staff_code'] }}"
+                        placeholder="{{ account['staff_code'] }}" disabled>
+                    <label for="SeccodeId" class="mx-2">Society Code</label>
+                </div>
+                <div class="col form-floating mb-3">
+                    <input type="text" class="form-control" id="SecmobileId"name="mobile" placeholder="{{ account['staff_mobile'] }}"
+                        value="{{ account['staff_mobile'] }}" disabled>
+                    <label for="SecmobileId" class="mx-2">Mobile Number</label>
+                </div>
+
+            </div>
+            
+                      
+        </div>
+
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+
 <h2>Staff Profile Page</h2>
 <div>
     <h3>Your account details are below:</h3>
@@ -71,4 +192,5 @@ function closeModal() {
 </script>
     <a href='javascript:self.history.back();'>Go Back</a>
 </div>
+-->
 {% endblock %}

@@ -3,120 +3,199 @@
 {% block title %}rportal - Staff Complaints{% endblock %}
 
 {% block content %}
-<style>
-    table, th, td {
-      border:1px solid black;
-    }
-</style>
-<h3>Manage Complaint</h3>
-<div>
-<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo1"><i class="fa fa-warning" aria-hidden="true"></i> Active/New complaints</button>
-<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo2"><i class="fa fa-history" aria-hidden="true"></i> Replied complaints</button>
-<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo3"><i class="fa fa-history" aria-hidden="true"></i> View History</button>
-<br>
-<div id="demo1" class="collapse">
-<br>
-<h4>Active complaints against you:</h4>
-    <table class="table" style="width:100%">
-<br>
-      
-        {% for data in account %}
-        <div class="content">
-            <tr>
-                <td> 
-                    <label><b>Date :</b></label>{{ data['complaint_time']}}<br>
-                    <label><b>Name:</b></label>&nbsp;{{ data['complaint_name'] }}<br>
-                    <label><b>Subject:</b></label> {{ data['complaint_subject'] }}<br>
-                    <label><b>Message:</b></label> {{ data['complaint_message'] }}<br>
-                    <button class="btn btn-primary" onclick="openModal()" >Reply</button>  <br>
-                    <p>Note: You can give your reply only <b>once.</b></p>
-                    <br><br>
- 
-                    <dialog id="dialog">
-                    <button onclick="closeModal()"  class="btn-close" aria-label="Close" ></button><br>
-                    <form action ="/rportal/staff_complaint" method="post">
-                        <input type="hidden" name="cid" value="{{ data['complaint_id']}}" >
-                        <input type="text" name="reply" placeholder="Enter Your Reply"><br><br>
-                        <button type="submit" >Send </button><br>         
-                     </form>
-                    </dialog>
 
-                </td>
-            </tr>   
-        </div>            
-        {% endfor %}
-    </table>
-</div>
-    <br>    
-    
-<div id="demo2" class="collapse">
-<br>
-    <h4>Replied complaints:</h4>
-    <table class="table" style="width:100%">
-<br>
-    
-        {% for data1 in account1 %}
-        <div class="content">
-            <tr>
-                <br>
-                <b>Complaint Subject:</b>&nbsp;{{ data1['complaint_subject'] }}<br><br>
-                <b>Complaint message:</b>&nbsp;{{ data1['complaint_message'] }}<br><br>
-                <b>Complaint Date Time: </b>&nbsp;{{ data1['complaint_time'] }}<br><br>
-                <b>Reply by {{data1['complaint_against']}}:</b>&nbsp;{{data1['complaint_reply']}}<br><br>
-                <b>Status: </b>&nbsp;{{data1['complaint_status']}}<br><br>
-            </tr> 
-            <hr>
+
+<div class="container mt-5 pt-3">
+    <div class="row row-cols-auto">
+        <a class="col" href='javascript:self.history.back();'>
+            <i class="bi bi-arrow-left" style="font-size: x-large;"></i>
+        </a>
+        <h2 class="col">Manage Complaint</h2>
+    </div>
+    <!-- TABS -->
+    <ul class="nav nav-tabs justify-content-lg-evenly mt-3" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button"
+                role="tab" aria-controls="home" aria-selected="true"><i class="bi bi-exclamation-diamond"></i>
+                Active/New complaints</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button"
+                role="tab" aria-controls="profile" aria-selected="false"> <i class="bi bi-check2-all"></i>
+                Review replied complaints</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button"
+                role="tab" aria-controls="contact" aria-selected="false"> <i class="bi bi-clock-history"></i>
+                View History</button>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div class="accordion accordion-flush my-3" id="accordionFlush{{data}}">
+                {% if (account[0]|length)==0 %}
+                <div class="container">
+                    <p class="h3 m-5 text-muted text-center">no active complaint</p>
+                </div>
+                {% else %}
+                {% for data in range(account|length) %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-heading{{data}}">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapse{{data}}" aria-expanded="false"
+                            aria-controls="flush-collapse{{data}}">
+                            <strong>{{account[data]['complaint_name']}}</strong>
+                            <span class="badge rounded-pill bg-primary mx-2" style="font-size: x-small;">NEW</span>
+                        </button>
+                    </h2>
+                    <div id="flush-collapse{{data}}" class="accordion-collapse collapse"
+                        aria-labelledby="flush-heading{{data}}" data-bs-parent="#accordionFlush{{data}}">
+                        <div class="accordion-body ">
+                            <label style="font-weight:600;">Date/Time:</label>
+                            <span class="mx-1">{{ account[data]['complaint_time']}}</span><br>
+                            <label style="font-weight:600;">Name:</label>
+                            <span class="mx-1">{{ account[data]['complaint_name']}}</span><br>
+                            <label style="font-weight:600;">Complaint against:</label>
+                            <span class="mx-1">{{ account[data]['complaint_against']}}</span><br>
+                            <label style="font-weight:600;">Subject:</label>
+                            <span class="mx-1">{{ account[data]['complaint_subject']}}</span><br>
+                            <label style="font-weight:600;">Message:</label>
+                            <span class="mx-1  text-break">{{ account[data]['complaint_message']}}</span><br>
+                            <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal"
+                                data-bs-target="#staticBackdrop{{data}}">
+                                Reply
+                            </button>
+                            <p class="mt-1" style="font-size:xx-small;">Note: You can give your reply only
+                                <b>once.</b>
+                            </p>
+                            <!-- REPLY MODAL -->
+                            <div class="modal  fade" id="staticBackdrop{{data}}" data-bs-backdrop="static"
+                                data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabe{{data}}"
+                                aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered ">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabe{{data}}">Complaint Reply
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="/rportal/staff_complaint" method="post"
+                                                id="replyForm{{data}}">
+                                                <textarea name="reply" class="form-control" id="complaintReply"
+                                                    placeholder="write your view on complaint here" rows="3"></textarea>
+                                                <input type="hidden" name="cid"
+                                                    value="{{account[data]['complaint_id']}}">
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Close</button>
+                                            <input type="submit" form="replyForm{{data}}"
+                                                class="btn btn-primary"></input>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END REPLY MODAL -->
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
         </div>
-        {% endfor %}
-    
-    </table>
-    </div> 
-    <br>  
-    
-<div id="demo3" class="collapse">
-<br>
-    <h4>Complaint History:</h4>
-    <table class="table" style="width:100%">
-<br>
-    
-        {% for data2 in account2 %}
-        <div class="content">
-            <tr>
-                <br>
-                <b>Complaint Subject:</b>&nbsp;{{ data2['complaint_subject'] }}<br><br>
-                <b>Complaint message:</b>&nbsp;{{ data2['complaint_message'] }}<br><br>
-                <b>Complaint Date Time: </b>&nbsp;{{ data2['complaint_time'] }}<br><br>
-                <b>Reply by {{data2['complaint_against']}}:</b>&nbsp;{{data2['complaint_reply']}}<br><br>
-                <b>Reply by Secretary:</b>&nbsp;{{data2['complaint_reply_closing']}}<br><br>
-                <b>Status: </b>&nbsp;{{data2['complaint_status']}}<br><br>
-            </tr> 
-            <hr>
+        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            <div class="accordion accordion-flush my-3" id="accordionFlush{{data1}}">
+                {% if (account1[0]|length)==0 %}
+                <div class="container">
+                    <p class="h3 m-5 text-muted text-center">no reviewed or replied complaints</p>
+                </div>
+                {% else %}
+                {% for data1 in range(account1|length) %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-heading{{data1}}">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapse{{data1}}" aria-expanded="false"
+                            aria-controls="flush-collapse{{data1}}">
+                            <strong>{{account1[data1]['complaint_name']}}</strong>
+                            <span class="badge rounded-pill bg-warning mx-2" style="font-size: x-small;">review</span>
+
+                        </button>
+                    </h2>
+                    <div id="flush-collapse{{data1}}" class="accordion-collapse collapse"
+                        aria-labelledby="flush-heading{{data1}}" data-bs-parent="#accordionFlush{{data1}}">
+                        <div class="accordion-body ">
+                            <label style="font-weight:600;">Date/Time:</label>
+                            <span class="mx-1">{{ account1[data1]['complaint_time']}}</span><br>
+                            <label style="font-weight:600;">Name:</label>
+                            <span class="mx-1">{{ account1[data1]['complaint_name']}}</span><br>
+                            <label style="font-weight:600;">Complaint against:</label>
+                            <span class="mx-1">{{ account1[data1]['complaint_against']}}</span><br>
+                            <label style="font-weight:600;">Subject:</label>
+                            <span class="mx-1">{{ account1[data1]['complaint_subject']}}</span><br>
+                            <label style="font-weight:600;">Message:</label>
+                            <span class="mx-1  text-break">{{ account1[data1]['complaint_message']}}</span><br>
+                            <label style="font-weight:600;">Reply by {{account1[data1]['complaint_against']}}:</label>
+                            <span class="mx-1  text-break">{{account1[data1]['complaint_reply']}}</span><br>
+                            <label style="font-weight:600;">Status:</label>
+                            <span class="mx-1 text-uppercase "
+                                style="font-weight: 900;">{{account1[data1]['complaint_status']}}</span><br>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
         </div>
-        {% endfor %}
-    
-    </table>
-    </div> 
-    <br>
-    <a href='javascript:self.history.back();'>Go Back</a>
+        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+            <div class="accordion accordion-flush my-3" id="accordionFlush{{data2}}">
+                {% if (account2[0]|length)==0 %}
+                <div class="container">
+                    <p class="h3 m-5 text-muted text-center">no history available</p>
+                </div>
+                {% else %}
+                {% for data2 in range(account2|length) %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-heading{{data2}}">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapse{{data2}}" aria-expanded="false"
+                            aria-controls="flush-collapse{{data2}}">
+                            <strong>{{account2[data2]['complaint_name']}}</strong>
+                            <span class="badge rounded-pill bg-success mx-2" style="font-size: x-small;">closed</span>
+
+                        </button>
+                    </h2>
+                    <div id="flush-collapse{{data2}}" class="accordion-collapse collapse"
+                        aria-labelledby="flush-heading{{data2}}" data-bs-parent="#accordionFlush{{data2}}">
+                        <div class="accordion-body ">
+                            <label style="font-weight:600;">Date/Time:</label>
+                            <span class="mx-1">{{ account2[data2]['complaint_time']}}</span><br>
+                            <label style="font-weight:600;">Name:</label>
+                            <span class="mx-1">{{ account2[data2]['complaint_name']}}</span><br>
+                            <label style="font-weight:600;">Complaint against:</label>
+                            <span class="mx-1">{{ account2[data2]['complaint_against']}}</span><br>
+                            <label style="font-weight:600;">Subject:</label>
+                            <span class="mx-1">{{ account2[data2]['complaint_subject']}}</span><br>
+                            <label style="font-weight:600;">Message:</label>
+                            <span class="mx-1  text-break">{{ account2[data2]['complaint_message']}}</span><br>
+                            <label style="font-weight:600;">Reply by {{account2[data2]['complaint_against']}}:</label>
+                            <span class="mx-1  text-break">{{account2[data2]['complaint_reply']}}</span><br>
+                            <label style="font-weight:600;">Reply by you:</label>
+                            <span class="mx-1  text-break">{{account2[data2]['complaint_reply_closing']}}</span><br>
+                            <label style="font-weight:600;">Status:</label>
+                            <span class="mx-1 text-uppercase "
+                                style="font-weight: 900;">{{account2[data2]['complaint_status']}}</span><br>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </div>
-
-<style>
-    #dialog{width:500px;}
-.right{float:right}
-</style>
-
-<script>
-    var dailog = document.getElementById("dialog"); 
-
-function openModal() { 
-   // dailog.show(); 
-      dailog.showModal();
-} 
-
-function closeModal() { 
-    dailog.close(); 
-} 
-
-</script>
 
 {% endblock %}
