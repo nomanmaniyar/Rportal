@@ -2,77 +2,118 @@
 {% block title %}rportal{% endblock %}
 
 {% block content %}
+<div class="container mt-5 pt-3">
+  <div class="d-flex">
+    <a class="bd-highlight" href='javascript:self.history.back();'>
+      <i class="bi bi-arrow-left" style="font-size: x-large;"></i>
+    </a>
+    <div class="mx-3 h2">Guest</div>
+    <button type="button" class="btn btn-primary btn-sm ms-auto mx-4" data-bs-toggle="modal"
+      data-bs-target="#changeSecId">Add Guest</button>
+    <div class="modal fade" id="changeSecId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+      aria-labelledby="changeSecIdLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title" id="changeSecIdLabel">Add New Guest</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form action="{{url_for('addguest')}}" enctype="multipart/form-data" method="POST">
+            <div class="modal-body ">
+              <div class="col-5 form-floating mb-3">
+                <input type="text" class="form-control" id="Gname" name="vname" value="" placeholder="Enter guest name"
+                  required>
+                <label for="Gname" class="mx-2">Name</label>
+              </div>
+              <div class="row mb-2">
+                <div class="col form-floating mb-3">
+                  <input type="tel" maxlength="10" name="vmobile" value="" class="form-control " id="mobileId"
+                    placeholder="Enter Mobile number" required>
+                  <label for="mobileId" class="mx-2">Mobile No</label>
+                </div>
+                <div class="col form-floating mb-3">
+                  <input type="text" class="form-control" id="vehical_no" placeholder="Enter Vehical Number" value=""
+                    name="vehical_no" required>
+                  <label for="vehical_no" class="mx-2">Vehical Number</label>
+                </div>
+              </div>
+              <h5 class="modal-title">Guest visit schedule</h5>
+              <div class="row mb-2">
+                <div class="col form-floating mb-3">
+                  <input type="time" name="in_time" value="" class="form-control " id="in_time"
+                    placeholder="Select Visit Time" required>
+                  <label for="in_time" class="mx-2">Visit Time</label>
+                </div>
+                <div class="col form-floating mb-3">
+                  <input type="date" class="form-control" id="in_date" placeholder="Enter Visit Date" value=""
+                    name="in_date" required>
+                  <label for="in_date" class="mx-2">Visit Date</label>
+                </div>
+              </div>
 
-<style>
-  table, th, td {
-    border:1px solid black;
-  }
-</style>
+              <div class="col mb-4">
+                <input type="file" class="form-control" id="vpic" placeholder="Select Guest Photo" value="" name="vpic"
+                  required>
 
-
-<h3>Add/ See guestes:</h3>
-<div>
-<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo1"><i class="fa fa-warning" aria-hidden="true"></i> Add new guest</button>
-<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo2"><i class="fa fa-history" aria-hidden="true"></i> See upcoming guests</button>
-<br><br>
-<a href='javascript:self.history.back();'>Go Back</a>
-<br>
-<div id="demo1" class="collapse">
-<br>
-  <h3>Add Guest</h3>
- 
-   <form action="{{url_for('addguest')}}"  enctype="multipart/form-data" method="POST"><br>
-     <input type="text" name="vname" placeholder="Guest Name" required> <br>
-     <input type="tel" name="vmobile" placeholder="Guest Mobile Number" required><br>
-      <input type="text" name="vehical_no"placeholder="Vehical Number" ><br>
-      <label>Guest visit schedule:</label><br>
-     <input type="time" name="in_time" required><br>
-     <input type="date" name="in_date" required><br>
-      <input type="file"  name="vpic" required><br>
-      <input class="btn btn-primary" type="submit" value="Add Guest"><br>
-
-      <br>
-   </form>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button class="btn btn-primary" type="submit" id="changeNS">Add Guest</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
-<div id="demo2" class="collapse">
-<br>
-<h4>Upcoming Visitors:</h4>
-<div>
-  <table  class="table" style="width:100%">
-
-    {% if account !=0 %}
-         {% for data  in account %}
-         <tr >
-          <td class="title">
-            <div class="thumb">
-            <img  src="/static/upload/vpic/{{data['vpic']}}" height="40%" width="20%" alt="Visitor image">
-            
-            <h6 class="mb-2" ><b>{{ data['vname'] }}</b></h6>
-                    
-                      <b>Contact No: </b>{{ data['vmobile'] }}<br>
-                      <b>Will visit on: </b>{{ data['in_date'] }} / {{ data['in_time'] }}<br>
+  <hr>
+  <div class="container-fluid">
+    {% if (account|length)==0 %}
+    <div class="container">
+      <p class="h3 m-5 text-muted text-center">No Upcoming Guest </p>
+    </div>
+    {% else %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      {% for data in ((range(account|length))|reverse) %}
+      <div class="col">
+        <div class="card">
+          <div class="justify-content-start d-flex mx-2 mt-2">
+            <!-- <img src="/static/upload/vpic/3017287.png" -->
+            <img src="/static/upload/vpic/{{data['vpic']}}" style="border-radius: 50px; height:35px; width: 35px;"
+              class="card-img-top" alt="Visitor image">
+            <h5 class="card-title mx-3 text-uppercase text-wrap">{{ account[data]['vname'] }}</h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col">
+                <i class="bi bi-telephone"></i>
+                <span class="mx-1">
+                  {{ account[data]['vmobile'] }}
+                </span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <i class="bi bi-clock"></i>
+                <span class="mx-1 text-uppercase">
+                  {{ account[data]['in_time'] }}
+                </span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <i class="bi bi-calendar3"></i>
+                <span class="mx-1 ">
+                  {{ account[data]['in_date'] }}
+                </span>
+              </div>
             </div>
           </div>
         </div>
-      </td>
-      </tr>
-        
-       </table>
-      
-     
-   {% else %}
-       
-      
-       <b><h4>No Data Found.</h4> </b><br>
-       {% endfor %} 
-   {% endif %} 
-   
-   </div>
-  </div> 
-  <br> 
-  <br> 
-
-
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
 </div>
 {% endblock %}

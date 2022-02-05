@@ -3,192 +3,394 @@
 {% block title %}rportal Member Complaint{% endblock %}
 
 {% block content %}
+<div class="container mt-5 pt-3">
+  <div class="d-flex">
+    <a class="bd-highlight" href='javascript:self.history.back();'>
+      <i class="bi bi-arrow-left" style="font-size: x-large;"></i>
+    </a>
+    <div class="mx-3 h2">Manage Complaint</div>
+    <button type="button" class="btn btn-primary btn-sm ms-auto mx-4" data-bs-toggle="modal"
+      data-bs-target="#changeSecId">Raise Complaint</button>
+    <div class="modal fade" id="changeSecId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+      aria-labelledby="changeSecIdLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-top">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="changeSecIdLabel">Raise Complaint</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form action="{{ url_for('member_complaint') }}" method="post" autocomplete="on">
+            <div class="modal-body ">
+              <div class="col mb-2">
+                <label class="h5">Complaint Title</label>
+                <input type="text" class="form-control form-control-lg" id="complaint_subject" name="complaint_subject"
+                  placeholder="Enter Subject/Title">
+              </div>
+              <div class="col-5 mb-2">
+                <label class=" h5">Complaint Against</label>
+                <select class="form-select form-select-lg" name="complaint_against">
+                  <option>Secratery</option>
+                  <option>Security</option>
+                  {% for data in account %}
+                  <option>{{ data['post'] }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col mb-1">
+                <label class=" h5">Message</label>
+                <textarea class="form-control" placeholder="Enter Details" name="complaint_message"
+                  id="complaint_message" style="height: 100px"></textarea>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button class="btn btn-primary" type="submit" value="add" id="changeNS">Raise
+                Complaint</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- TABS -->
+  <ul class="nav nav-tabs justify-content-lg-evenly mt-3" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab"
+        aria-controls="home" aria-selected="true"><i class="bi bi-exclamation-diamond"></i>
+        Active/New complaints</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab"
+        aria-controls="profile" aria-selected="false"> <i class="bi bi-check2-all"></i>
+        Review replied complaints</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab"
+        aria-controls="contact" aria-selected="false"> <i class="bi bi-clock-history"></i>
+        View History</button>
+    </li>
+  </ul>
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+      <div class="accordion accordion-flush my-3" id="accordionFlush{{data}}">
+        {% if (account1[0]|length)==0 %}
+        <div class="container">
+          <p class="h3 m-5 text-muted text-center">no active complaint</p>
+        </div>
+        {% else %}
+        {% for data in range(account1|length) %}
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="flush-heading{{data}}">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              data-bs-target="#flush-collapse{{data}}" aria-expanded="false" aria-controls="flush-collapse{{data}}">
+              <strong>{{account1[data]['complaint_subject']}}</strong>
+              <span class="badge rounded-pill bg-primary mx-2" style="font-size: x-small;">NEW</span>
+            </button>
+          </h2>
+          <div id="flush-collapse{{data}}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{data}}"
+            data-bs-parent="#accordionFlush{{data}}">
+            <div class="accordion-body ">
+              <label style="font-weight:600;">Date/Time:</label>
+              <span class="mx-1">{{ account1[data]['complaint_time']}}</span><br>
+              <label style="font-weight:600;">Complaint against:</label>
+              <span class="mx-1">{{ account1[data]['complaint_against']}}</span><br>
+              <label style="font-weight:600;">Subject:</label>
+              <span class="mx-1">{{ account1[data]['complaint_subject']}}</span><br>
+              <label style="font-weight:600;">Message:</label>
+              <span class="mx-1  text-break">{{ account1[data]['complaint_message']}}</span><br>
+
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+      <div class="accordion accordion-flush my-3" id="accordionFlush{{data1}}">
+        {% if (account2[0]|length)==0 %}
+        <div class="container">
+          <p class="h3 m-5 text-muted text-center">no reviewed or replied complaints</p>
+        </div>
+        {% else %}
+        {% for data1 in range(account2|length) %}
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="flush-heading{{data1}}">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              data-bs-target="#flush-collapse{{data1}}" aria-expanded="false" aria-controls="flush-collapse{{data1}}">
+              <strong>{{account2[data1]['complaint_subject']}}</strong>
+              <span class="badge rounded-pill bg-warning mx-2" style="font-size: x-small;">review</span>
+
+            </button>
+          </h2>
+          <div id="flush-collapse{{data1}}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{data1}}"
+            data-bs-parent="#accordionFlush{{data1}}">
+            <div class="accordion-body ">
+              <label style="font-weight:600;">Date/Time:</label>
+              <span class="mx-1">{{ account2[data1]['complaint_time']}}</span><br>
+              <label style="font-weight:600;">Complaint against:</label>
+              <span class="mx-1">{{ account2[data1]['complaint_against']}}</span><br>
+              <label style="font-weight:600;">Subject:</label>
+              <span class="mx-1">{{ account2[data1]['complaint_subject']}}</span><br>
+              <label style="font-weight:600;">Message:</label>
+              <span class="mx-1  text-break">{{ account2[data1]['complaint_message']}}</span><br>
+              <label style="font-weight:600;">Reply by {{account2[data1]['complaint_against']}}:</label>
+              <span class="mx-1  text-break">{{account2[data1]['complaint_reply']}}</span><br>
+              <label style="font-weight:600;">Status:</label>
+              <span class="mx-1 text-uppercase "
+                style="font-weight: 900;">{{account2[data1]['complaint_status']}}</span><br>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+      <div class="accordion accordion-flush my-3" id="accordionFlush{{data2}}">
+        {% if (account2[0]|length)==0 %}
+        <div class="container">
+          <p class="h3 m-5 text-muted text-center">no history available</p>
+        </div>
+        {% else %}
+        {% for data2 in range(account3|length) %}
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="flush-heading{{data2}}">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              data-bs-target="#flush-collapse{{data2}}" aria-expanded="false" aria-controls="flush-collapse{{data2}}">
+              <strong>{{account3[data2]['complaint_subject']}}</strong>
+              <span class="badge rounded-pill bg-success mx-2" style="font-size: x-small;">closed</span>
+            </button>
+          </h2>
+          <div id="flush-collapse{{data2}}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{data2}}"
+            data-bs-parent="#accordionFlush{{data2}}">
+            <div class="accordion-body ">
+              <label style="font-weight:600;">Date/Time:</label>
+              <span class="mx-1">{{ account3[data2]['complaint_time']}}</span><br>
+              <label style="font-weight:600;">Name:</label>
+              <span class="mx-1">{{ account3[data2]['complaint_name']}}</span><br>
+              <label style="font-weight:600;">Complaint against:</label>
+              <span class="mx-1">{{ account3[data2]['complaint_against']}}</span><br>
+              <label style="font-weight:600;">Subject:</label>
+              <span class="mx-1">{{ account3[data2]['complaint_subject']}}</span><br>
+              <label style="font-weight:600;">Message:</label>
+              <span class="mx-1  text-break">{{ account3[data2]['complaint_message']}}</span><br>
+              <label style="font-weight:600;">Reply by {{account3[data2]['complaint_against']}}:</label>
+              <span class="mx-1  text-break">{{account3[data2]['complaint_reply']}}</span><br>
+              <label style="font-weight:600;">Reply by you:</label>
+              <span class="mx-1  text-break">{{account3[data2]['complaint_reply_closing']}}</span><br>
+              <label style="font-weight:600;">Status:</label>
+              <span class="mx-1 text-uppercase "
+                style="font-weight: 900;">{{account3[data2]['complaint_status']}}</span><br>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 
 <br>
-
-
-
 <button id="myBtn" class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add New Complaint</button>
-<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo"><i class="fa fa-history" aria-hidden="true"></i> Previous Complaint</button>
-<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo1"><i class="fa fa-history" aria-hidden="true"></i> View History</button>
+<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo"><i class="fa fa-history"
+    aria-hidden="true"></i> Previous Complaint</button>
+<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo1"><i class="fa fa-history"
+    aria-hidden="true"></i> View History</button>
 <div id="demo" class="collapse">
   <h4>Complaints under review:</h4>
-<table class="table" style="width:100%">
+  <table class="table" style="width:100%">
 
     {% for data2 in account2 %}
     <div class="content">
-        <tr>
-            <br>
-            <b>Complaint Subject:</b>&nbsp;{{ data2['complaint_subject'] }}<br><br>
-            <b>Complaint Against</b>&nbsp;{{data2['complaint_against']}}<br><br>
-            <b>Complaint message:</b>&nbsp;{{ data2['complaint_message'] }}<br><br>
-            <b>Complaint Date Time: </b>&nbsp;{{ data2['complaint_time'] }}<br><br>
-            <b>Reply by {{data2['complaint_against']}}:</b>&nbsp;{{data2['complaint_reply']}}<br><br>
-            <b>Status: </b>&nbsp;{{data2['complaint_status']}}<br><br>
-        </tr> 
-        <hr>
+      <tr>
+        <br>
+        <b>Complaint Subject:</b>&nbsp;{{ data2['complaint_subject'] }}<br><br>
+        <b>Complaint Against</b>&nbsp;{{data2['complaint_against']}}<br><br>
+        <b>Complaint message:</b>&nbsp;{{ data2['complaint_message'] }}<br><br>
+        <b>Complaint Date Time: </b>&nbsp;{{ data2['complaint_time'] }}<br><br>
+        <b>Reply by {{data2['complaint_against']}}:</b>&nbsp;{{data2['complaint_reply']}}<br><br>
+        <b>Status: </b>&nbsp;{{data2['complaint_status']}}<br><br>
+      </tr>
+      <hr>
     </div>
     {% endfor %}
 
-</table>
-</div> 
+  </table>
+</div>
 
 <div id="demo" class="collapse">
   <h4>Active complaints:</h4>
   <table class="table" style="width:100%">
-    
-      {% for data1 in account1 %}
-      <div class="content">
-          <tr>
-              <br>
-              <b>Complaint Subject:</b>&nbsp;{{ data1['complaint_subject'] }}<br><br>
-              <b>Complaint Against</b>&nbsp;{{data1['complaint_against']}}<br><br>
-              <b>Complaint message:</b>&nbsp;{{ data1['complaint_message'] }}<br><br>
-              <b>Complaint Date Time: </b>&nbsp;{{ data1['complaint_time'] }}<br><br>
-              <b>Status: </b>&nbsp;{{data1['complaint_status']}}<br><br>
-          </tr> 
-          <hr>
-      </div>
-      {% endfor %}
-  
+
+    {% for data1 in account1 %}
+    <div class="content">
+      <tr>
+        <br>
+        <b>Complaint Subject:</b>&nbsp;{{ data1['complaint_subject'] }}<br><br>
+        <b>Complaint Against</b>&nbsp;{{data1['complaint_against']}}<br><br>
+        <b>Complaint message:</b>&nbsp;{{ data1['complaint_message'] }}<br><br>
+        <b>Complaint Date Time: </b>&nbsp;{{ data1['complaint_time'] }}<br><br>
+        <b>Status: </b>&nbsp;{{data1['complaint_status']}}<br><br>
+      </tr>
+      <hr>
+    </div>
+    {% endfor %}
+
   </table>
-  </div> 
+</div>
 
 <div id="demo1" class="collapse">
   <h4>Complaint History:</h4>
   <table class="table" style="width:100%">
-  
-      {% for data3 in account3 %}
-      <div class="content">
-          <tr>
-              <br>
-              <b>Complaint Subject:</b>&nbsp;{{ data3['complaint_subject'] }}<br><br>
-              <b>Complaint Against</b>&nbsp;{{data3['complaint_against']}}<br><br>
-              <b>Complaint message:</b>&nbsp;{{ data3['complaint_message'] }}<br><br>
-              <b>Complaint Date Time: </b>&nbsp;{{ data3['complaint_time'] }}<br><br>
-              <b>Reply by {{data3['complaint_against']}}:</b>&nbsp;{{data3['complaint_reply']}}<br><br>
-              <b>Reply by Secretary:</b>&nbsp;{{data3['complaint_reply_closing']}}<br><br>
-              <b>Status: </b>&nbsp;{{data3['complaint_status']}}<br><br>
-          </tr> 
-          <hr>
-      </div>
-      {% endfor %}
-  
+
+    {% for data3 in account3 %}
+    <div class="content">
+      <tr>
+        <br>
+        <b>Complaint Subject:</b>&nbsp;{{ data3['complaint_subject'] }}<br><br>
+        <b>Complaint Against</b>&nbsp;{{data3['complaint_against']}}<br><br>
+        <b>Complaint message:</b>&nbsp;{{ data3['complaint_message'] }}<br><br>
+        <b>Complaint Date Time: </b>&nbsp;{{ data3['complaint_time'] }}<br><br>
+        <b>Reply by {{data3['complaint_against']}}:</b>&nbsp;{{data3['complaint_reply']}}<br><br>
+        <b>Reply by Secretary:</b>&nbsp;{{data3['complaint_reply_closing']}}<br><br>
+        <b>Status: </b>&nbsp;{{data3['complaint_status']}}<br><br>
+      </tr>
+      <hr>
+    </div>
+    {% endfor %}
+
   </table>
-  </div> 
+</div>
 
 <div id="myModal" class="modal">
 
-    <!-- Modal content -->
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h3>Make Complaint</h3>
+  
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h3>Make Complaint</h3>
 
-<form action="{{ url_for('member_complaint') }}" method="post" autocomplete="on">
-		
-    <div class="member_complaint">
+    <form action="{{ url_for('member_complaint') }}" method="post" autocomplete="on">
+
+      <div class="member_complaint">
 
         <h3>Add new complaint: </h3>
-        <h4><div class="msg">{{ msg }}</div></h4>
+        <h4>
+          <div class="msg">{{ msg }}</div>
+        </h4>
 
         <label for="complaint_subject">
-       
+
         </label>
         <input type="text" name="complaint_subject" placeholder="Enter Subject" id="complaint_subject" required>
         <br><br>
 
         <b>Complaint Against:</b><br>
 
-            <select name="complaint_against" >
-            <option>Secratery</option>
-            <option>Security</option>
-            {% for data in account %}
-           <option >{{ data['post'] }}</option>
-           {% endfor %} 
-          </select><br><br>
+        <select name="complaint_against">
+          <option>Secratery</option>
+          <option>Security</option>
+          {% for data in account %}
+          <option>{{ data['post'] }}</option>
+          {% endfor %}
+        </select><br><br>
 
         <label for="complaint_message">
-        
+
         </label>
-        <textarea type="text" name="complaint_message"  placeholder="Enter Details" id="complaint_message" required></textarea>
+        <textarea type="text" name="complaint_message" placeholder="Enter Details" id="complaint_message"
+          required></textarea>
         <br><br>
         <button type="submit" class="btn btn-primary" value="add">Add Complaint</button>
-    
-        </div>
-    </div>
-</form>
-    </div>
-  
+
+      </div>
   </div>
+  </form>
+</div>
+
+</div>
 
 
 <script>
-    // Get the modal
-    var modal = document.getElementById("myModal");
-    
-    // Get the button that opens the modal
-    var btn = document.getElementById("myBtn");
-    
-    // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("close")[0];
-    
-    // When the user clicks the button, open the modal 
-    btn.onclick = function() {
-      modal.style.display = "block";
-    }
-    
-    // When the user clicks on <span> (x), close the modal
-    span.onclick = function() {
+  // Get the modal
+  var modal = document.getElementById("myModal");
+
+  // Get the button that opens the modal
+  var btn = document.getElementById("myBtn");
+
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+
+  // When the user clicks the button, open the modal 
+  btn.onclick = function () {
+    modal.style.display = "block";
+  }
+
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function () {
+    modal.style.display = "none";
+  }
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function (event) {
+    if (event.target == modal) {
       modal.style.display = "none";
     }
-    
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-      if (event.target == modal) {
-        modal.style.display = "none";
-      }
-    }
-    </script>
+  }
+</script>
 
 <style>
-    body {font-family: Arial, Helvetica, sans-serif;}
-    
-    /* The Modal (background) */
-    .modal {
-      display: none; /* Hidden by default */
-      position: fixed; /* Stay in place */
-      z-index: 1; /* Sit on top */
-      padding-top: 100px; /* Location of the box */
-      left: 0;
-      top: 0;
-      width: 100%; /* Full width */
-      height: 100%; /* Full height */
-      overflow: auto; /* Enable scroll if needed */
-      background-color: rgb(0,0,0); /* Fallback color */
-      background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-    }
-    
-    /* Modal Content */
-    .modal-content {
-      background-color: #fefefe;
-      margin: auto;
-      padding: 20px;
-      border: 1px solid #888;
-      width: 80%;
-    }
-    
-    /* The Close Button */
-    .close {
-      color: #aaaaaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-    }
-    
-    .close:hover,
-    .close:focus {
-      color: #000;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    </style>
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  /* The Modal (background) */
+  .modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    /* Sit on top */
+    padding-top: 100px;
+    /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+  }
+
+  /* Modal Content */
+  .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+  }
+
+  /* The Close Button */
+  .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
+</style> -->
 {% endblock %}
