@@ -69,7 +69,6 @@ We will love to help and assist you at any movement.
 Automated mail sent by RPortal. Please do not reply.
 Regards! """
 mail = Mail(app)
-otp = random.randint(111111,999999)  
 
 #   Index Page - rportal
 @app.route('/')
@@ -145,10 +144,11 @@ def  register():
                 server.quit()
                 if code == 250:
                     email = email
+                    register.otp = random.randint(111111,999999)
                     msg = Message('OTP confirmation for RPortal' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
-                    msg.body = part2 + str(otp)+ part3 
+                    msg.body = part2 + str(register.otp)+ part3 
                     mail.send(msg)
-                    msg1 = 'OTP: ',otp
+                    msg1 = 'OTP: ',register.otp
                     return render_template('register_otp.html', msg1=msg1, name=name, mobile=mobile, email=email, username=username, password=password)
                 else:
                     msg ='Mail adderss not found! Change the address and try again'
@@ -167,7 +167,7 @@ def rvalidate():
     name = request.form['name']
     email = request.form['email']
     mobile = request.form['mobile']
-    if otp == int(form_otp):  
+    if register.otp == int(form_otp):  
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('INSERT INTO userdetails VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT)', (username , name ,  password , mobile ,  email ,))
         mysql.connection.commit()
@@ -440,8 +440,7 @@ def login():
                 session['username'] = account['username']
                 session['user_name'] = account['name']
                 session['user_email'] = account['email']
-                session['user_mobile'] = account['mobile']
-                
+                session['user_mobile'] = account['mobile']         
                 return uotp()
             elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                 username = request.form['username']
@@ -524,11 +523,31 @@ def login():
     return render_template('login.html', msg=msg, msg1=msg1)
 
 #   User OTP Validators
+def uotp(): 
+    if 'user' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM  userdetails WHERE uid = %s', (session['uid'],))
+        account = cursor.fetchone()
+        if account: 
+            email = account['email']
+            uotp.otp = random.randint(111111,999999)
+            msg = Message('OTP confirmation for RPortal' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
+            msg.body = part2 + str(uotp.otp)+ part3 
+            mail.send(msg)
+            msg1 = 'OTP: ',uotp.otp
+            return render_template('otp.html', msg1=msg1)
+        else:
+            msg = 'Something went wrong:( Please try again!'
+    elif session.get('user') is None:
+        return login()
+    else: 
+        return logout()
+ 
 @app.route('/validate',methods=["POST"])
 def validate(): 
     if 'user' in session:     
         user_otp = request.form['otp']  
-        if otp == int(user_otp):  
+        if uotp.otp == int(user_otp):  
             return redirect(url_for('mainhome')) 
         else: 
             msg = 'OTP Does not match! Try Again!!'
@@ -538,25 +557,6 @@ def validate():
     else:
         return logout()
 
-def uotp(): 
-    if 'user' in session:
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM  userdetails WHERE uid = %s', (session['uid'],))
-        account = cursor.fetchone()
-        if account: 
-            email = account['email']
-            msg = Message('OTP confirmation for RPortal' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
-            msg.body = part2 + str(otp)+ part3 
-            mail.send(msg)
-            msg1 = 'OTP: ',otp
-            return render_template('otp.html', msg1=msg1)
-        else:
-            msg = 'Something went wrong:( Please try again!'
-    elif session.get('user') is None:
-        return login()
-    else: 
-        return logout()
- 
 #   Forgot Password
 @app.route('/rportal/forgot_password', methods=['GET', 'POST'])
 def forgot_password():
@@ -587,10 +587,11 @@ def forgot_password():
                 server.quit()
                 if code == 250:
                     email = email
+                    forgot_password.otp = random.randint(111111,999999)
                     msg = Message('OTP confirmation for RPortal' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
-                    msg.body = part2 + str(otp)+ part3 
+                    msg.body = part2 + str(forgot_password.otp)+ part3 
                     mail.send(msg)
-                    msg1 = 'OTP: ',otp
+                    msg1 = 'OTP: ',forgot_password.otp
                     return render_template('forgot_otp.html', msg1=msg1, username=username, password=password)
                 else:
                     msg ='Mail adderss not found! Change the address and try again'
@@ -626,7 +627,7 @@ def fvalidate():
     form_otp = request.form['otp']  
     username = request.form['username']
     passtext = request.form['password']
-    if otp == int(form_otp):  
+    if forgot_password.otp == int(form_otp):  
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('UPDATE userdetails SET password = %s WHERE username = %s', (passtext,username))  
         mysql.connection.commit()
