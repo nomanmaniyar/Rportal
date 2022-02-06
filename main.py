@@ -368,7 +368,7 @@ def security():
         elif not security_username or not security_password or not security_mobile:
             msg = 'Please fill out the form!'
         else:
-            cursor.execute('INSERT INTO security VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT)', (security_username , security_password , security_name , security_mobile, session['code']))
+            cursor.execute('INSERT INTO security VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT)', (security_username , security_password , security_name , security_mobile, session['Scode']))
             mysql.connection.commit()
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
@@ -1832,7 +1832,7 @@ def maintenance_pay():
             main_id = request.form['id']
             soc_bal = request.form['soc_bal']
             amount = request.form['amount']
-            new_bal = float(soc_bal )+ float( amount)
+            new_bal = float(soc_bal)+float(amount)
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('UPDATE society SET soc_bal = %s  WHERE  code = %s', (new_bal, session['Mcode'],))
             mysql.connection.commit()
@@ -1856,13 +1856,13 @@ def maintenance_pay():
 def Mmaintenance():
     if 'member' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM maintenance WHERE code = %s GROUP BY due_date',(session['Mcode'],))
+        cursor.execute('SELECT * FROM maintenance WHERE code = %s and Musername=%s GROUP BY due_date',(session['Mcode'],session['Musername'],))
         account = cursor.fetchall()
         cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor1.execute('SELECT * FROM maintenance WHERE code = %s and payment_status=%s',(session['Mcode'],'paid',))
+        cursor1.execute('SELECT * FROM maintenance WHERE code = %s and payment_status=%s and Musername=%s',(session['Mcode'],'paid',session['Musername'],))
         account1 = cursor1.fetchall()
         cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor2.execute('SELECT * FROM maintenance WHERE code = %s and payment_status=%s',(session['Mcode'],'unpaid',))
+        cursor2.execute('SELECT * FROM maintenance WHERE code = %s and payment_status=%s and Musername=%s',(session['Mcode'],'unpaid',session['Musername'],))
         account2 = cursor2.fetchall()
         cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor3.execute('SELECT soc_bal FROM society WHERE code = %s',(session['Mcode'],))
@@ -1879,13 +1879,13 @@ def Mmaintenance1(msg):
     if 'member' in session:
         msg=msg
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM maintenance WHERE code = %s GROUP BY due_date',(session['Mcode'],))
+        cursor.execute('SELECT * FROM maintenance WHERE code = %s and Musername=%s GROUP BY due_date',(session['Mcode'],session['Musername'],))
         account = cursor.fetchall()
         cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor1.execute('SELECT * FROM maintenance WHERE code = %s and payment_status=%s',(session['Mcode'],'paid',))
+        cursor1.execute('SELECT * FROM maintenance WHERE code = %s and payment_status=%s and Musername=%s',(session['Mcode'],'paid',session['Musername'],))
         account1 = cursor1.fetchall()
         cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor2.execute('SELECT * FROM maintenance WHERE code = %s and payment_status=%s',(session['Mcode'],'unpaid',))
+        cursor2.execute('SELECT * FROM maintenance WHERE code = %s and payment_status=%s and Musername=%s',(session['Mcode'],'unpaid',session['Musername'],))
         account2 = cursor2.fetchall()
         cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor3.execute('SELECT soc_bal FROM society WHERE code = %s',(session['Mcode'],))
