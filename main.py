@@ -368,7 +368,8 @@ def security():
         elif not security_username or not security_password or not security_mobile:
             msg = 'Please fill out the form!'
         else:
-            cursor.execute('INSERT INTO security VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT)', (security_username , security_password , security_name , security_mobile, session['code']))
+            #added Scode instead of code
+            cursor.execute('INSERT INTO security VALUES (NULL, %s, %s, %s, %s, %s, DEFAULT)', (security_username , security_password , security_name , security_mobile, session['Scode']))
             mysql.connection.commit()
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
@@ -1551,22 +1552,22 @@ def mprofile1(msg):
 @app.route('/rportal/mupdate', methods=['GET', 'POST'] )
 def mupdate():
     if 'member' in session:
-        if request.method == 'POST' and 'flatno' in request.form and 'wing' in request.form:
+        if request.method == 'POST' and 'email' in request.form and 'name' in request.form:
             email = request.form['email']
             Aname = request.form['name']
-            flatno = request.form['flatno']
-            wing = request.form['wing']
+            # flatno = request.form['flatno']
+            # wing = request.form['wing']
             mobile = request.form['mobile']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('SELECT username FROM member WHERE Mcode = %s AND Mflatno = %s AND Mwing = %s', (session['Mcode'], flatno, wing,))
+            cursor.execute('SELECT username FROM member WHERE Mcode = %s AND Memail = %s AND Mmobile = %s', (session['Mcode'], email, mobile,))
             account = cursor.fetchone()
             cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor1.execute('SELECT username FROM secretary WHERE Scode = %s AND Sflatno = %s AND Swing = %s', (session['Mcode'], flatno, wing,))
+            cursor1.execute('SELECT username FROM secretary WHERE Scode = %s AND Semail = %s AND Smobile = %s', (session['Mcode'], email, mobile,))
             account1 = cursor1.fetchone()
             if account:
                 if account['username'] == session['Musername']:
                     cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-                    cursor2.execute('UPDATE member SET Mname=%s, Mflatno=%s, Mwing=%s, Memail=%s, Mmobile=%s WHERE Mid=%s', (Aname , flatno , wing , email, mobile, session['Mid'],))
+                    cursor2.execute('UPDATE member SET Mname=%s, Memail=%s, Mmobile=%s WHERE Mid=%s', (Aname , email, mobile, session['Mid'],))
                     mysql.connection.commit()
                     msg ='Profile updated!'
                     return mprofile1(msg)
@@ -1576,7 +1577,7 @@ def mupdate():
             elif account1:
                 if account1['username'] == session['Musername']:
                     cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-                    cursor2.execute('UPDATE member SET Mname=%s, Mflatno=%s, Mwing=%s, Memail=%s, Mmobile=%s WHERE Mid=%s', (Aname , flatno , wing , email, mobile, session['Mid'],))
+                    cursor2.execute('UPDATE member SET Mname=%s, Memail=%s, Mmobile=%s WHERE Mid=%s', (Aname , email, mobile, session['Mid'],))
                     mysql.connection.commit()
                     msg ='Profile updated!'
                     return mprofile1(msg)
@@ -1585,7 +1586,7 @@ def mupdate():
                     return mprofile1(msg)
             else:
                 cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-                cursor2.execute('UPDATE member SET Mname=%s, Mflatno=%s, Mwing=%s, Memail=%s, Mmobile=%s WHERE Mid=%s', (Aname , flatno , wing , email, mobile, session['Mid'],))
+                cursor2.execute('UPDATE member SET Mname=%s, Memail=%s, Mmobile=%s WHERE Mid=%s', (Aname , email, mobile, session['Mid'],))
                 mysql.connection.commit()
                 msg ='Profile updated!'
                 return mprofile1(msg)
@@ -1789,9 +1790,9 @@ def manage_visitor():
         return login()
     else:
         return logout()
-
-@app.route('/rportal/askpermission', methods=['GET', 'POST'] )
-def askpermission():
+# added new permission route
+@app.route('/rportal/mpermission')
+def mpermission():
     if 'member' in session:
         msg = ''
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1806,6 +1807,16 @@ def askpermission():
         cursor2.execute('SELECT *  from permission WHERE pstatus = %s AND society_code = %s', ('denied',session['Mcode'],) ) 
         account2 = cursor2.fetchall() 
 
+        return render_template('member/askpermission.html',account=account, account1=account1,account2=account2)
+    elif session.get('member') is None:
+        return login()
+    else:
+        return logout()
+
+@app.route('/rportal/askpermission', methods=['GET', 'POST'] )
+def askpermission():
+    if 'member' in session:
+        msg = ''
         if request.method == 'POST'and 'subject' in request.form :
             subject = request.form['subject']
             text = request.form['text']
@@ -1813,9 +1824,7 @@ def askpermission():
             cursor.execute('INSERT INTO permission values (NULL , %s, %s,%s, %s, %s, DEFAULT )', (session['Mname'],subject, text ,'request', session['Mcode']))
             mysql.connection.commit() 
             msg="successfully request submit"
-            return render_template('member/askpermission.html',msg=msg)
-
-        return render_template('member/askpermission.html',account=account, account1=account1,account2=account2,)
+        return redirect(url_for('mpermission'))
     elif session.get('member') is None:
         return login()
     else:

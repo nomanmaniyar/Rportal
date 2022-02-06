@@ -2,34 +2,45 @@
 
 {% block title %}rportal - View Contacts{% endblock %}
 
-{% block content %}	
-<style>
-    table, th, td {
-      border:1px solid black;
-    }
-</style>
-	
+{% block content %}
+<div class="container mt-5 pt-3">
+  <div class="row row-cols-auto">
+    <a class="col" href='javascript:self.history.back();'>
+      <i class="bi bi-arrow-left" style="font-size: x-large;"></i>
+    </a>
+    <h2 class="col">Documents</h2>
+  </div>
 
-<div>
-    <h3>Important Document</h3>
-{% if account !=0 %}
-{% for data  in account %}
-<table  class="table" style="width:100%">
-  <td>
-      
-      <a  href="{{data['document']}}" download="{{data['doc_filename']}}" target="blank">{{data['doc_filename']}}</a>
- 
-</table>
+  <div class="container">
+    <hr>
+    <span class="h6">
+      Document Available
+    </span>
+    {% if (account|length)==0 %}
+    <div class="container">
+      <p class="h3 m-5 text-muted text-center">no files to download</p>
+    </div>
+    {% else %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      {% for data in account %}
+      <div class="col">
+        <div class="card ">
+          <div class="card-body">
+            <h5 class="card-title">{{data['doc_filename']}}</h5>
+          </div>
+          <div class="card-footer d-flex flex-row-reverse">
 
-{% else %}
-
-
-<b><h4>No Data Found.</h4> </b><br>
-{% endfor %} 
-{% endif %} 
-<a href='javascript:self.history.back();'>Go Back</a>
-</div>
-
+            <a class="btn btn-outline-secondary btn-sm mx-1" role="button" href="{{data['document']}}"
+              download="{{data['doc_filename']}}" target="blank">
+              <i class="bi bi-download"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
 </div>
 
 {% endblock %}
