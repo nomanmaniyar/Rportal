@@ -15,14 +15,22 @@
     {% if account !=0 %}
     {% for contact in account %}
     
-    <div class="row">
-      <div class="col-sm-3">
-         <p><h6>{{contact['contact_label']}} :{{contact['contact_no']}}</h6></p>
-      </div>  
-      <div class="col-sm-6">
-         <button class="bi bi-telephone btn btn-primary" href="tel:+101"> call</button>
+    <div class="row ">
+      <div class="col-5">
+        <div class="card-title">
+          <span class="">
+            {{contact['contact_label']}}
+          </span>
+          <br>
+          <span class="text-muted " style="font-weight: 700;">
+            {{contact['contact_no']}}
+          </span>
+        </div>
       </div>
-    </div>
+      <div class="col-4">
+        <a class="bi bi-telephone btn btn-primary" href="tel:+{{contact['contact_no']}}"> call </a>&nbsp;&nbsp;
+      </div>
+      </div>
     {% else %}
     <div>
     
@@ -39,7 +47,7 @@
              <p><h6>Emergency Number:  112</h6></p>
           </div>  
           <div class="col-sm-6">
-             <button class="bi bi-telephone btn btn-primary" href="tel:+112"> call 112</button>
+             <a class="bi bi-telephone btn btn-primary" href="tel:+112"> call 112</a>
           </div>
         </div>
         <div class="row">
@@ -47,7 +55,7 @@
              <p><h6>Police: 100</h6></p>
           </div>  
           <div class="col-sm-6">
-             <button class="bi bi-telephone btn btn-info" href="tel:+100"> call 100</button>
+             <a class="bi bi-telephone btn btn-info" href="tel:+100"> call 100</a>
           </div>
         </div>
         <div class="row">
@@ -55,7 +63,7 @@
              <p><h6>Fire:  101</h6></p>
           </div>  
           <div class="col-sm-6">
-             <button class="bi bi-telephone btn btn-danger" href="tel:+101"> call 101</button>
+             <a class="bi bi-telephone btn btn-danger" href="tel:+101"> call 101</a>
           </div>
         </div>
         <div class="row">
@@ -63,7 +71,7 @@
              <p><h6>Ambulance :  102</h6></p>
           </div>  
           <div class="col-sm-6">
-             <button class="bi bi-telephone btn btn-success" href="tel:+102"> call 102</button>
+             <a class="bi bi-telephone btn btn-success" href="tel:+102"> call 102</a>
           </div>
         </div>             
         </div>

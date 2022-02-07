@@ -3,17 +3,125 @@
 {% block title %}rportal{% endblock %}
 
 {% block content %}	
-<h3>Admin Home Page</h3>
-<p>Good to see you back, AJ!</p>
-<p><br>
-	Total Users: {{ c1 }}<br>
-	Total Active Secretary: {{ c2 }}<br>
-	Total Active Member: {{ c3 }}<br>
-	Total Active Society: {{ c4 }}<br>
-    Total Inactive Secretary: {{ c5 }}<br>
-	Total Inactive Member: {{ c6 }}<br>
-	Total Inactive Society: {{ c7 }}<br>
-	</p>
+
+
+<div class="container1 my-5">
+    <h2>Admin Dashboard</h2>
+    <h6>Good to see you back ,AJ!</h6>
+    <div class="container-fluid text-dark my-3 shadow text-white" style="border-radius: 15px;">
+        <br>
+        <p class="text-black">
+            <script type="text/javascript" src="https://www.brainyquote.com/link/quotebr.js"></script><br>
+        </p>
+    </div>
+    <div class="row">
+        <div class="four col-md-3">
+            <div class="counter-box colored"> <i class="fa fa-user"></i> <span class="counter">{{c1}}</span>
+                <p>Total Users</p>
+            </div>
+        </div>
+        <div class="four col-md-3">
+            <div class="counter-box"> <i class="fa fa-user"></i> <span class="counter">{{ c2 }}</span>
+                <p> Active Secretary</p>
+            </div>
+        </div>
+        <div class="four col-md-3">
+            <div class="counter-box"> <i class="fa fa-user"></i> <span class="counter">{{ c3 }}</span>
+                <p>Active Member</p>
+            </div>
+        </div>
+        <div class="four col-md-3">
+            <div class="counter-box"> <i class="fas fa-building"></i> <span class="counter">{{ c4 }}</span>
+                <p>Active Society</p>
+            </div>
+        </div>
+	</div>
+
+	<div class="row count2">
+		<div class="four col-md-3">
+            <div class="counter-box"> <i class="fas fa-user"></i> <span class="counter">{{ c5 }}</span>
+                <p> Inactive Secretary</p>
+            </div>
+        </div>
+		<div class="four col-md-3">
+            <div class="counter-box"> <i class="fas fa-user"></i> <span class="counter">{{ c6 }}</span>
+                <p> Inactive Member</p>
+            </div>
+        </div>
+		<div class="four col-md-3">
+            <div class="counter-box"> <i class="fas fa-building"></i> <span class="counter">{{ c7 }}</span>
+                <p> Inactive Society</p>
+            </div>
+        </div>
 
 	
+    </div>
+</div>
+
+
+<style>
+	.container {
+    margin-top: 100px
+}
+
+.counter-box {
+    display: block;
+    background: #f6f6f6;
+    padding: 40px 20px 37px;
+    text-align: center
+}
+.count2{
+	padding-top: 20px;
+}
+.counter-box p {
+    margin: 5px 0 0;
+    padding: 0;
+    color: #909090;
+    font-size: 18px;
+    font-weight: 500
+}
+
+.counter-box i {
+    font-size: 60px;
+    margin: 0 0 15px;
+    color: #d2d2d2
+}
+
+.counter {
+    display: block;
+    font-size: 32px;
+    font-weight: 700;
+    color: #666;
+    line-height: 28px
+}
+
+.counter-box.colored {
+    background: #0B5ED7;
+}
+
+.counter-box.colored p,
+.counter-box.colored i,
+.counter-box.colored .counter {
+    color: #fff
+}
+</style>
+
+<script>
+	$(document).ready(function() {
+
+$('.counter').each(function () {
+$(this).prop('Counter',0).animate({
+Counter: $(this).text()
+}, {
+duration: 3000,
+easing: 'swing',
+step: function (now) {
+$(this).text(Math.ceil(now));
+}
+});
+});
+
+});
+</script>
+
 {% endblock %}
