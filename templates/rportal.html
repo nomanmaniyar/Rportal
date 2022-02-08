@@ -12,6 +12,8 @@
 		LiaFdizhPpN" crossorigin="anonymous">
 	<link href="https://fonts.googleapis.com/css2?family=Spartan:wght@300;600&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="{{ url_for('static', filename='rportal.css') }}">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+	<link rel="icon" type="image/x-icon" href="/static/Icon/favicon.ico">
 </head>
 
 <body>
@@ -78,12 +80,6 @@
 			</div>
 		</div>
 	</section>
-	<p><br>
-	Total Users: {{ count1 }}<br>
-	Total Secretary: {{ count2 }}<br>
-	Total Member: {{ count3 }}<br>
-	Total Society: {{ count4 }}<br>
-	</p>
 	<!-- Boxes -->
 	<section class="p-5" id="Features">
 		<div class="container">
@@ -374,21 +370,14 @@
 	<!-- Team -->
 	<section id="Team" class=" bg-primary">
 		<div class="container">
-			<h2 class="text-center text-white p-2">Our Team</h2>
+			<h2 class="text-center text-white p-2">Our User</h2>
 			<div class="row g-4 pb-5">
 				<div class="col-md-6 col-lg-3">
 					<div class="card bg-light">
 						<div class="card-body text-center">
-							<img src="../static/Icon/male_avatar.svg" class="rounded-circle mb-3 w-50" alt="" />
-							<h3 class="card-title mb-3">Aashutosh M</h3>
-							<p class="card-text">
-								Lorem ipsum dolor sit amet consectetur adipisicing elit.
-								Assumenda accusamus nobis sed cupiditate iusto? Quibusdam.
-							</p>
-							<a href="#"><i class="bi bi-twitter text-dark mx-1"></i></a>
-							<a href="#"><i class="bi bi-facebook text-dark mx-1"></i></a>
-							<a href="#"><i class="bi bi-linkedin text-dark mx-1"></i></a>
-							<a href="#"><i class="bi bi-instagram text-dark mx-1"></i></a>
+							<div class="counter-box"> <i class="fa fa-user"></i> <span class="counter">{{count1}}</span>
+								<p>Total Users</p>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -396,16 +385,9 @@
 				<div class="col-md-6 col-lg-3">
 					<div class="card bg-light">
 						<div class="card-body text-center">
-							<img src="../static/Icon/male_avatar.svg" class="rounded-circle mb-3 w-50" alt="" />
-							<h3 class="card-title mb-3">Jay S</h3>
-							<p class="card-text">
-								Lorem ipsum dolor sit amet consectetur adipisicing elit.
-								Assumenda accusamus nobis sed cupiditate iusto? Quibusdam.
-							</p>
-							<a href="#"><i class="bi bi-twitter text-dark mx-1"></i></a>
-							<a href="#"><i class="bi bi-facebook text-dark mx-1"></i></a>
-							<a href="#"><i class="bi bi-linkedin text-dark mx-1"></i></a>
-							<a href="#"><i class="bi bi-instagram text-dark mx-1"></i></a>
+							<div class="counter-box "> <i class="fa fa-user"></i> <span class="counter">{{count2}}</span>
+								<p>Total Users</p>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -414,32 +396,18 @@
 					<div class="card bg-light">
 						<div class="card-body text-center">
 
-							<img src="../static/Icon/male_avatar.svg" class="rounded-circle mb-3 w-50" alt="" />
-							<h3 class="card-title mb-3">Samadhan S</h3>
-							<p class="card-text">
-								Lorem ipsum dolor sit amet consectetur adipisicing elit.
-								Assumenda accusamus nobis sed cupiditate iusto? Quibusdam.
-							</p>
-							<a href="#"><i class="bi bi-twitter text-dark mx-1"></i></a>
-							<a href="#"><i class="bi bi-facebook text-dark mx-1"></i></a>
-							<a href="#"><i class="bi bi-linkedin text-dark mx-1"></i></a>
-							<a href="#"><i class="bi bi-instagram text-dark mx-1"></i></a>
+							<div class="counter-box"> <i class="fa fa-user"></i> <span class="counter">{{count3}}</span>
+								<p>Total Users</p>
+							</div>
 						</div>
 					</div>
 				</div>
 				<div class="col-md-6 col-lg-3">
 					<div class="card bg-light">
 						<div class="card-body text-center">
-							<img src="../static/Icon/male_avatar.svg" class="rounded-circle mb-3 w-50" alt="" />
-							<h3 class="card-title mb-3">Noman M</h3>
-							<p class="card-text">
-								Lorem ipsum dolor sit amet consectetur adipisicing elit.
-								Assumenda accusamus nobis sed cupiditate iusto? Quibusdam.
-							</p>
-							<a href="#"><i class="bi bi-twitter text-dark mx-1"></i></a>
-							<a href="#"><i class="bi bi-facebook text-dark mx-1"></i></a>
-							<a href="#"><i class="bi bi-linkedin text-dark mx-1"></i></a>
-							<a href="#"><i class="bi bi-instagram text-dark mx-1"></i></a>
+							<div class="counter-box "> <i class="fa fa-user"></i> <span class="counter">{{count4}}</span>
+								<p>Total Users</p>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -464,4 +432,63 @@
 	<script src='https://code.jquery.com/jquery-3.3.1.slim.min.js'></script>
 </body>
 
+<style>
+	
+.counter-box {
+    display: block;
+    background: #f6f6f6;
+    padding: 40px 20px 37px;
+    text-align: center
+}
+
+.counter-box p {
+    margin: 5px 0 0;
+    padding: 0;
+    color: #909090;
+    font-size: 18px;
+    font-weight: 500
+}
+
+.counter-box i {
+    font-size: 60px;
+    margin: 0 0 15px;
+    color: #d2d2d2
+}
+
+.counter {
+    display: block;
+    font-size: 32px;
+    font-weight: 700;
+    color: #666;
+    line-height: 28px
+}
+
+.counter-box.colored {
+    background: #0B5ED7;
+}
+
+.counter-box.colored p,
+.counter-box.colored i,
+.counter-box.colored .counter {
+    color: #fff
+}
+</style>
+
+<script>
+	$(document).ready(function() {
+
+$('.counter').each(function () {
+$(this).prop('Counter',0).animate({
+Counter: $(this).text()
+}, {
+duration: 3000,
+easing: 'swing',
+step: function (now) {
+$(this).text(Math.ceil(now));
+}
+});
+});
+
+});
+</script>
 </html>
