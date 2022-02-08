@@ -1,74 +1,18 @@
-{% extends 'member/mlayout.html' %}
-
-{% block title %}rportal - View Contacts{% endblock %}
+{% extends 'security/security_layout.html' %}
 
 {% block content %}
 <div class="container mt-5 pt-3">
   <div class="d-flex">
     <a class="bd-highlight" href='javascript:self.history.back();'>
-
-      <i class="bi bi-arrow-left" style="font-size: x-large;"></i>
+        <i class="bi bi-arrow-left" style="font-size: x-large;"></i>
     </a>
-    <div class="mx-3 h2">Contacts</div>
+      <div class="mx-3 h2">Important Contacts</div>    
   </div>
   <div>
     <hr>
-    {% if (account[0]|length)==0 %}
-    <div>
-      <div class="col">
-        <div class="card-herader bg-transparent">
-          <span class="h5">Emergency Helpline Numbers</span>
-        </div>
-      </div>
-      <hr>
-      <div>
-        <div>
-          <div class="row">
-            <div class="col-sm-3">
-              <p>
-              <h6>Emergency Number: 112</h6>
-              </p>
-            </div>
-            <div class="col-sm-6">
-              <button class="bi bi-telephone btn btn-primary" href="tel:+122"> call 112</button>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-3">
-              <p>
-              <h6>Police: 100</h6>
-              </p>
-            </div>
-            <div class="col-sm-6">
-              <button class="bi bi-telephone btn btn-primary" href="tel:+100"> call 100</button>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-3">
-              <p>
-              <h6>Fire: 101</h6>
-              </p>
-            </div>
-            <div class="col-sm-6">
-              <button class="bi bi-telephone btn btn-primary" href="tel:+101"> call 101</button>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-3">
-              <p>
-              <h6>Ambulance : 102</h6>
-              </p>
-            </div>
-            <div class="col-sm-6">
-              <button class="bi bi-telephone btn btn-primary" href="tel:+102"> call 102</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    {% else %}
+    {% if account !=0 %}
     {% for contact in account %}
-
+    
     <div class="row ">
       <div class="col-5">
         <div class="card-title">
@@ -82,13 +26,59 @@
         </div>
       </div>
       <div class="col-4">
-
-        <button class="bi bi-telephone btn btn-primary" href="{{contact['contact_no']}}"> call </button>&nbsp;&nbsp;
-
+        <a class="bi bi-telephone btn btn-primary" href="tel:+{{contact['contact_no']}}"> call </a>&nbsp;&nbsp;
       </div>
+      </div>
+    {% else %}
+    <div>
+    
+    <div class="col">
+      <div class="card-herader bg-transparent">
+        <span class="h5">Emergency Helpline Numbers</span>
+      </div>
+    </div>  
+    <hr>
+    <div>
+      <div>
+        <div class="row">
+          <div class="col-sm-3">
+             <p><h6>Emergency Number:  112</h6></p>
+          </div>  
+          <div class="col-sm-6">
+            
+             <a class="bi bi-telephone btn btn-primary"  href="tel:+100"> call 112</a>
+            
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3">
+             <p><h6>Police: 100</h6></p>
+          </div>  
+          <div class="col-sm-6">
+             <a class="bi bi-telephone btn btn-primary" href="tel:+100"> call 100</a>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3">
+             <p><h6>Fire:  101</h6></p>
+          </div>  
+          <div class="col-sm-6">
+             <a class="bi bi-telephone btn btn-primary" href="tel:+101"> call 101</a>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3">
+             <p><h6>Ambulance :  102</h6></p>
+          </div>  
+          <div class="col-sm-6">
+             <a class="bi bi-telephone btn btn-primary" href="tel:+102"> call 102</a>
+          </div>
+        </div>             
+        </div>
     </div>
-    {% endfor %}
-    {% endif %}
-  </div>
+</div> 
+{% endfor %} 
+{% endif %}
 </div>
-{% endblock %}
+</div>  
+{% endblock %}  
