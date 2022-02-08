@@ -12,11 +12,12 @@
     </div>
     {% if (account[0]|length)==0 %}
     <div>
-        <h5>Secretary of your society haven't added maintenance rules yet.</h5>
+        <p class="h3 m-5 text-muted text-center">Secretary of your society haven't added maintenance rules yet.
+        <p>
+
     </div>
     {% else %}
     <div>
-        <h5>Maintenance Payment:</h5>
         <h6>{{ msg }}</h6>
         <ul class="nav nav-tabs justify-content-lg-evenly mt-3" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
@@ -35,7 +36,8 @@
                 <div class="accordion accordion-flush my-3" id="accordionFlush{{data1}}">
                     {% if (account1[0]|length)==0 %}
                     <div class="container">
-                        <p class="h3 m-5 text-muted text-center">No records to show<p>
+                        <p class="h3 m-5 text-muted text-center">No Records to Show
+                        <p>
                     </div>
                     {% else %}
                     {% for data1 in range(account1|length) %}
@@ -44,7 +46,8 @@
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#flush-collapse{{data1}}" aria-expanded="false"
                                 aria-controls="flush-collapse{{data1}}">
-                                <strong>Paid ₹{{ account1[data1]['amount']}} on {{ account1[data1]['paid_date']}}</strong>
+                                <strong>Paid ₹{{ account1[data1]['amount']}} on {{
+                                    account1[data1]['paid_date']}}</strong>
                                 <span class="badge rounded-pill bg-success mx-2" style="font-size: x-small;">paid</span>
                             </button>
                         </h2>
@@ -72,7 +75,7 @@
                 <div class="accordion accordion-flush my-3" id="accordionFlush{{data2}}">
                     {% if (account2[0]|length)==0 %}
                     <div class="container">
-                        <p class="h3 m-5 text-muted text-center">No payments pending</p>
+                        <p class="h3 m-5 text-muted text-center">No Payments Pending</p>
                     </div>
                     {% else %}
                     {% for data2 in range(account2|length) %}
@@ -82,7 +85,8 @@
                                 data-bs-target="#flush-collapse{{data2}}" aria-expanded="false"
                                 aria-controls="flush-collapse{{data2}}">
                                 <strong>{{account2[data2]['Mname']}}</strong>
-                                <span class="badge rounded-pill bg-warning mx-2" style="font-size: x-small;">unpaid</span>
+                                <span class="badge rounded-pill bg-warning mx-2"
+                                    style="font-size: x-small;">unpaid</span>
                             </button>
                         </h2>
                         <div id="flush-collapse{{data2}}" class="accordion-collapse collapse"
@@ -99,10 +103,11 @@
                                 <form action="/rportal/maintenance_pay" method="post">
                                     <input type="hidden" name="id" value="{{account2[data2]['main_id']}}" required>
                                     <input type="hidden" name="amount" value="{{account2[data2]['amount']}}" required>
-                                   
+
                                     {% for data3 in account3 %}
                                     <input type="hidden" name="soc_bal" value="{{ data3['soc_bal']}}  " required>
-                                    <input type="submit" class="btn btn-primary mt-3" value="Pay ₹{{account2[data2]['amount']}}"></input>
+                                    <input type="submit" class="btn btn-primary mt-3"
+                                        value="Pay ₹{{account2[data2]['amount']}}"></input>
                                 </form>
                             </div>
                         </div>
