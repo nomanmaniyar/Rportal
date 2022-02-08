@@ -2,7 +2,7 @@
 
 {% block title %}rportal x Ajinfotics!{% endblock %}
 
-{% block content %}	
+{% block content %}
 
 <div class="container mt-5 pt-3">
 
@@ -11,29 +11,33 @@
             <i class="bi bi-arrow-left" style="font-size: x-large;"></i>
         </a>
         <div class="mx-3 h2">All Society under rportal</div>
-         
+
     </div>
     <hr>
-<style>
-    table, th, td {
-      border:1px solid black;
-    }
-</style>
-	
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+    </style>
 
-<div>
-    <h4><div class="msg">{{ msg }}</div></h4>
-    <table  class="table" style="width:100%">
-        <tr>
-            <th>Name</th>
-            <th>Address</th>
-            <th>Secretary Details</th>
-            <th>Bank Details</th>
-            <th>KYC File</th>
-            <th>Change Status</th>
-            <th>Delete</th>
-        </tr> 
-        {% for data in account %}
+
+    <div>
+        <h4>
+            <div class="msg">{{ msg }}</div>
+        </h4>
+        <table class="table" style="width:100%">
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Secretary Details</th>
+                <th>Bank Details</th>
+                <th>Address Proof</th>
+                <th>Change Status</th>
+                <th>Delete</th>
+            </tr>
+            {% for data in account %}
             <tr>
                 <td>{{ data['name'] }}<br><br>
                     <b><a>Society Code: </a></b>{{ data['Scode'] }}<br>
@@ -47,32 +51,36 @@
                     <b><a>Flat no: </a></b> {{ data['Sflatno'] }}<br>
                     <b><a>Wing: </a></b> {{ data['Swing'] }}<br>
                     <b><a>Mobile: </a></b> {{ data['Smobile'] }}<br>
-                    <b><a>Email: </a></b>  {{ data['Semail'] }}</td>
+                    <b><a>Email: </a></b> {{ data['Semail'] }}
+                </td>
                 <td><b><a>AC Name: </a></b>{{ data['acname'] }}<br>
                     <b><a>Ac Number: </a></b> {{ data['acno'] }}<br>
                     <b><a>MMID: </a></b> {{ data['mmid'] }}<br>
                     <b><a>Bank Name: </a></b> {{ data['bankname'] }}<br>
-                    <b><a>Branch: </a></b>  {{ data['branch'] }}<br>
-                    <b><a>IFSC Code: </a></b>  {{ data['ifsc'] }}</td>
-                <td><a href="/static/upload/{{data['kyc_file']}}" download="/static/upload/{{data['kyc_file']}}" target="blank"><button class='btn btn-primary'>Download</button></a></td>
+                    <b><a>Branch: </a></b> {{ data['branch'] }}<br>
+                    <b><a>IFSC Code: </a></b> {{ data['ifsc'] }}
+                </td>
+                <td><a href="/static/upload/{{data['kyc_file']}}" download="/static/upload/{{data['kyc_file']}}"
+                        target="blank"><button class='btn btn-primary'>Download</button></a></td>
                 <td>
-                    <form action="/rportal/c_sec/{{data.Scode}}" >
-                    <b> Status: </b>
+                    <form action="/rportal/c_sec/{{data.Scode}}">
+                        <b> Status: </b>
                         <select onchange='if(this.value !=0 ) { this.form.submit(); }'>
-                       <option value='0'>{{ data['secretarty_status'] }}</option>
-                       <option value='1'>inactive</option>
-                      </select>
-                   </form>
-                 </td>
-                <td>    
-                    &nbsp;&nbsp;&nbsp;<a href="/rportal/r_sec/{{data.Scode}}"><i class="fa fa-trash" aria-hidden="true" onclick="return confirm('Are You Sure For delete ?')" style="color:black"></i></a>
-                 </td>  
-            </tr>   
-        {% endfor %}
+                            <option value='0'>{{ data['secretarty_status'] }}</option>
+                            <option value='1'>inactive</option>
+                        </select>
+                    </form>
+                </td>
+                <td>
+                    &nbsp;&nbsp;&nbsp;<a href="/rportal/r_sec/{{data.Scode}}"><i class="fa fa-trash" aria-hidden="true"
+                            onclick="return confirm('Are You Sure For delete ?')" style="color:black"></i></a>
+                </td>
+            </tr>
+            {% endfor %}
 
-    </table>
-    <br>    
-    
-</div>
+        </table>
+        <br>
+
+    </div>
 </div>
 {% endblock %}
