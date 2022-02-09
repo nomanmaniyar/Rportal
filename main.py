@@ -453,7 +453,7 @@ def login():
                     session['admin'] = True
                     session['Aid'] = account['Aid']
                     session['Ausername'] = account['Ausername']
-                    return render_template("admin/admin.html")       
+                    return redirect(url_for('admin_home'))      
                 elif request.method == 'POST' and 'username' in request.form and 'password' in request.form:
                     username = request.form['username']
                     passtext = request.form['password']
@@ -1710,14 +1710,24 @@ def add_chat():
     else:
         return logout()
 
+#guest added
+@app.route('/rportal/guest')
+def guest():
+    if 'member' in session:
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('SELECT *  from visitor WHERE  society_code = %s AND vstatus = %s AND Mflatno = %s AND Mwing = %s', (session['Mcode'],'upcoming', session['Mflatno'], session['Mwing'],) ) 
+        account = cursor1.fetchall()
+        return render_template('member/addguest.html', account=account)
+    elif session.get('member') is None:
+        return login()
+    else:
+        return logout() 
+
 @app.route('/rportal/addguest', methods=['GET', 'POST'] )
 def addguest():
     if 'member' in session:
         msg = ''
         target2 = os.path.join('/Rportal/static/upload/vpic/')
-        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor1.execute('SELECT *  from visitor WHERE  society_code = %s AND vstatus = %s AND Mflatno = %s AND Mwing = %s', (session['Mcode'],'upcoming', session['Mflatno'], session['Mwing'],) ) 
-        account = cursor1.fetchall() 
         if not os.path.isdir(target2):
             os.makedirs(target2)
         if request.method == 'POST' and 'vname' in request.form  and 'vmobile' in request.form:
@@ -1739,7 +1749,8 @@ def addguest():
             cursor.execute('INSERT INTO visitor VALUES (NULL, %s, %s, %s, %s, %s, NULL, NULL, %s, %s, %s, %s, %s, %s, %s, DEFAULT )',(vname, vmobile, vehical_no, in_time, in_date, vpic, session['Mname'], session['Mflatno'], session['Mwing'], 'upcoming', session['Mcode'], session['Musername']))
             mysql.connection.commit() 
             msg = "Guest Add successfully!"
-        return render_template('member/addguest.html',msg=msg, account=account)
+            #calling geust function
+        return redirect(url_for('guest'))
     elif session.get('member') is None:
         return login()
     else:
@@ -1918,7 +1929,7 @@ def admin_home():
         c5=''
         c6=''
         c7=''
-        
+        c8=''
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('select count(uid) from userdetails')
         c1 =  [v for v in cursor.fetchone().values()][0]
@@ -1947,7 +1958,11 @@ def admin_home():
         cursor6.execute('select count(id) from society where society_status=%s',('inactive',))
         c7 =  [v for v in cursor6.fetchone().values()][0]
 
-        return render_template('admin/admin_home.html', Ausername=session['Ausername'],c1=c1,c2=c2,c3=c3,c4=c4,c5=c5,c6=c6,c7=c7)
+        cursor7 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor7.execute('select count(id) from society where society_status=%s',('request',))
+        c8 =  [v for v in cursor7.fetchone().values()][0]
+
+        return render_template('admin/admin_home.html', Ausername=session['Ausername'],c1=c1,c2=c2,c3=c3,c4=c4,c5=c5,c6=c6,c7=c7,c8=c8)
     elif session.get('admin') is None:
         return login(),
     else:
@@ -2216,7 +2231,7 @@ def upvisitor():
 def addvisitor():
     if 'security' in session:
         msg = ''
-        target2 = os.path.join( '/Rportal/static/upload/vpic/')
+        target2 = os.path.join('/Rportal/static/upload/vpic/')
         cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor1.execute('SELECT *  from visitor WHERE  society_code = %s AND vstatus = %s', (session['security_code'],'upcoming') ) 
         account1 = cursor1.fetchall() 

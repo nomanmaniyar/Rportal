@@ -1,7 +1,5 @@
 {% extends 'member/mlayout.html' %}
 
-{% block title %}rportal - Member Profile{% endblock %}
-
 {% block content %}
 <div class="container mt-5 pt-3">
     <div class="row row-cols-auto">
@@ -27,8 +25,10 @@
                             {{ account[data]['notice_time'] }}
                         </span>
                     </div>
-                    <p class="card-text" id="div">
-                        {{ account[data]['notice_message'] }}</p>
+                    <p class="card-text text-overflow" id="notice">
+                        {{ account[data]['notice_message'] }}
+                    </p>
+                    <a class="btn-overflow" href="#">Show more</a>
                 </div>
             </div>
         </div>
@@ -36,15 +36,50 @@
         {% endif %}
     </div>
 </div>
+<style>
+    .text-overflow {
+        height: 100px;
+        display: block;
+        overflow: hidden;
+        word-break: break-word;
+        word-wrap: break-word;
+    }
+
+    .btn-overflow {
+        display: none;
+        text-decoration: none;
+    }
+</style>
 <script>
     $.fn.toHtml = function () {
-
         return $(this).html($(this).text())
-
     }
-    $('#div').toHtml()
+    $('#notice').toHtml()
+////
+    var text = $('.text-overflow'),
+        btn = $('.btn-overflow'),
+        h = text[0].scrollHeight;
+    if (h > 100) {
+        btn.addClass('less');
+        btn.css('display', 'block');
+    }
 
+    btn.click(function (e) {
+        e.stopPropagation();
 
+        if (btn.hasClass('less')) {
+            btn.removeClass('less');
+            btn.addClass('more');
+            btn.text('Show less');
+
+            text.animate({ 'height': h });
+        } else {
+            btn.addClass('less');
+            btn.removeClass('more');
+            btn.text('Show more');
+            text.animate({ 'height': '120px' });
+        }
+    });
 </script>
 
 

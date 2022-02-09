@@ -1,42 +1,145 @@
-{% extends 'security/security_layout.html' %}
-
-{% block title %}visitorlog{% endblock %}
-
+m {% extends 'security/security_layout.html' %}
 {% block content %}
-<div>
-  <table  class="table" style="width:100%">
 
-    {% if account !=0 %}
-         {% for data  in account %}
-         <tr >
-          <td class="title">
-            <div class="thumb">
-            <img  src="/static/upload/vpic/{{data['vpic']}}" height="40%" width="20%" alt="Visitor image">
-            
-            <h6 class="mb-2" ><b>{{ data['vname'] }}</b></h6>
-                    
-                      <b>Contact No: </b>{{ data['vmobile'] }}<br>
-                    
-                        <b>Visited to: </b>{{ data['Mwing'] }} {{ data['Mflatno'] }}<br>
-                        <b>Visited on: </b>{{ data['in_date'] }} / {{ data['in_time'] }}<br>
-                        <b>Left on: </b>{{ data['out_date'] }} / {{ data['out_time'] }}<br>
-                 <b>Status: </b>{{ data['vstatus'] }}<br> 
+<div class="container mt-5 pt-3">
+  <div class="d-flex">
+    <a class="bd-highlight" href='javascript:self.history.back();'>
+      <i class="bi bi-arrow-left" style="font-size: x-large;"></i>
+    </a>
+    <div class="mx-3 h2">Visitors Log</div>
+  </div>
+  <hr>
+  <div class="tab-content my-3" id="myTabContent">
+    {% if (account[0]|length)==0 %}
+    <div class="container">
+      <p class="h3 m-5 text-muted text-center">No Visitor Log</p>
+    </div>
+    {% else %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      {% for data in ((range(account|length))|reverse) %}
+      <div class="col">
+        <div class="card">
+          <img src="/static/upload/vpic/{{ account[data]['vpic']}}" class="img-fluid rounded-start h-100">
+
+          <div class="card-body">
+            <h5 class="card-title">{{ account[data]['vname']}}</h5>
+            <div class="card-subtitle text-muted h6 mb-2">
+              <span class="">
+                {{ account[data]['vmobile'] }}
+              </span>
+              <!-- <div class="col">
+                  <i class="bi bi-telephone"></i>
+                </div> -->
+            </div>
+            <div class="row">
+              <div class="col">
+                <i class="bi bi-person-square"></i>
+                <span class="mx-1 text-uppercase">
+                  {{ account[data]['Mname'] }}
+                </span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <i class="bi bi-building"></i>
+                <span class="mx-1 text-uppercase">
+                  {{ account[data]['Mwing'] }}, {{ account[data]['Mflatno'] }}
+                </span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="row">
+                  <div class="col">
+                    <i class="bi bi-clock"></i>
+                    <span class="mx-1 text-uppercase">
+                      {{ account[data]['in_time'] }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="row">
+                  <div class="col">
+                    <i class="bi bi-calendar3"></i>
+                    <span class="mx-1 ">
+                      {{ account[data]['in_date'] }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <span class="h6">
+              Left Premises
+            </span>
+            <div class="row">
+              <div class="col">
+                <div class="row">
+                  <div class="col">
+                    <i class="bi bi-clock"></i>
+                    <span class="mx-1 text-uppercase">
+                      {{ account[data]['out_time'] }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="row">
+                  <div class="col">
+                    <i class="bi bi-calendar3"></i>
+                    <span class="mx-1 ">
+                      {{ account[data]['out_date'] }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <Span class="" style="font-weight: bold;">Status: </Span>
+                <span class="mx-1 text-uppercase">
+                  {{ account[data]['vstatus'] }}
+                </span>
+              </div>
             </div>
           </div>
         </div>
-      </td>
-      </tr>
-        
-       </table>
-      
-     
-   {% else %}
-       
-      
-       <b><h4>No Data Found.</h4> </b><br>
-       {% endfor %} 
-   {% endif %} 
-   
-   </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+<!-- <div>
+  <table class="table" style="width:100%">
+    {% if account !=0 %}
+    {% for data in account %}
+    <tr>
+      <td class="title">
+        <div class="thumb">
+          <img src="/static/upload/vpic/{{data['vpic']}}" height="40%" width="20%" alt="Visitor image">
 
-   {% endblock %}
+          <h6 class="mb-2"><b>{{ data['vname'] }}</b></h6>
+
+          <b>Contact No: </b>{{ data['vmobile'] }}<br>
+
+          <b>Visited to: </b>{{ data['Mwing'] }} {{ data['Mflatno'] }}<br>
+          <b>Visited on: </b>{{ data['in_date'] }} / {{ data['in_time'] }}<br>
+          <b>Left on: </b>{{ data['out_date'] }} / {{ data['out_time'] }}<br>
+          <b>Status: </b>{{ data['vstatus'] }}<br>
+        </div>
+</div>
+<div>
+  </td>
+  </tr>
+  </table>
+  {% else %}
+  <b>
+    <h4>No Data Found.</h4>
+  </b><br>
+  {% endfor %}
+  {% endif %}
+
+</div> -->
+
+{% endblock %}

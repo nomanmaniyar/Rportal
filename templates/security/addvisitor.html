@@ -1,86 +1,160 @@
 {% extends 'security/security_layout.html' %}
 
-{% block title %}ADD Visitor{% endblock %}
-
 {% block content %}
-
-<style>
-    table, th, td {
-      border:1px solid black;
-    }
-</style>
-
-
-<h3>Add visitors/ See upcoming visitors:</h3>
-<div>
-<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo1"><i class="fa fa-warning" aria-hidden="true"></i> Add new visitor</button>
-<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo2"><i class="fa fa-history" aria-hidden="true"></i> Upcoming visitors</button>
-<br><br>
-<a href='javascript:self.history.back();'>Go Back</a>
-<br>
-<div id="demo1" class="collapse">
-<br>
-<h4>Add Visitor:</h4>
-    <div>
-      {{msg}}   
-     <form action="{{url_for('addvisitor')}}"  enctype="multipart/form-data" method="POST"><br>
-       <input type="text" name="vname" placeholder="Visitor Name" required> <br>
-       <input type="tel" name="vmobile" placeholder="Visitor Mobile Number" ><br>
-        <input type="text" name="vehical_no"placeholder="Vehical Number" ><br>
-       <input type="text" name="username" placeholder="Member Name" >
-       <input type="text" name="Mwing" placeholder="Wing" >
-        <input type="number" name="Mflatno" placeholder="Flat No"  required><br>
-        <input type="file"  name="vpic" id="vpic" required>
-        <input class="btn btn-primary" type="submit" value="ADD"><br>
-
-        <br>
-     </form>
+<div class="container mt-5 pt-3">
+  <div class="d-flex">
+    <a class="bd-highlight" href='javascript:self.history.back();'>
+      <i class="bi bi-arrow-left" style="font-size: x-large;"></i>
+    </a>
+    <div class="mx-3 h2">Add Visitor</div>
+    <div class="ms-auto">
+      <!-- Button trigger modal -->
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        Add Visitor
+      </button>
+      <!-- Modal -->
+      <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <form action="{{url_for('addvisitor')}}" enctype="multipart/form-data" method="POST">
+              <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Add New Visitor</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="mb-3">
+                  <label for="exampleFormControlInput1" class="form-label">Name</label>
+                  <input type="text" class="form-control" name="vname" id="exampleFormControlInput1"
+                    placeholder="Enter visitor name">
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="mb-3">
+                      <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
+                      <input type="tel" maxlength="10" class="form-control" name="vmobile" id="exampleFormControlInput1"
+                        placeholder="Enter visitor Phone Number">
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="mb-3">
+                      <label for="exampleFormControlInput1" class="form-label">Vehical Number</label>
+                      <input type="text" class="form-control" name="vehical_no" id="exampleFormControlInput1"
+                        placeholder="Enter visitor Vehical Number">
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3 ">
+                  <label for="exampleFormControlInput1" class="form-label">Member Name</label>
+                  <input type="text" class="form-control" name="username" id="exampleFormControlInput1"
+                    placeholder="Enter Member Name">
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="mb-3">
+                      <label for="exampleFormControlInput1" class="form-label">Wing Name/Number</label>
+                      <input type="text" class="form-control" name="Mwing" id="exampleFormControlInput1"
+                        placeholder="Enter Wing Name/Number">
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="mb-3">
+                      <label for="exampleFormControlInput1" class="form-label">Flat Number</label>
+                      <input type="text" class="form-control" name="Mflatno" id="exampleFormControlInput1"
+                        placeholder="Enter Flat Number">
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label" for="vpic ">Visitor Photo</label>
+                  <input type="file" class="form-control" name="vpic" id="vpic">
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Add Visitor</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-  <br>    
-  
-<div id="demo2" class="collapse">
-<br>
-  <h4>Upcoming Visitors:</h4>
-  <div>
-    <table  class="table" style="width:100%">
-  
-      {% if account !=0 %}
-           {% for data  in account %}
-           <tr >
-            <td class="title">
-              <div class="thumb">
-              <img  src="/static/upload/vpic/{{data['vpic']}}" height="40%" width="20%" alt="Visitor image">
-              
-              <h6 class="mb-2" ><b>{{ data['vname'] }}</b></h6>
-                      
-                        <b>Contact No: </b>{{ data['vmobile'] }}<br>
-                      
-                          <b>Will visit to: </b>{{ data['Mwing'] }} {{ data['Mflatno'] }}<br>
-                          <b>Will visit on: </b>{{ data['in_date'] }} / {{ data['in_time'] }}<br>
-                   <form action="{{ url_for('upvisitor') }}" method="POST">
-                      <input type="hidden" name="vid" value="{{data['vid']}}" required >
-                      <input type="submit" class="btn btn-primary" value="Allow">
-                    </form>
-                    
+  <hr>
+  <div class="container">
+    <span class="h5">
+      Upcoming Visitor
+    </span>
+    <hr>
+    {% if (account[0]|length)==0 %}
+    <div class="container">
+      <p class="h3 m-5 text-muted text-center">No New Visitor</p>
+    </div>
+    {% else %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      {% for data in (range(account|length)|reverse) %}
+      <div class="col">
+        <div class="card">
+          <img src="/static/upload/vpic/{{data['vpic']}}" class="img-fluid rounded-start h-100">
+
+          <div class="card-body">
+            <h5 class="card-title">{{ account[data]['vname']}}</h5>
+            <div class="card-subtitle text-muted h6 mb-2">
+              <span class="">
+                {{ account[data]['vmobile'] }}
+              </span>
+              <!-- <div class="col">
+                <i class="bi bi-telephone"></i>
+              </div> -->
+            </div>
+            <div class="row">
+              <div class="col">
+                <i class="bi bi-building"></i>
+                <span class="mx-1 text-uppercase">
+                  {{ account[data]['Mwing'] }}, {{ account[data]['Mflatno'] }}
+                </span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="row">
+                  <div class="col">
+                    <i class="bi bi-clock"></i>
+                    <span class="mx-1 text-uppercase">
+                      {{ account[data]['in_time'] }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="row">
+                  <div class="col">
+                    <i class="bi bi-calendar3"></i>
+                    <span class="mx-1 ">
+                      {{ account[data]['in_date'] }}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </td>
-        </tr>
-          
-         </table>
-        
-       
-     {% else %}
-         
-        
-         <b><h4>No Data Found.</h4> </b><br>
-         {% endfor %} 
-     {% endif %} 
-     
-     </div>
-    </div> 
-    <br> 
-    <br>
+          <div class="card-footer d-flex flex-row-reverse">
+            <form action="{{ url_for('upvisitor') }}" method="POST">
+              <input type="hidden" name="vid" value="{{account[data]['vid']}}" required>
+              <button class="btn btn-outline-secondary btn-sm mx-1" type="submit">
+                <i class="bi bi-check2"></i></button>
+            </form>
+
+          </div>
+
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+
+
 {% endblock %}
