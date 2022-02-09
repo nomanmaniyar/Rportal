@@ -102,15 +102,13 @@
                                     <input type="hidden" name="id" value="{{account2[data2]['main_id']}}" required>
                                     <input type="hidden" name="amount" value="{{account2[data2]['amount']}}" required>
 
-                                    {% for data3 in account3 %}
-                                    <input type="hidden" name="soc_bal" value="{{ data3['soc_bal']}}  " required>
+                                    <input type="hidden" name="soc_bal" value="{{account3['soc_bal']}}" required>
                                     <input type="submit" class="btn btn-primary mt-3"
                                         value="Pay ₹{{account2[data2]['amount']}}"></input>
                                 </form>
                             </div>
                         </div>
                     </div>
-                    {% endfor %}
                     {% endfor %}
                     {% endif %}
                 </div>
