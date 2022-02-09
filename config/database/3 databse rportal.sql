@@ -187,13 +187,13 @@ select * from complaint;
 CREATE TABLE IF NOT EXISTS `notice` (
 	`notice_id` int NOT NULL AUTO_INCREMENT,
 	`notice_subject` varchar(500) NOT NULL,
-	`notice_message` varchar(500) NOT NULL,
+	`notice_message` LONGTEXT NOT NULL,
 	`notice_code` varchar(30) NOT NULL,
     `notice_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   	PRIMARY KEY (`notice_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-INSERT INTO `notice` (`notice_id`,`notice_subject`, `notice_message`, `notice_code`) VALUES ('1', 'Test Subject', 'Test Notice Message', 'GOKU11');
-INSERT INTO `notice` (`notice_id`,`notice_subject`, `notice_message`, `notice_code`) VALUES ('2', 'Test Subject', 'Test Notice Message', 'SAIR11');
+INSERT INTO `notice` (`notice_id`,`notice_subject`, `notice_message`, `notice_code`) VALUES ('1', 'Test Subject 1', 'Test Notice Message 1', 'SAIR11');
+INSERT INTO `notice` (`notice_id`,`notice_subject`, `notice_message`, `notice_code`) VALUES ('2', 'Test Subject 2', 'Test Notice Message 2', 'SAIR11');
 alter table notice auto_increment = 3;
 select * from notice;
 
@@ -202,7 +202,7 @@ UPDATE complaint SET complaint_reply = 'sry', complaint_status = 'review'  WHERE
 CREATE TABLE IF NOT EXISTS `contact` (
 	`contact_id` int NOT NULL AUTO_INCREMENT,
 	`contact_label` VARCHAR(255) NOT NULL,
-	`contact_no` int NOT NULL,
+	`contact_no` bigint NOT NULL,
 	`society_code` varchar(255) NOT NULL,
   	PRIMARY KEY (`contact_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
