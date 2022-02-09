@@ -62,7 +62,7 @@
         <hr>
         {% if (account|length)==0 %}
         <div class="container">
-            <p class="h3 m-5 text-muted text-center">no Metting Shedule</p>
+            <p class="h3 m-5 text-muted text-center">no metting scheduled</p>
         </div>
         {% else %}
         <div class="row row-cols-1 row-cols-md-2 g-4">
@@ -74,7 +74,9 @@
                             <h3 class="card-title text-uppercase">{{data['topic']}}</h3>
 
                         </div>
-
+                        <p style="font-size: xx-meduim;"><b>Host key: 528614</b>
+                            <a href="https://support.zoom.us/hc/en-us/articles/115001315866-Claiming-host-privileges-in-Zoom-Rooms-with-the-host-key">How to claim host?</a>
+                        </p>
                         <div class="d-flex justify-content-between">
                             <span style="font-weight: 500;">
                                 Start

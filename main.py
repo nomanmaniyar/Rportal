@@ -1204,6 +1204,20 @@ def generateToken():
     )
     return token
 
+
+    #meeting added
+@app.route('/rportal/meeting')
+def meeting():
+    if 'secretary' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT *  from meetings WHERE society_code = %s  ', (session['Scode'],) ) 
+        account = cursor.fetchall()
+        return render_template('secretary/createmeeting.html', account= account)
+    elif session.get('secretary') is None:
+        return login()
+    else:
+        return logout() 
+
 @app.route('/rportal/createmeeting', methods=['GET', 'POST'] )
 def createmeeting():
     if 'secretary' in session:
@@ -1249,13 +1263,7 @@ def createmeeting():
             cursor.execute('INSERT INTO meetings values (NULL , %s,%s ,%s ,%s, %s, %s, %s,  DEFAULT)', (topic, date, start_time, duration, link, agenda, session['Scode']))
             mysql.connection.commit() 
             msg2 = 'Meeting Scheduled'
-            return render_template('secretary/createmeeting.html', msg = msg , msg1= msg1, msg2=msg2 )
-        else:
-            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('SELECT *  from meetings WHERE society_code = %s  ', (session['Scode'],) ) 
-            account = cursor.fetchall()
-            return render_template('secretary/createmeeting.html', account= account)
-
+            return redirect(url_for('meeting'))
     elif session.get('secretary') is None:
         return login()
     else:
