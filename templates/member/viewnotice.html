@@ -9,32 +9,38 @@
         <h2 class="col"> Notice</h2>
     </div>
     <hr>
-    <div class="row row-cols-1 row-cols-md-2 g-4 ">
-        {% if (account[0]|length)==0 %}
-        <div class="container">
-            <p class="h3 m-5 text-muted text-center">no notice</p>
-        </div>
-        {% else %}
+    {% if (account[0]|length)==0 %}
+    <div class="container">
+        <p class="h3 m-5 text-muted text-center">no notice</p>
+    </div>
+    {% else %}
+    <div class="accordion accordion-flush" id="accordionFlushExample">
         {% for data in ((range(account|length))|reverse) %}
-        <div class="col-sm-6">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <h5 class="card-title" id="div">{{ account[data]['notice_subject'] }}</h5>
-                        <span style="font-size: x-small;">
-                            {{ account[data]['notice_time'] }}
-                        </span>
-                    </div>
-                    <p class="card-text text-overflow" id="notice">
-                        {{ account[data]['notice_message'] }}
-                    </p>
-                    <a class="btn-overflow" href="#">Show more</a>
+        <div class="accordion-item">
+            <h2 class="accordion-header " id="flush-heading{{data}}">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#flush-collapse{{data}}" aria-expanded="true"
+                    aria-controls="flush-collapse{{data}}">
+                    <b> {{ account[data]['notice_subject'] }} </b>
+                </button>
+            </h2>
+            <div id="flush-collapse{{data}}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{data}}"
+                data-bs-parent="#accordionFlushExample">
+                <div class="accordion-body" id="notice{{data}}">
+                    {{ account[data]['notice_message']}}
                 </div>
             </div>
         </div>
+        <script>
+            $.fn.toHtml = function () {
+                return $(this).html($(this).text())
+            }
+            // 
+            $('#notice{{data}}').toHtml()
+        </script>
         {% endfor %}
-        {% endif %}
     </div>
+    {% endif %}
 </div>
 <style>
     .text-overflow {
@@ -50,37 +56,4 @@
         text-decoration: none;
     }
 </style>
-<script>
-    $.fn.toHtml = function () {
-        return $(this).html($(this).text())
-    }
-    $('#notice').toHtml()
-////
-    var text = $('.text-overflow'),
-        btn = $('.btn-overflow'),
-        h = text[0].scrollHeight;
-    if (h > 100) {
-        btn.addClass('less');
-        btn.css('display', 'block');
-    }
-
-    btn.click(function (e) {
-        e.stopPropagation();
-
-        if (btn.hasClass('less')) {
-            btn.removeClass('less');
-            btn.addClass('more');
-            btn.text('Show less');
-
-            text.animate({ 'height': h });
-        } else {
-            btn.addClass('less');
-            btn.removeClass('more');
-            btn.text('Show more');
-            text.animate({ 'height': '120px' });
-        }
-    });
-</script>
-
-
 {% endblock %}
