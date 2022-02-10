@@ -1323,11 +1323,12 @@ def add_docs():
         file_name = file.filename or ''
         destination = ''.join([target1, file_name])
         file.save(destination)
-        doc_filename = file_name;
+        #doc_filename = file_name;
         document = destination  ;
+        
         ... 
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('INSERT INTO document values (NULL , %s, %s, %s)', (doc_filename,session['Scode'], document))
+        cursor.execute('INSERT INTO document values (NULL , %s, %s, %s)', ( file ,session['Scode'], document))
         mysql.connection.commit()    
         msg="File upload suceesfully"   
         return docs()

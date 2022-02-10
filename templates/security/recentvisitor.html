@@ -38,7 +38,7 @@
         <div class="col">
           <div class="card">
             <img src="/static/upload/vpic/3017287.png
-            " class="img-fluid rounded-start h-100">
+            " class="img-fluid rounded-start " style="height: 200px;">
             <div class="card-body">
               <h5 class="card-title">{{ account[data]['vname']}}</h5>
               <div class="card-subtitle text-muted h6 mb-2">
@@ -127,7 +127,8 @@
         {% for data in ((range(account1|length))|reverse) %}
         <div class="col">
           <div class="card">
-            <img src="/static/upload/vpic/{{ account1[data]['vpic']}}" class="img-fluid rounded-start h-100">
+            <img src="/static/upload/vpic/{{ account1[data]['vpic']}}" class="img-fluid rounded-start "
+              style="height: 200px;">
 
             <div class="card-body">
               <h5 class="card-title">{{ account1[data]['vname']}}</h5>
@@ -218,7 +219,8 @@
         {% for data in ((range(account2|length))|reverse) %}
         <div class="col">
           <div class="card">
-            <img src="/static/upload/vpic/{{ account1[data]['vpic']}}" class="img-fluid rounded-start h-100">
+            <img src="/static/upload/vpic/{{ account1[data]['vpic']}}" class="img-fluid rounded-start "
+              style="height: 200px;">
 
             <div class="card-body">
               <h5 class="card-title">{{ account2[data]['vname']}}</h5>
