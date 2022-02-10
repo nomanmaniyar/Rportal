@@ -74,9 +74,14 @@
                             <h3 class="card-title text-uppercase">{{data['topic']}}</h3>
 
                         </div>
-                        <p style="font-size: xx-meduim;"><b>Host key: 528614</b>
-                            <a href="https://support.zoom.us/hc/en-us/articles/115001315866-Claiming-host-privileges-in-Zoom-Rooms-with-the-host-key">How to claim host?</a>
-                        </p>
+                        <div class="d-flex justify-content-between">
+                            <span style="font-weight: 500;">
+                                <b>Host key: 528614</b>
+                            </span>
+                            <span>
+                                <a href="https://support.zoom.us/hc/en-us/articles/115001315866-Claiming-host-privileges-in-Zoom-Rooms-with-the-host-key">How to claim host?</a>
+                            </span>
+                        </div>
                         <div class="d-flex justify-content-between">
                             <span style="font-weight: 500;">
                                 Start
@@ -87,7 +92,7 @@
                         </div>
                         <div class="d-flex justify-content-between">
                             <span style="font-weight: 500;">
-                                Duration
+                                Duration (in min)
                             </span>
                             <span>
                                 {{data['duration']}} min

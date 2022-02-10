@@ -1,0 +1,62 @@
+{% extends 'secretary/slayout.html' %}
+
+{% block content %}
+<div class="container mt-5 pt-3">
+    <div class="row row-cols-auto">
+        <a class="col" href='javascript:self.history.back();'>
+            <i class="bi bi-arrow-left" style="font-size: x-large;"></i>
+        </a>
+        <h2 class="col"> Notice</h2>
+        <a type="button" class="btn btn-primary ms-auto" href="{{ url_for('createnotice') }}">
+            Publish new notice
+        </a>
+    </div>
+    <hr>
+    {% if (account[0]|length)==0 %}
+    <div class="container">
+        <p class="h3 m-5 text-muted text-center">no notice</p>
+    </div>
+    {% else %}
+    <div class="accordion accordion-flush" id="accordionFlushExample">
+        {% for data in ((range(account|length))|reverse) %}
+        <div class="accordion-item">
+            <h2 class="accordion-header " id="flush-heading{{data}}">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#flush-collapse{{data}}" aria-expanded="true"
+                    aria-controls="flush-collapse{{data}}">
+                    <b> {{ account[data]['notice_subject'] }} </b>
+                </button>
+            </h2>
+            <div id="flush-collapse{{data}}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{data}}"
+                data-bs-parent="#accordionFlushExample">
+                <div class="accordion-body" id="notice{{data}}">
+                    {{ account[data]['notice_message']}}
+                </div>
+            </div>
+        </div>
+        <script>
+            $.fn.toHtml = function () {
+                return $(this).html($(this).text())
+            }
+            // 
+            $('#notice{{data}}').toHtml()
+        </script>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+<style>
+    .text-overflow {
+        height: 100px;
+        display: block;
+        overflow: hidden;
+        word-break: break-word;
+        word-wrap: break-word;
+    }
+
+    .btn-overflow {
+        display: none;
+        text-decoration: none;
+    }
+</style>
+{% endblock %}
