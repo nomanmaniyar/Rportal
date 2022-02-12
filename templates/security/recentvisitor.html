@@ -37,8 +37,10 @@
         {% for data in ((range(account|length))|reverse) %}
         <div class="col">
           <div class="card">
-            <img src="/static/upload/vpic/3017287.png
-            " class="img-fluid rounded-start " style="height: 200px;">
+            <!-- <img src="/static/upload/vpic/3017287.png
+            " class="img-fluid rounded-start " style="height: 200px;"> -->
+            <img src="/static/upload/vpic/{{ account[data]['vpic']}}" class="img-fluid rounded-start "
+            style="height: 200px;">
             <div class="card-body">
               <h5 class="card-title">{{ account[data]['vname']}}</h5>
               <div class="card-subtitle text-muted h6 mb-2">
