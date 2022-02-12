@@ -17,7 +17,7 @@
         <form action="{{url_for('add_docs')}}" enctype="multipart/form-data" method="POST">
             <div class="row">
                 <div class="col">
-                    <input class="form-control" type="file" id="formFile" name="document">
+                    <input class="form-control" type="file" id="formFile" name="document" required>
                 </div>
                 <div class="col">
                     <button type="submit" class="btn btn-primary" value="save">Upload <i
@@ -49,8 +49,8 @@
                             onclick="return confirm('Are you sure you want to delete this document ?');">
                             <i class="bi bi-trash-fill"></i>
                         </a>
-                        <a class="btn btn-outline-secondary btn-sm mx-1" role="button" href="{{data['document']}}"
-                            download="{{data['doc_filename']}}" target="blank">
+                        <a class="btn btn-outline-secondary btn-sm mx-1" role="button" href="/static/upload/docs/{{data['document']}}"
+                            download="/static/upload/docs/{{data['document']}}" target="blank">
                             <i class="bi bi-download"></i>
                         </a>
                     </div>

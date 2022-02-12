@@ -1176,6 +1176,18 @@ def createnotice():
         return login()
     else:
         return logout()
+
+@app.route('/rportal/viewoldnotice')
+def viewoldnotice():
+    if 'secretary' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT *  from notice WHERE notice_code = %s', (session['Scode'],) ) 
+        account = cursor.fetchall() 
+        return render_template('secretary/viewoldnotice.html', account=account)
+    elif session.get('secretary') is None:
+        return login()
+    else:
+        return logout()
     
 @app.route('/rportal/manage_complaint', methods=['GET','POST'])
 def complaint():
@@ -1208,8 +1220,6 @@ def generateToken():
     )
     return token
 
-
-    #meeting added
 @app.route('/rportal/meeting')
 def meeting():
     if 'secretary' in session:
@@ -1314,33 +1324,6 @@ def d_contact(contact_id):
     else:
         return logout()
 
-@app.route('/rportal/add_docs', methods=['GET', 'POST'] )
-def add_docs():
-    if 'secretary' in session:
-        msg = ''
-        target1 = os.path.join( '/Rportal/static/upload/docs/')
-        if not os.path.isdir(target1):
-            os.makedirs(target1)
-        if request.method == 'POST'and 'document'  :
-             ...
-        file = request.files['document']
-        file_name = file.filename or ''
-        destination = ''.join([target1, file_name])
-        file.save(destination)
-        #doc_filename = file_name;
-        document = destination  ;
-        
-        ... 
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('INSERT INTO document values (NULL , %s, %s, %s)', ( file ,session['Scode'], document))
-        mysql.connection.commit()    
-        msg="File upload suceesfully"   
-        return docs()
-    elif session.get('secretary') is None:
-        return login()
-    else:
-        return logout()
-
 @app.route('/rportal/docs')
 def docs():
     if 'secretary' in session:
@@ -1352,10 +1335,46 @@ def docs():
         return login()
     else:
         return logout()
-        
+
+@app.route('/rportal/add_docs', methods=['GET', 'POST'] )
+def add_docs():
+    if 'secretary' in session:
+        msg = ''
+        target1 = os.path.join('/Rportal/static/upload/docs/')
+        if not os.path.isdir(target1):
+            os.makedirs(target1)
+        if request.method == 'POST'and 'document' in request.files:
+            ...
+            file = request.files['document']
+            file_name = file.filename or ''
+            destination = ''.join([target1, file_name])
+            file.save(destination)  
+            doc_name = file_name          
+            ... 
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('INSERT INTO document values (NULL , %s, %s, %s)',(doc_name,session['Scode'],doc_name,))
+            mysql.connection.commit()    
+            msg="File upload suceesfully"   
+            return docs()
+        else:
+            return docs()
+    elif session.get('secretary') is None:
+        return login()
+    else:
+        return logout()
+
 @app.route('/rportal/d_docs/<int:doc_id>' , methods=['GET', 'POST'])
 def d_docs(doc_id):
+    target1 = os.path.join('/Rportal/static/upload/docs/')
     if 'secretary' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT doc_filename FROM document  WHERE doc_id = %s',[doc_id]) 
+        account = cursor.fetchone() 
+        ...
+        file = account['doc_filename']
+        destination = ''.join([target1, file])
+        os.remove(destination)  
+        ... 
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('DELETE FROM document  WHERE doc_id = %s',[doc_id]) 
         mysql.connection.commit()
@@ -1723,7 +1742,6 @@ def add_chat():
     else:
         return logout()
 
-#guest added
 @app.route('/rportal/guest')
 def guest():
     if 'member' in session:
@@ -2024,7 +2042,7 @@ def a_sec(Scode):
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute("UPDATE secretary SET secretarty_status = %s WHERE Scode = %s" ,('active',Scode,)) 
         cursor.execute("UPDATE society SET society_status = %s WHERE code = %s" ,('active',Scode,)) 
-        cursor.execute("UPDATE member SET member_status = %s WHERE Mcode = %s" ,('inactive',Scode,)) 
+        cursor.execute("UPDATE member SET member_status = %s WHERE Mcode = %s and member_status = %s" ,('active',Scode,'inactive',)) 
         cursor.execute("UPDATE security SET security_status = %s WHERE security_code = %s" ,('active',Scode,)) 
         cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_code = %s" ,('active',Scode,)) 
         mysql.connection.commit()
@@ -2041,7 +2059,7 @@ def al_sec(Scode):
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute("UPDATE secretary SET secretarty_status = %s WHERE Scode = %s" ,('active',Scode,)) 
         cursor.execute("UPDATE society SET society_status = %s WHERE code = %s" ,('active',Scode,)) 
-        cursor.execute("UPDATE member SET member_status = %s WHERE Mcode = %s" ,('inactive',Scode,)) 
+        cursor.execute("UPDATE member SET member_status = %s WHERE Mcode = %s and member_status = %s" ,('active',Scode,'inactive',)) 
         cursor.execute("UPDATE security SET security_status = %s WHERE security_code = %s" ,('active',Scode,)) 
         cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_code = %s" ,('active',Scode,)) 
         mysql.connection.commit()
@@ -2058,7 +2076,7 @@ def c_sec(Scode):
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute("UPDATE secretary SET secretarty_status = %s WHERE Scode = %s" ,('inactive',Scode,)) 
         cursor.execute("UPDATE society SET society_status = %s WHERE code = %s" ,('inactive',Scode,)) 
-        cursor.execute("UPDATE member SET member_status = %s WHERE Mcode = %s" ,('inactive',Scode,)) 
+        cursor.execute("UPDATE member SET member_status = %s WHERE Mcode = %s and member_status = %s" ,('inactive',Scode,'active',)) 
         cursor.execute("UPDATE security SET security_status = %s WHERE security_code = %s" ,('active',Scode,)) 
         cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_code = %s" ,('active',Scode,)) 
         mysql.connection.commit()
@@ -2072,6 +2090,7 @@ def c_sec(Scode):
 @app.route('/rportal/r_sec' , methods=['GET', 'POST'])
 def r_sec():
     if 'admin' in session:
+        msg = ''
         if request.method == 'POST' and 'email' in request.form and 'message'  in request.form and 'Scode' :
             email = request.form['email']
             message = request.form['message']
@@ -2104,7 +2123,7 @@ def contactdata():
         return login()
     else:
         return logout()
-   
+
 #
 #   Security Part
 #

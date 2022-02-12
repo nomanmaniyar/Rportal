@@ -3,7 +3,6 @@ USE `rportal`;
 SET GLOBAL sql_mode = '';
 SET SQL_SAFE_UPDATES = 0;
 set sql_mode="NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION";
-SET SQL_SAFE_UPDATES = 0;
 
 CREATE TABLE IF NOT EXISTS `userdetails` (
 	`uid` int NOT NULL AUTO_INCREMENT,
@@ -218,7 +217,7 @@ CREATE TABLE IF NOT EXISTS `document` (
 CREATE TABLE IF NOT EXISTS `chat` (
 	`msg_id` int NOT NULL AUTO_INCREMENT,
 	`msg_username` varchar(255) NOT NULL,
-	`message` varchar(255) NOT NULL,
+	`message` LONGTEXT NOT NULL,
 	`society_code` varchar(255) NOT NULL,
 	`msg_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   	PRIMARY KEY (`msg_id`)
