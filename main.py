@@ -37,6 +37,7 @@ API_SEC = 'ZIN4AsaniiKYBBA0cQHLSupJOIZwMEdbcRm2'
 UPLOAD_FOLDER = '/path/to/the/uploads'
 UPLOAD_DOCS = '/path/to/the/uploads/docs'
 UPLOAD_VPIC = '/path/to/the/uploads/vpic'
+UPLOAD_EXPENSE = '/path/to/the/uploads/expense'
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
 
 app = Flask(__name__)
@@ -49,6 +50,7 @@ app.config['charset'] ='utf8'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['UPLOAD_DOCS'] = UPLOAD_DOCS
 app.config['UPLOAD_VPIC'] = UPLOAD_VPIC
+app.config['UPLOAD_EXPENSE'] = UPLOAD_EXPENSE
 mysql = MySQL(app)
  
 mail = Mail(app)
@@ -1521,6 +1523,67 @@ def Smaintenance():
     else:
         return logout()  
 
+@app.route('/rportal/expense')
+def expense():
+    if 'secretary' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM maintenance WHERE code = %s GROUP BY due_date',(session['Scode'],))
+        account = cursor.fetchall()
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('SELECT *  from expense WHERE society_code = %s', (session['Scode'],) ) 
+        account1 = cursor1.fetchall() 
+        cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor3.execute('SELECT soc_bal FROM society WHERE code = %s',(session['Scode'],))
+        account3 = cursor3.fetchone()
+        return render_template('secretary/expense.html', account=account, account1=account1, account3=account3)
+    elif session.get('secretary') is None:
+        return login()
+    else:
+        return logout()
+
+@app.route('/rportal/addexpense', methods=['GET', 'POST'] )
+def addexpense():
+    if 'secretary' in session:
+        target1 = os.path.join('/Rportal/static/upload/expense/')
+        if not os.path.isdir(target1):
+            os.makedirs(target1)
+        if request.method == 'POST'and 'name' in request.form:
+            name= request.form['name']
+            amount = request.form['amount']
+            soc_bal = request.form['soc_bal']
+            date = request.form['date']
+            new_bal = float(soc_bal) - float(amount)
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('UPDATE society SET soc_bal = %s  WHERE  code = %s', (new_bal, session['Scode'],))
+            mysql.connection.commit()
+            
+            if 'document' in request.files:
+                print('if')
+                ...
+                file = request.files['document']
+                file_name = file.filename or ''
+                destination = ''.join([target1, file_name])
+                file.save(destination)  
+                doc_name = file_name          
+                ... 
+
+                cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                cursor1.execute('INSERT INTO expense values (NULL , %s, %s, %s, %s, %s)',(name, date, amount, session['Scode'],doc_name,))
+                mysql.connection.commit()    
+                return expense()
+            else:
+                print('esle')
+                cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                cursor1.execute('INSERT INTO expense values (NULL , %s, %s, %s, %s, NULL)',(name, date, amount, session['Scode'],))
+                mysql.connection.commit()    
+                return expense()
+        else:
+            return expense()
+    elif session.get('secretary') is None:
+        return login()
+    else:
+        return logout()
+
 #
 #   Member Part
 #
@@ -1882,7 +1945,6 @@ def maintenance_pay():
             main_id = request.form['id']
             soc_bal = request.form['soc_bal']
             amount = request.form['amount']
-            print( soc_bal ,amount)
             new_bal = float(soc_bal) + float(amount)
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('UPDATE society SET soc_bal = %s  WHERE  code = %s', (new_bal, session['Mcode'],))
@@ -1947,6 +2009,21 @@ def Mmaintenance1(msg):
         return login()
     else:
         return logout() 
+
+@app.route('/rportal/viewexpense')
+def viewexpense():
+    if 'member' in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM maintenance WHERE code = %s GROUP BY due_date',(session['Mcode'],))
+        account = cursor.fetchall()
+        cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor1.execute('SELECT *  from expense WHERE society_code = %s', (session['Mcode'],) ) 
+        account1 = cursor1.fetchall() 
+        return render_template('member/viewexpense.html', account=account, account1=account1)
+    elif session.get('member') is None:
+        return login()
+    else:
+        return logout()
 
 #
 #   Admin Part
