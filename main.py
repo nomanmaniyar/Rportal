@@ -23,6 +23,10 @@ import jwt
 import requests
 import json
 from time import time
+import base64
+from PIL import Image
+from io import BytesIO
+
 
 #sys.path.insert(0, 'Rportal/config')
 #from config import credentials as cred
@@ -2253,14 +2257,23 @@ def addvisitor():
             username = request.form['username']   
             Mflatno = request.form['Mflatno']   
             Mwing = request.form['Mwing']  
-            
-            ...
-            file = request.files['vpic']
-            file_name = file.filename or ''
-            destination = ''.join([target2, file_name])
-            file.save(destination)
-            vpic  = file_name
-            ...
+            vpicText=request.form['vpicText']
+            if  len(vpicText) != 0:
+                data=vpicText.replace("data:image/png;base64,","")
+                im = Image.open(BytesIO(base64.b64decode(data)))
+                file_name =  vname+"image.png"
+                destination = ''.join([target2, file_name])
+                im.save(destination)
+                vpic  = file_name
+            else:
+                ...
+                file = request.files['vpic']
+                file_name = file.filename or ''
+                destination = ''.join([target2, file_name])
+                file.save(destination)
+                vpic  = file_name
+                ...
+
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('SELECT * FROM member WHERE Mflatno = %s AND Mwing = %s AND Mcode=%s', (Mflatno, Mwing,session['security_code'],))
             account = cursor.fetchone()
