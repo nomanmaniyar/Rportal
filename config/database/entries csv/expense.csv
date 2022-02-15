@@ -1,0 +1,3 @@
+exp_id,name,date,amount,society_code,document
+1,"Pipeline repair",2022-02-16,600,SAIR11,invoice.pdf
+2,"maintenance work",2022-02-05,200,SAIR11,invoice.pdf

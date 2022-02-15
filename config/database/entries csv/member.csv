@@ -1,0 +1,22 @@
+Mid,username,Mcode,Memail,Mname,Mflatno,Mwing,Mmobile,member_time,member_status
+1,jay1,GOKU11,mem1@gmail.com,"Jay Sharma",1002,A,9922338265,"2022-02-15 23:55:32",request
+2,aashutosh1,GOKU11,mem2@gmail.com,"Aashutosh Mali",1002,A,9922338265,"2022-02-15 23:55:32",request
+4,temp,TEMP11,temp@gmail.com,"temp user",1001,A,9420829593,"2022-02-16 00:35:37",request
+5,jay,SAIR11,jais65142@gmail.com,"Jay Sharma",1001,A,9420829593,"2022-02-16 00:38:43",active
+6,jay,GOKU11,jais65142@gmail.com,"Jay Sharma",1001,A,9420829593,"2022-02-16 00:38:43",inactive
+7,jay,TEMP11,jais65142@gmail.com,"Jay Sharma",1001,A,9420829593,"2022-02-16 00:38:43",request
+8,noman,SAIR11,maniyarnomaan2000@gmail.com,Noman,1005,A,9420829593,"2022-02-16 00:38:43",active
+9,shinde,SAIR11,noman.maniyar@matoshri.edu.in,Shinde,1006,A,9420829593,"2022-02-16 00:38:43",active
+10,"dyaneshwar ",SAIR11,maniyarnomaan123@gmail.com,Dyaneshwar,1007,A,9420829593,"2022-02-16 00:38:43",request
+11,ashvini,SAIR11,nomaanmaniyar@gmail.com,Ashvini,1008,A,9420829593,"2022-02-16 00:38:43",inactive
+12,"chandrashekhar ",SAIR11,nomaanmaniyar123@gmail.com,"Chandrashekhar ",1009,A,9420829593,"2022-02-16 00:38:43",request
+13,ashok,SAIR11,samadhan.shinde@matoshri.edu.in,Ashok,1010,A,9420829593,"2022-02-16 00:38:43",request
+14,kalpana,SAIR11,aashutosh.mali@matoshri.edu.in,Kalpana,1011,A,9420829593,"2022-02-16 00:38:43",inactive
+15,sachin,SAIR11,aashutosh.smali@gmail.com,Sachin,1021,A,9420829593,"2022-02-16 00:38:43",inactive
+16,sngita,SAIR11,gaurav.pawar.ap2004@gmail.com,Sangita,1031,A,9420829593,"2022-02-16 00:38:43",request
+17,nishant,SAIR11,jay.b.sharma07@gmail.com,Nishant,1041,A,9420829593,"2022-02-16 00:38:43",active
+18,tayde,SAIR11,jay.sharma@matoshri.edu.in,Tayade,1051,A,9420829593,"2022-02-16 00:38:43",inactive
+19,sharad,SAIR11,jitakshsharma217@gmail.com,Sharad,1061,A,9420829593,"2022-02-16 00:38:43",inactive
+20,samadhan,SAIR11,samadhanshinde403@gmail.com,Samadhan,1004,A,9420829593,"2022-02-16 00:38:43",active
+21,aashutosh,SAIR11,aashutoshmali1460@gmail.com,Aashutosh,1003,A,9420829593,"2022-02-16 00:38:43",active
+22,,,,,0,,,"2022-02-16 01:56:49",

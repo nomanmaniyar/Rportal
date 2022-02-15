@@ -60,29 +60,50 @@
                 <td><a href="/static/upload/{{data['kyc_file']}}" download="/static/upload/{{data['kyc_file']}}"
                         target="blank"><button class='btn btn-primary'>Download</button></a></td>
                 <td>
-                    <form action="/rportal/al_sec/{{data.Scode}}">
-
+                    <form action="/rportal/al_sec/{{data.Scode}}" method="post">
+                        <input type="hidden" name="Sname" value={{ data['Sname'] }}></input>
+                          <input type="hidden" name="name" value={{ data['name'] }}></input>
+                          <input type="hidden" name="Semail" value={{ data['Semail'] }}></input>
                         <b> Status: </b>
                         <select onchange='if(this.value !=0 ) { this.form.submit(); }'>
                             <option value='0'>{{ data['secretarty_status'] }}</option>
                             <option value='1'>active</option>
                         </select>
-
                     </form>
-
-                    <!--
-                    <a  class="btn btn-danger" href="/rportal/"><i class="fas fa-user-minus" onclick="return confirm('Are You Sure to change status?')" style="color:#fa1808"></i>Deactivate</a><br><br>
-               -->
                 </td>
                 <td>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                    data-bs-target="#changeSecId"><i class="fa fa-trash"></i></button>
 
-                    &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<a href="/rportal/r_sec/{{data.Scode}}"><i class="fa fa-trash"
-                            aria-hidden="true" onclick="return confirm('Are You Sure For delete ?')"
-                            style="color:black"></i></a>
-
-
-                    <!--       <a  class="btn btn-danger" href="/rportal/><i class="fas fa-user-minus" onclick="return confirm('Are You Sure For Reject?')" style="color:#fa1808"></i>Delete</a>
-               -->
+                  <div class="modal" id="changeSecId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                    aria-labelledby="changeSecIdLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h3 class="modal-title" id="changeSecIdLabel">Reason for deletion</h3>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form action ="/rportal/r_sec" enctype="multipart/form-data" method="POST">
+                          <div class="modal-body ">
+                            <div class="col-5 form-floating mb-3">
+                              <textarea type="text" class="form-control" id="Gname" name="message" value="" placeholder="Give Reason"
+                                required>
+                              </textarea>
+                              <input type="hidden" name="email"  value="{{ data['Semail'] }}"></input>
+                              <input type="hidden" name="Sname" value={{ data['Sname'] }}></input>
+                              <input type="hidden" name="name" value={{ data['name'] }}></input>
+                              <input type="hidden" name="Scode"  value="{{data['Scode']}}"></input>
+                            </div>
+                            
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button class="btn btn-danger" type="submit" id="changeNS">Delete</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
                 </td>
             </tr>
             {% endfor %}

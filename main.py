@@ -254,10 +254,14 @@ def sregister():
                 msg = 'Username must contain only characters and numbers!'
             else:
                 cursor1.execute('INSERT INTO secretary VALUES (NULL, %s, %s, %s, %s, %s, %s,%s , DEFAULT , DEFAULT)', (username , code ,  email , Aname , flatno , wing , mobile ,))
-                cursor2.execute('INSERT INTO society VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, NULL, NULL,%s, DEFAULT , DEFAULT)', (code , name , city , road , area , state , pin , acname, acno, mmid, bankname, branch, ifsc, kyc_file))
+                cursor2.execute('INSERT INTO society VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, NULL, %s, DEFAULT , DEFAULT)', (code , name , city , road , area , state , pin , acname, acno, mmid, bankname, branch, ifsc, kyc_file,))
                 cursor.execute('INSERT INTO member VALUES (NULL, %s, %s, %s, %s, %s, %s,%s,DEFAULT,DEFAULT )', (username , code ,  email , Aname , flatno , wing , mobile))
                 mysql.connection.commit()
-                msg = 'You have successfully registered!'
+                aj = 'ajinfotics@gmail.com'
+                msg = Message('New society request on R-Portal' ,sender ='Residents Portal<me@Rportal.com', recipients = [aj])
+                msg.body ="Hey!\nCheers!\nYou have new society request on R-Portal.\nDetails:\nSecretary name: "+Aname+"\nSociety name: "+name+"\nCity: "+city+"\nGoodbye!"
+                mail.send(msg)
+                msg = 'Society request sent sucsessfully!'
         elif request.method == 'POST':
             msg = 'elif code!' 
         return render_template('secretary/sregister.html', msg=msg, name=session['user_name'],username=session['username'], email=session['user_email'], mobile=session['user_mobile'])
@@ -274,15 +278,22 @@ def mcode():
         if request.method == 'POST' and 'code' in request.form:
             code = request.form['code']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('SELECT * FROM society WHERE code = %s', (code,))
+            cursor.execute('SELECT * FROM society WHERE code = %s AND society_status=%s', (code,'active',))
             account = cursor.fetchone()
             if account:
-                cursor.execute('select name, city, road, area, state, pin, code , Semail from society inner join secretary WHERE code = %s', (code ,))
+                cursor.execute('select name, city, road, area, state, pin, code , Semail, Sname from society inner join secretary WHERE code = %s', (code ,))
                 account = cursor.fetchone()
                 return render_template('member/mverify.html', account=account, msg=msg,  name=session['user_name'],username=session['username'], email=session['user_email'], mobile=session['user_mobile'])
             else:
-                mysql.connection.commit()
-                msg='Invalid Society Code!'
+                cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                cursor1.execute('SELECT * FROM society WHERE code = %s AND society_status=%s', (code,'inactive',))
+                account1 = cursor1.fetchone()
+                if account1:
+                    mysql.connection.commit()
+                    msg='Society is evicted, contact secretary.'
+                else:
+                    mysql.connection.commit()
+                    msg='Invalid Society Code!'
         return render_template('member/mcode.html', msg=msg)
     elif session.get('user') is None:
             return login()
@@ -298,11 +309,19 @@ def mcode1(code):
         cursor.execute('SELECT * FROM society WHERE code = %s', (code,))
         account = cursor.fetchone()
         if account:
-            cursor.execute('select name, city, road, area, state, pin, code , Semail from society inner join secretary WHERE code = %s', (code ,))
+            cursor.execute('select name, city, road, area, state, pin, code , Semail, Sname from society inner join secretary WHERE code = %s', (code ,))
             account = cursor.fetchone()
-            return render_template('member/mverify.html', account=account, name=session['user_name'],username=session['username'], email=session['user_email'], mobile=session['user_mobile'])
+            return render_template('member/mverify.html', account=account, msg=msg,  name=session['user_name'],username=session['username'], email=session['user_email'], mobile=session['user_mobile'])
         else:
-            msg='Invalid Society Code!'
+            cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor1.execute('SELECT * FROM society WHERE code = %s AND society_status=%s', (code,'inactive',))
+            account1 = cursor1.fetchone()
+            if account1:
+                mysql.connection.commit()
+                msg='Society is evicted, contact secretary.'
+            else:
+                mysql.connection.commit()
+                msg='Invalid Society Code!'
         return render_template('member/Mcode.html', msg=msg)
     elif session.get('user') is None:
             return login()
@@ -323,6 +342,7 @@ def mregister():
             wing = request.form['Mwing']
             mobile = session['user_mobile']   
             Semail = request.form['Semail']
+            Sname = request.form['Sname']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('SELECT * FROM member WHERE username = %s AND Mcode = %s AND Mflatno = %s AND Mwing = %s', (username, code, flatno, wing,))
             account = cursor.fetchone()
@@ -341,8 +361,8 @@ def mregister():
                 cursor.execute('INSERT INTO member VALUES (NULL, %s, %s, %s, %s, %s, %s,%s,DEFAULT,DEFAULT )', (username , code ,  email , name , flatno , wing , mobile))
                 mysql.connection.commit()
                 msg = Message('New Member Request' ,sender ='Residents Portal<me@Rportal.com', recipients = [Semail]) 
-                text = "Hello \nYou have received new member request with followinh member details. \n Member details are :\n"
-                msg.body = text + "\n Flat No :" + wing + flatno + "\n Name : " + name + "\n phone No : " + mobile + "\n Email ID : " + email + part4
+                text = "Hello "+Sname+"!\nYou have received new member request with following details. \nMember details are :\n"
+                msg.body = text + "\nFlat No :" + wing + flatno + "\nName : " + name + "\nPhone No : " + mobile + "\nEmail ID : " + email + part4
                 mail.send(msg)  
                 msg1 = 'You have successfully registered!'
         elif request.method == 'POST':
@@ -846,7 +866,7 @@ def a_members(Mid):
             email = request.form['Memail']
             Mname = request.form['Mname']
             msg = Message('Your Joining Request is accepted' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
-            msg.body ="Hello!" + Mname + " \n your account activate for login please login on rportal ." + part4
+            msg.body ="Hello"+Mname+"! \nYour account is accepted by secretary of your society.\nPlease login on R-Portal to see whan happned." + part4
             mail.send(msg) 
         return allow_members()
     elif session.get('secretary') is None:
@@ -863,8 +883,8 @@ def i_members(Mid):
             mysql.connection.commit()
             email = request.form['Memail']
             Mname = request.form['Mname']
-            msg = Message('Account Inactive' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
-            msg.body ="Hello!" + Mname + " \n You have Temporary Inactive from secreatry please contact with your secretary." + part4
+            msg = Message('Account Evicted' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
+            msg.body ="Hello "+Mname+"! \nYour account has been temporarily disbanded by your secreatry.\nPlease contact with your secretary if you think it's a mistake." + part4
             mail.send(msg)  
             return people()
     elif session.get('secretary') is None:
@@ -881,8 +901,8 @@ def ac_members(Mid):
             mysql.connection.commit()
             email = request.form['Memail']
             Mname = request.form['Mname']
-            msg = Message('Account activated' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
-            msg.body ="Hello!" + Mname + " \n You have active from secreatry any query please contact with your secretary." + part4
+            msg = Message('Account Activated' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
+            msg.body ="Hello"+Mname+"! \nYour account is activated back by secretary of your society.\nPlease login on R-Portal to see whan happned." + part4
             mail.send(msg)  
         return inpeople()
     elif session.get('secretary') is None:
@@ -903,7 +923,7 @@ def r_members():
             cursor.execute('DELETE FROM member WHERE Mid = %s',[Mid]) 
             mysql.connection.commit()
             msg = Message('Member Request Rejected' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
-            msg.body ="Hello! \n Your member request for the "+ name + " is rejected by "+ Sname + "!\n Reason: " + message +"\n\n Thank you for using rportal!\n" +part4
+            msg.body ="Hello! \nYour member request for the "+name+" is rejected by "+Sname+".\nReason: "+message+"\n\nThank you for using rportal!\n" +part4
             mail.send(msg)  
             msg = 'Member Rejected/Deleted'
         return allow_members()
@@ -921,23 +941,10 @@ def d_members(Mid):
             mysql.connection.commit()
             email = request.form['Memail']
             Mname = request.form['Mname']
-            msg = Message('Account Delete' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
-            msg.body ="Hello!" + Mname + " \n Your account has deleted from secreatry please contact with your secretary.\n" + part4
+            msg = Message('Society Account Deleted' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
+            msg.body ="Hello"+Mname+"! \nYour account has deleted by secreatry of your society.\nPlease contact with your secretary for any queries.\n" + part4
             mail.send(msg)  
         return people()
-    elif session.get('secretary') is None:
-        return login()
-    else:
-        return logout()
-
-@app.route('/rportal/din_members/<int:Mid>')
-def din_members(Mid):
-    if 'secretary' in session:
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('DELETE FROM member WHERE Mid = %s',[Mid]) 
-        mysql.connection.commit()
-        msg = 'Member Delete'
-        return inpeople()
     elif session.get('secretary') is None:
         return login()
     else:
@@ -979,18 +986,6 @@ def d_security(security_id):
     else:
         return logout()
 
-@app.route('/rportal/din_security/<int:security_id>')
-def din_security(security_id):
-    if 'secretary' in session:
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('DELETE FROM security WHERE security_id = %s',[security_id]) 
-        mysql.connection.commit()
-        return inpeople()
-    elif session.get('secretary') is None:
-        return login()
-    else:
-        return logout()
-
 @app.route('/rportal/i_staff/<int:staff_id>', methods=['GET', 'POST'])
 def i_staff(staff_id):
     if 'secretary' in session:
@@ -1022,18 +1017,6 @@ def d_staff(staff_id):
         cursor.execute('DELETE FROM staff WHERE staff_id = %s',[staff_id]) 
         mysql.connection.commit()
         return people()
-    elif session.get('secretary') is None:
-        return login()
-    else:
-        return logout()
-
-@app.route('/rportal/din_staff/<int:staff_id>')
-def din_staff(staff_id):
-    if 'secretary' in session:
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('DELETE FROM staff WHERE staff_id = %s',[staff_id]) 
-        mysql.connection.commit()
-        return inpeople()
     elif session.get('secretary') is None:
         return login()
     else:
@@ -1274,7 +1257,7 @@ def createmeeting():
             result = json.loads(r.text)
             link = result['join_url']
             msg = link 
-            msg1 = "\n Host Key : 528614"
+            msg1 = "\nHost Key : 528614"
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('INSERT INTO meetings values (NULL , %s,%s ,%s ,%s, %s, %s, %s,  DEFAULT)', (topic, date, start_time, duration, link, agenda, session['Scode']))
             mysql.connection.commit() 
@@ -2081,7 +2064,7 @@ def admin_home():
 def asoc():
     if 'admin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT  name, road, area, city, state, pin, Sname, Sflatno, Swing, Smobile, Semail, Scode, acname, acno, mmid, bankname, branch, ifsc, secretarty_status FROM secretary INNER JOIN society on secretary.Scode=society.code WHERE secretarty_status = %s;', ('active',))
+        cursor.execute('SELECT  name, road, area, city, state, pin, Sname, Sflatno, Swing, Smobile, Semail, Scode, acname, acno, mmid, bankname, branch, ifsc, kyc_file, secretarty_status FROM secretary INNER JOIN society on secretary.Scode=society.code WHERE secretarty_status = %s;', ('active',))
         account = cursor.fetchall() 
         return render_template('admin/asoc.html', account=account)
     elif session.get('admin') is None:
@@ -2093,7 +2076,7 @@ def asoc():
 def isoc():
     if 'admin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT  name, road, area, city, state, pin, Sname, Sflatno, Swing, Smobile, Semail, Scode, acname, acno, mmid, bankname, branch, ifsc, secretarty_status FROM secretary INNER JOIN society on secretary.Scode=society.code WHERE secretarty_status = %s;', ('inactive',))
+        cursor.execute('SELECT  name, road, area, city, state, pin, Sname, Sflatno, Swing, Smobile, Semail, Scode, acname, acno, mmid, bankname, branch, ifsc, kyc_file, secretarty_status FROM secretary INNER JOIN society on secretary.Scode=society.code WHERE secretarty_status = %s;', ('inactive',))
         account = cursor.fetchall() 
         return render_template('admin/isoc.html', account=account)
     elif session.get('admin') is None:
@@ -2113,51 +2096,69 @@ def admin_req():
     else:
         return logout()
 
-@app.route('/rportal/a_sec/<string:Scode>')
+@app.route('/rportal/a_sec/<string:Scode>' , methods=['GET', 'POST'])
 def a_sec(Scode):
     if 'admin' in session:
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute("UPDATE secretary SET secretarty_status = %s WHERE Scode = %s" ,('active',Scode,)) 
-        cursor.execute("UPDATE society SET society_status = %s WHERE code = %s" ,('active',Scode,)) 
-        cursor.execute("UPDATE member SET member_status = %s WHERE Mcode = %s and member_status = %s" ,('active',Scode,'inactive',)) 
-        cursor.execute("UPDATE security SET security_status = %s WHERE security_code = %s" ,('active',Scode,)) 
-        cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_code = %s" ,('active',Scode,)) 
-        mysql.connection.commit()
-        msg = 'Society Allowed'
+        if request.method == 'POST' and 'Semail' in request.form and 'Sname':
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute("UPDATE secretary SET secretarty_status = %s WHERE Scode = %s" ,('active',Scode,)) 
+            cursor.execute("UPDATE society SET society_status = %s WHERE code = %s" ,('active',Scode,)) 
+            cursor.execute("UPDATE member SET member_status = %s WHERE Mcode = %s and member_status = %s" ,('active',Scode,'inactive',)) 
+            cursor.execute("UPDATE security SET security_status = %s WHERE security_code = %s" ,('active',Scode,)) 
+            cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_code = %s" ,('active',Scode,)) 
+            mysql.connection.commit()
+            email = request.form['Semail']
+            Sname = request.form['Sname']
+            name = request.form['name']
+            msg = Message('Society Accepted' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
+            msg.body ="Hello "+Sname+"! \nCheers!\nYour society with name "+name+" has been verified and accepted by Admin, R-Portal. You can add members and use the system." + part4
+            mail.send(msg)  
         return admin_req()
     elif session.get('admin') is None:
         return login()
     else:
         return logout()
 
-@app.route('/rportal/al_sec/<string:Scode>')
+@app.route('/rportal/al_sec/<string:Scode>' , methods=['GET', 'POST'])
 def al_sec(Scode):
     if 'admin' in session:
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute("UPDATE secretary SET secretarty_status = %s WHERE Scode = %s" ,('active',Scode,)) 
-        cursor.execute("UPDATE society SET society_status = %s WHERE code = %s" ,('active',Scode,)) 
-        cursor.execute("UPDATE member SET member_status = %s WHERE Mcode = %s and member_status = %s" ,('active',Scode,'inactive',)) 
-        cursor.execute("UPDATE security SET security_status = %s WHERE security_code = %s" ,('active',Scode,)) 
-        cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_code = %s" ,('active',Scode,)) 
-        mysql.connection.commit()
-        msg = 'Society Allowed'
+        if request.method == 'POST' and 'Semail' in request.form and 'Sname':
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute("UPDATE secretary SET secretarty_status = %s WHERE Scode = %s" ,('active',Scode,)) 
+            cursor.execute("UPDATE society SET society_status = %s WHERE code = %s" ,('active',Scode,)) 
+            cursor.execute("UPDATE member SET member_status = %s WHERE Mcode = %s and member_status = %s" ,('active',Scode,'inactive',)) 
+            cursor.execute("UPDATE security SET security_status = %s WHERE security_code = %s" ,('active',Scode,)) 
+            cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_code = %s" ,('active',Scode,)) 
+            mysql.connection.commit()
+            email = request.form['Semail']
+            Sname = request.form['Sname']
+            name = request.form['name']
+            msg = Message('Society Allowed' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
+            msg.body ="Hello "+Sname+"! \n\nYour society with name "+name+" has been allowed again by Admin, R-Portal. You can add members and use the system.\n" + part4
+            mail.send(msg) 
         return isoc()
     elif session.get('admin') is None:
         return login()
     else:
         return logout()
 
-@app.route('/rportal/c_sec/<string:Scode>')
+@app.route('/rportal/c_sec/<string:Scode>' , methods=['GET', 'POST'])
 def c_sec(Scode):
     if 'admin' in session:
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute("UPDATE secretary SET secretarty_status = %s WHERE Scode = %s" ,('inactive',Scode,)) 
-        cursor.execute("UPDATE society SET society_status = %s WHERE code = %s" ,('inactive',Scode,)) 
-        cursor.execute("UPDATE member SET member_status = %s WHERE Mcode = %s and member_status = %s" ,('inactive',Scode,'active',)) 
-        cursor.execute("UPDATE security SET security_status = %s WHERE security_code = %s" ,('active',Scode,)) 
-        cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_code = %s" ,('active',Scode,)) 
-        mysql.connection.commit()
-        msg = 'Society Disbanded'
+        if request.method == 'POST' and 'Semail' in request.form and 'Sname':
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute("UPDATE secretary SET secretarty_status = %s WHERE Scode = %s" ,('inactive',Scode,)) 
+            cursor.execute("UPDATE society SET society_status = %s WHERE code = %s" ,('inactive',Scode,)) 
+            cursor.execute("UPDATE member SET member_status = %s WHERE Mcode = %s and member_status = %s" ,('inactive',Scode,'active',)) 
+            cursor.execute("UPDATE security SET security_status = %s WHERE security_code = %s" ,('active',Scode,)) 
+            cursor.execute("UPDATE staff SET staff_status = %s WHERE staff_code = %s" ,('active',Scode,)) 
+            mysql.connection.commit()
+            email = request.form['Semail']
+            Sname = request.form['Sname']
+            name = request.form['name']
+            msg = Message('Society Evicted' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
+            msg.body ="Hello "+Sname+"! \n\nYour society with name "+name+" has been temporarily disbanded by Admin, R-Portal.\nPlease contact with below mail address if you think it's a mistake.\n" + part4
+            mail.send(msg)  
         return asoc()
     elif session.get('admin') is None:
         return login()
@@ -2172,6 +2173,8 @@ def r_sec():
             email = request.form['email']
             message = request.form['message']
             Scode = request.form['Scode'] 
+            Sname = request.form['Sname'] 
+            name = request.form['name'] 
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('DELETE FROM secretary WHERE Scode = %s',[Scode]) 
             cursor.execute('DELETE FROM society WHERE code = %s',[Scode]) 
@@ -2180,7 +2183,7 @@ def r_sec():
             cursor.execute('DELETE FROM staff WHERE staff_code = %s',[Scode]) 
             mysql.connection.commit()
             msg = Message('Society Rejected' ,sender ='Residents Portal<me@Rportal.com', recipients = [email])
-            msg.body ="Hi \n"+ message
+            msg.body ="Hello "+Sname+"! \n\nYour society with name "+name+" has been rejected by Admin, R-Portal.\nReason: "+message+"\nPlease contact with below mail address if you think it's a mistake.\n" + part4
             mail.send(msg)  
             msg = 'Society Rejected/Deleted'
         return render_template('admin/admin_req.html', msg=msg)
@@ -2471,7 +2474,7 @@ def contactus():
         email = request.form['email']
         message = request.form['message']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('INSERT INTO contactus VALUES (NULL, %s, %s, %s)', (name , email , message))
+        cursor.execute('INSERT INTO contactus VALUES (NULL, %s, %s, %s, DEFAULT)', (name , email , message))
         mysql.connection.commit()
         return render_template('rportal.html')
 

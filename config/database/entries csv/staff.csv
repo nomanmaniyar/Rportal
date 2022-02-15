@@ -1,0 +1,3 @@
+staff_id,staff_username,staff_password,staff_name,staff_mobile,post,staff_code,staff_status
+1,sitaram,e0756475ba880020b168494c2fa9951bca5f9f7e39501e6c670409060955c8e9,"Sitaram Narayan Kapadnis",945121415,Cleaner,SAIR11,active
+2,gitaram,e0756475ba880020b168494c2fa9951bca5f9f7e39501e6c670409060955c8e9,"Gitaram Narayan Kapadnis",945121415,Gardener,SAIR11,active

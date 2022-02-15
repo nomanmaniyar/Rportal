@@ -1,0 +1,4 @@
+id,code,name,city,road,area,state,pin,acname,acno,mmid,bankname,branch,ifsc,soc_bal,kyc_file,society_time,society_status
+1,GOKU11,"Gokuldham Society","Goregaon East","Powder Gali",Goregaon,Maharastra,422001,"Gokuldham CO OP Hsg Society",85858858585858,5155755,"DBS Bank",Singapour,SBIN0006333,0,"Sample Bill.pdf","2022-02-15 23:55:32",inactive
+2,TEMP11,"Temparory Society","Goregaon East","Powder Gali",Goregaon,Maharastra,422001,"Temp Society account",85858858585858,5155755,"DBS Bank",Singapour,SBIN0006333,0,"Sample Bill.pdf","2022-02-16 00:07:11",request
+4,SAIR11,"Sai Residency",Nashik,"Mhasrul, Panchvati","Gajpanth ",Maharastra,422003,"Sai Residency Account",54512562323,523262,"Bank of Maharashtra",Panchvati,MAHB000432,56400,"Sample Bill.pdf","2022-02-16 00:38:43",active
