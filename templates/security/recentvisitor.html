@@ -180,7 +180,7 @@
                   </div>
                 </div>
               </div>
-              <form action="{{ url_for('visitorexit') }}" method="POST">
+              <form action="/rportal/visitorexit" method="POST">
                 <input type="hidden" name="vid" value="{{account1[data]['vid']}}" required>
                 <div class="row">
                   <div class="col">
@@ -221,7 +221,7 @@
         {% for data in ((range(account2|length))|reverse) %}
         <div class="col">
           <div class="card">
-            <img src="/static/upload/vpic/{{ account1[data]['vpic']}}" class="img-fluid rounded-start "
+            <img src="/static/upload/vpic/{{ account2[data]['vpic']}}" class="img-fluid rounded-start "
               style="height: 200px;">
 
             <div class="card-body">
