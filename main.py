@@ -1,3 +1,4 @@
+from pickle import FALSE
 import socket
 import dns.resolver;
 from email import message
@@ -2261,7 +2262,7 @@ def security_complaint():
             cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor3.execute('UPDATE complaint SET complaint_reply = %s, complaint_status = %s  WHERE complaint_id = %s', (complaint_reply, 'review', complaint_id ))
             mysql.connection.commit()
-            security_complaint()
+            #security_complaint()
         return render_template('security/security_complaint.html', account=account, account1=account1, account2=account2)
     elif session.get('security') is None:
         return login()

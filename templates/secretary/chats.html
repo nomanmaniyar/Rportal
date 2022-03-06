@@ -17,9 +17,9 @@
         </div>
         {% else %}
         <div class="" style="overflow:auto; height:400px;">
-            {% for data in (range((account|length))) %}
+            {% for data in range((account|length)) %}
             {%if(((account[data]['message'])|length)!=0)%}
-            <div class="card" style="border: none; width:100%">
+            <div class="card" style="border: none; width:100%;">
                 <div class="card-title d-flex mb-0 pb-0 justify-content-between">
                     <span style="font-weight: bold;">{{account[data]['msg_username']}}</span>
                     <span style="color:gray; font-size: x-small;">{{account[data]['msg_time']}}</span>
