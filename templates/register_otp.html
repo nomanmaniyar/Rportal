@@ -17,11 +17,9 @@
 </head>
 
 <body>
-
     <section class="bg-light-pink text-dark p-5 p-lg-0 pt-lg-5 text-start text-sm-start">
         <div class="container">
             <div class="d-sm-flex align-items-center justify-content-between pb-1">
-
                 <div class="px-lg-5 py-lg-5 p-4 w-100 align-self-center shadow">
                     <h1 class="font-weight-bold mb-4">2-Step
                         <br>Authentication
@@ -31,22 +29,20 @@
                         {{ msg }}
                     </div>
                     {% else %} {% endif %}
-
                     <div class="msg1">{{ msg1 }}</div>
                     <div class="msg">{{ msg }}</div>
                     <form class="mb-5" action="/rvalidate" method="post">
-
                         <div class="mb-4">
-                            <label for="Otp" class="form-label font-weight-bold">Please verify your Email OTP here to complate registrations.</label>
+                            <label for="Otp" class="form-label font-weight-bold">Please verify your Email OTP here to complate registrations.
+                            </label>
                             <input type="text" class="form-control bg-grey border-0" placeholder="Enter your OTP" id="otp" name="otp" aria-describedby="emailHelp" required>
                             <input type="hidden"  name="username" value={{ username }}></input>
                             <input type="hidden"  name="password" value={{ password }}></input>
-                            <input type="hidden"  name="name" value={{ name }}></input>
+                            <input type="text"  name="name" value='{{name}}'
+                            ></input>
                             <input type="hidden"  name="email" value={{ email }}></input>
                             <input type="hidden"  name="mobile" value={{ mobile }}></input>
-
                         </div>
-
                         <button type="submit" class="btn btn-primary w-100">Verify</button>
                     </form>
                     <p class="d-inline-block mb-0">Wan'na go
