@@ -19,7 +19,8 @@ m {% extends 'security/security_layout.html' %}
       {% for data in ((range(account|length))|reverse) %}
       <div class="col">
         <div class="card">
-          <img src="/static/upload/vpic/{{ account[data]['vpic']}}" class="img-fluid rounded-start h-100">
+          <img src="/static/upload/vpic/{{ account[data]['vpic']}}" class="img-fluid rounded-start "
+          style="height: 200px;">
 
           <div class="card-body">
             <h5 class="card-title">{{ account[data]['vname']}}</h5>
