@@ -1,0 +1,7 @@
+main_id,Musername,Mname,code,bill_date,due_date,amount,pending_amount,paid_date,payment_status
+1,jay,"Jay Sharma",SAIR11,"2022-02-16 02:12:01",2022-12-31,400,0,"2022-02-16 02:16:27",paid
+2,noman,Noman,SAIR11,"2022-02-16 02:12:01",2022-12-31,400,400,NULL,unpaid
+3,shinde,Shinde,SAIR11,"2022-02-16 02:12:01",2022-12-31,400,0,"2022-02-16 13:19:59",paid
+4,nishant,Nishant,SAIR11,"2022-02-16 02:12:01",2022-12-31,400,0,"2022-02-16 13:19:59",paid
+5,samadhan,Samadhan,SAIR11,"2022-02-16 02:12:01",2022-12-31,400,400,NULL,unpaid
+6,aashutosh,Aashutosh,SAIR11,"2022-02-16 02:12:01",2022-12-31,400,400,NULL,unpaid
